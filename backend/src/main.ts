@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { DataSource } from 'typeorm';
 
@@ -14,6 +15,15 @@ async function bootstrap() {
   
   // Prefix cho tất cả các route API
   app.setGlobalPrefix('api');
+
+  // Bật validation pipe toàn cục
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Loại bỏ các field không được định nghĩa trong DTO
+      forbidNonWhitelisted: true, // Throw error nếu có field không hợp lệ
+      transform: true, // Tự động chuyển đổi kiểu dữ liệu
+    }),
+  );
   
   const port = process.env.PORT || 3001;
   await app.listen(port);

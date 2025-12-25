@@ -5,12 +5,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseConfig } from './config/database.config';
 import { UserModule } from './modules/user/user.module';
+import { VaiTroModule } from './modules/VaiTro/vai-tro.module';
+import { NguoiDungModule } from './modules/NguoiDung/nguoi-dung.module';
 
 /**
  * Module chính của ứng dụng
  * - Import ConfigModule để quản lý biến môi trường
  * - Import TypeOrmModule để kết nối database
- * - Import các feature modules (UserModule)
+ * - Import các feature modules
  */
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { UserModule } from './modules/user/user.module';
     }),
     
     // Feature Modules
+    VaiTroModule,
+    NguoiDungModule,
     UserModule,
   ],
   controllers: [AppController],
