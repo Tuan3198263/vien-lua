@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { User } from '../modules/user/user.entity';
+
+import { VaiTro } from '../modules/VaiTro/vai-tro.entity';
+import { NguoiDung } from '../modules/NguoiDung/nguoi-dung.entity';
 
 /**
  * Cấu hình kết nối database
@@ -14,14 +16,14 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'mysql',
-      host: this.configService.get<string>('DB_HOST', 'sql.freedb.tech'),
-      port: this.configService.get<number>('DB_PORT', 3306),
-      username: this.configService.get<string>('DB_USER', 'freedb_tuanle2901'),
-      password: this.configService.get<string>('DB_PASSWORD', '8KWDRXuY!AbwG%S'),
-      database: this.configService.get<string>('DB_NAME', 'freedb_vien_lua'),
+      host: this.configService.get<string>('DB_HOST'),
+      port: this.configService.get<number>('DB_PORT'),
+      username: this.configService.get<string>('DB_USER'),
+      password: this.configService.get<string>('DB_PASSWORD'),
+      database: this.configService.get<string>('DB_NAME'),
       
-      // Import trực tiếp entities thay vì dùng pattern
-      entities: [User],
+      // Import trực tiếp tất cả entities
+      entities: [VaiTro, NguoiDung],
       
       // Chỉ bật synchronize trong development
       // KHÔNG bật trong production
