@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +10,8 @@ import { VaiTro } from './vai-tro.entity';
 import { CreateVaiTroDto, UpdateVaiTroDto } from './dto/vai-tro.dto';
 import { PaginationDto, PaginatedResult } from '../../shared/dto/pagination.dto';
 import { QueryUtils } from '../../shared/utils/query.utils';
+import { PhanQuyen } from '../PhanQuyen/phan-quyen.entity';
+import { kiemTraMaModule } from '../../shared/constants/modules.constant';
 
 /**
  * Service xử lý logic cho module Vai Trò
@@ -18,12 +21,14 @@ export class VaiTroService {
   constructor(
     @InjectRepository(VaiTro)
     private vaiTroRepository: Repository<VaiTro>,
+    @InjectRepository(PhanQuyen)
+    private phanQuyenRepository: Repository<PhanQuyen>,
   ) {}
 
   /**
-   * Tạo vai trò mới
-   * @param createVaiTroDto - Dữ liệu vai trò cần tạo
-   * @returns Vai trò vừa được tạo
+   * Tạo vai trò mới (kèm phân quyền)
+   * @param createVaiTroDto - Dữ liệu vai trò và quyền cần tạo
+   * @returns Vai trò vừa được tạo kèm quyền
    */
   async create(createVaiTroDto: CreateVaiTroDto): Promise<VaiTro> {
     // Kiểm tra mã vai trò đã tồn tại chưa
@@ -35,11 +40,48 @@ export class VaiTroService {
       throw new ConflictException('Mã vai trò đã tồn tại');
     }
 
-    // Tạo entity mới
-    const vaiTro = this.vaiTroRepository.create(createVaiTroDto);
+    // Validate mã module trong permissions nếu có
+    if (createVaiTroDto.permissions && createVaiTroDto.permissions.length > 0) {
+      for (const perm of createVaiTroDto.permissions) {
+        if (!kiemTraMaModule(perm.ma_module)) {
+          throw new BadRequestException(`Mã module '${perm.ma_module}' không hợp lệ`);
+        }
+      }
+    }
 
-    // Lưu vào database
-    return await this.vaiTroRepository.save(vaiTro);
+    // Tạo vai trò mới
+    const vaiTro = this.vaiTroRepository.create({
+      ma_vai_tro: createVaiTroDto.ma_vai_tro,
+      ten_vai_tro: createVaiTroDto.ten_vai_tro,
+      mo_ta: createVaiTroDto.mo_ta,
+    });
+
+    // Lưu vai trò
+    const savedVaiTro = await this.vaiTroRepository.save(vaiTro);
+
+    // Tạo phân quyền nếu có
+    if (createVaiTroDto.permissions && createVaiTroDto.permissions.length > 0) {
+      const phanQuyenList: PhanQuyen[] = [];
+
+      for (const perm of createVaiTroDto.permissions) {
+        for (const hanhDong of perm.hanh_dong) {
+          const phanQuyen = this.phanQuyenRepository.create({
+            vai_tro_id: savedVaiTro.id,
+            ma_module: perm.ma_module,
+            hanh_dong: hanhDong,
+          });
+          phanQuyenList.push(phanQuyen);
+        }
+      }
+
+      await this.phanQuyenRepository.save(phanQuyenList);
+    }
+
+    // Trả về vai trò kèm quyền
+    return await this.vaiTroRepository.findOne({
+      where: { id: savedVaiTro.id },
+      relations: ['phanQuyen'],
+    });
   }
 
   /**
@@ -96,7 +138,7 @@ export class VaiTroService {
   }
 
   /**
-   * Cập nhật vai trò
+   * Cập nhật vai trò (kèm phân quyền)
    * @param id - ID của vai trò cần cập nhật
    * @param updateVaiTroDto - Dữ liệu cập nhật
    * @returns Vai trò sau khi cập nhật
@@ -116,11 +158,52 @@ export class VaiTroService {
       }
     }
 
-    // Cập nhật các trường
-    Object.assign(vaiTro, updateVaiTroDto);
+    // Validate mã module trong permissions nếu có
+    if (updateVaiTroDto.permissions) {
+      for (const perm of updateVaiTroDto.permissions) {
+        if (!kiemTraMaModule(perm.ma_module)) {
+          throw new BadRequestException(`Mã module '${perm.ma_module}' không hợp lệ`);
+        }
+      }
+    }
 
-    // Lưu thay đổi
-    return await this.vaiTroRepository.save(vaiTro);
+    // Cập nhật các trường của vai trò
+    if (updateVaiTroDto.ma_vai_tro) vaiTro.ma_vai_tro = updateVaiTroDto.ma_vai_tro;
+    if (updateVaiTroDto.ten_vai_tro) vaiTro.ten_vai_tro = updateVaiTroDto.ten_vai_tro;
+    if (updateVaiTroDto.mo_ta !== undefined) vaiTro.mo_ta = updateVaiTroDto.mo_ta;
+
+    // Lưu vai trò
+    await this.vaiTroRepository.save(vaiTro);
+
+    // Nếu có cập nhật permissions, xóa quyền cũ và tạo quyền mới
+    if (updateVaiTroDto.permissions) {
+      // Xóa tất cả quyền cũ của vai trò này
+      await this.phanQuyenRepository.delete({ vai_tro_id: id });
+
+      // Tạo quyền mới
+      if (updateVaiTroDto.permissions.length > 0) {
+        const phanQuyenList: PhanQuyen[] = [];
+
+        for (const perm of updateVaiTroDto.permissions) {
+          for (const hanhDong of perm.hanh_dong) {
+            const phanQuyen = this.phanQuyenRepository.create({
+              vai_tro_id: id,
+              ma_module: perm.ma_module,
+              hanh_dong: hanhDong,
+            });
+            phanQuyenList.push(phanQuyen);
+          }
+        }
+
+        await this.phanQuyenRepository.save(phanQuyenList);
+      }
+    }
+
+    // Trả về vai trò kèm quyền
+    return await this.vaiTroRepository.findOne({
+      where: { id },
+      relations: ['phanQuyen'],
+    });
   }
 
   /**

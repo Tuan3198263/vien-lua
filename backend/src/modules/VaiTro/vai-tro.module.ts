@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { VaiTroService } from './vai-tro.service';
 import { VaiTroController } from './vai-tro.controller';
 import { VaiTro } from './vai-tro.entity';
+import { PhanQuyen } from '../PhanQuyen/phan-quyen.entity';
+import { PhanQuyenModule } from '../PhanQuyen/phan-quyen.module';
 
 /**
  * Module Vai Trò
@@ -10,8 +12,10 @@ import { VaiTro } from './vai-tro.entity';
  */
 @Module({
   imports: [
-    // Import TypeORM repository cho entity VaiTro
-    TypeOrmModule.forFeature([VaiTro]),
+    // Import TypeORM repository cho entity VaiTro và PhanQuyen
+    TypeOrmModule.forFeature([VaiTro, PhanQuyen]),
+    // Import PhanQuyenModule để sử dụng PermissionGuard
+    forwardRef(() => PhanQuyenModule),
   ],
   controllers: [VaiTroController],
   providers: [VaiTroService],

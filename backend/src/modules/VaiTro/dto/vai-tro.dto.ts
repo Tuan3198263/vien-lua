@@ -1,4 +1,27 @@
-import { IsString, IsNotEmpty, MaxLength, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, MaxLength, IsOptional, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { HanhDong } from '../../../shared/constants/hanh-dong.enum';
+
+/**
+ * DTO cho phân quyền một module
+ * Dùng khi tạo/sửa vai trò
+ */
+export class QuyenModuleDto {
+  /**
+   * Mã module (VAI_TRO, NGUOI_DUNG...)
+   */
+  @IsNotEmpty({ message: 'Mã module không được để trống' })
+  @IsString({ message: 'Mã module phải là chuỗi' })
+  ma_module: string;
+
+  /**
+   * Danh sách hành động được phép
+   * Mảng các giá trị của enum HanhDong
+   */
+  @IsArray({ message: 'Danh sách hành động phải là mảng' })
+  @IsString({ each: true, message: 'Mỗi hành động phải là chuỗi' })
+  hanh_dong: HanhDong[];
+}
 
 /**
  * DTO để tạo vai trò mới
@@ -29,6 +52,16 @@ export class CreateVaiTroDto {
   @IsOptional()
   @IsString({ message: 'Mô tả phải là chuỗi' })
   mo_ta?: string;
+
+  /**
+   * Danh sách quyền của vai trò
+   * Mỗi phần tử chứa ma_module và danh sách hanh_dong
+   */
+  @IsOptional()
+  @IsArray({ message: 'Danh sách quyền phải là mảng' })
+  @ValidateNested({ each: true })
+  @Type(() => QuyenModuleDto)
+  permissions?: QuyenModuleDto[];
 }
 
 /**
@@ -61,4 +94,15 @@ export class UpdateVaiTroDto {
   @IsOptional()
   @IsString({ message: 'Mô tả phải là chuỗi' })
   mo_ta?: string;
+
+  /**
+   * Danh sách quyền của vai trò
+   * Mỗi phần tử chứa ma_module và danh sách hanh_dong
+   * Tùy chọn - nếu có thì sẽ cập nhật quyền
+   */
+  @IsOptional()
+  @IsArray({ message: 'Danh sách quyền phải là mảng' })
+  @ValidateNested({ each: true })
+  @Type(() => QuyenModuleDto)
+  permissions?: QuyenModuleDto[];
 }

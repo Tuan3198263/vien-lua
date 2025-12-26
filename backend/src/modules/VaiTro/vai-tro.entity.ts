@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
+import { PhanQuyen } from '../PhanQuyen/phan-quyen.entity';
 
 /**
  * Entity Vai Trò
@@ -51,6 +52,13 @@ export class VaiTro {
     nullable: true,
   })
   mo_ta: string;
+
+  /**
+   * Danh sách phân quyền của vai trò này
+   * Relation OneToMany với PhanQuyen
+   */
+  @OneToMany(() => PhanQuyen, (phanQuyen) => phanQuyen.vaiTro, { cascade: true })
+  phanQuyen: PhanQuyen[];
 
   /**
    * Ngày tạo - Tự động set khi tạo mới

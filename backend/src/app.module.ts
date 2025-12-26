@@ -4,9 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseConfig } from './config/database.config';
-import { UserModule } from './modules/user/user.module';
 import { VaiTroModule } from './modules/VaiTro/vai-tro.module';
 import { NguoiDungModule } from './modules/NguoiDung/nguoi-dung.module';
+import { PhanQuyenModule } from './modules/PhanQuyen/phan-quyen.module';
 
 /**
  * Module chính của ứng dụng
@@ -30,7 +30,8 @@ import { NguoiDungModule } from './modules/NguoiDung/nguoi-dung.module';
     // Feature Modules
     VaiTroModule,
     NguoiDungModule,
-    UserModule,
+    PhanQuyenModule,
+   
   ],
   controllers: [AppController],
   providers: [AppService],
