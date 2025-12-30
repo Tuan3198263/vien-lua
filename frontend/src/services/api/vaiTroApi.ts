@@ -1,0 +1,48 @@
+/**
+ * Vai Trò API Service
+ */
+
+import { 
+  VaiTro, 
+  CreateVaiTroDto, 
+  UpdateVaiTroDto,
+  PaginationParams,
+  PaginatedResponse 
+} from '@/interfaces';
+import { API_URL } from '@/config/api.config';
+import { getData, postData, updateData, deleteData, getPaginatedData } from './coreApi';
+
+/**
+ * API services cho module Vai Trò
+ */
+export const vaiTroApi = {
+  /**
+   * Lấy danh sách vai trò có phân trang
+   */
+  getAll: (params?: PaginationParams) => 
+    getPaginatedData<VaiTro>(API_URL.VAI_TRO, params),
+
+  /**
+   * Lấy chi tiết vai trò
+   */
+  getById: (id: number) => 
+    getData<VaiTro>(`${API_URL.VAI_TRO}/${id}`),
+
+  /**
+   * Tạo vai trò mới
+   */
+  create: (data: CreateVaiTroDto) => 
+    postData<VaiTro>(API_URL.VAI_TRO, data),
+
+  /**
+   * Cập nhật vai trò
+   */
+  update: (id: number, data: UpdateVaiTroDto) => 
+    updateData<VaiTro>(`${API_URL.VAI_TRO}/${id}`, data),
+
+  /**
+   * Xóa vai trò
+   */
+  delete: (id: number) => 
+    deleteData(`${API_URL.VAI_TRO}/${id}`),
+};
