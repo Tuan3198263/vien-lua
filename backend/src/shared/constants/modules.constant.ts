@@ -32,27 +32,6 @@ export const DANH_SACH_MODULE: ModuleInfo[] = [
     icon: 'user',
     thu_tu: 2,
   },
-  {
-    ma_module: 'SAN_PHAM',
-    ten_module: 'Quản lý sản phẩm',
-    mo_ta: 'Module quản lý sản phẩm và danh mục',
-    icon: 'box',
-    thu_tu: 3,
-  },
-  {
-    ma_module: 'DON_HANG',
-    ten_module: 'Quản lý đơn hàng',
-    mo_ta: 'Module quản lý đơn hàng và thanh toán',
-    icon: 'shopping-cart',
-    thu_tu: 4,
-  },
-  {
-    ma_module: 'BAO_CAO',
-    ten_module: 'Báo cáo thống kê',
-    mo_ta: 'Module báo cáo và thống kê dữ liệu',
-    icon: 'chart',
-    thu_tu: 5,
-  },
 ];
 
 /**

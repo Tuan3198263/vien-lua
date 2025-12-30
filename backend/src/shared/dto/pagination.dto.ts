@@ -1,9 +1,16 @@
-import { IsOptional, IsInt, Min, Max, IsString } from 'class-validator';
+import { IsOptional, IsInt, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 
 /**
- * DTO cho phân trang
+ * DTO cho phân trang và filter
  * Sử dụng cho các API GET danh sách
+ * 
+ * Logic filter mới:
+ * - Nhận filter theo từng field cụ thể (tai_khoan, ho_ten, email...)
+ * - Không còn param "search" chung
+ * - Không còn sort_field, sort_order (mặc định sort theo ngay_tao DESC)
+ * 
+ * Lưu ý: DTO này cho phép additional properties để hỗ trợ dynamic filtering
  */
 export class PaginationDto {
   /**
@@ -28,29 +35,14 @@ export class PaginationDto {
   limit?: number = 10;
 
   /**
-   * Trường để sắp xếp
-   * Ví dụ: 'ngay_tao', 'ten_vai_tro'
+   * Các trường filter động
+   * Mỗi entity sẽ có các field riêng (trừ id)
+   * Ví dụ: tai_khoan, ho_ten, email, sdt, gioi_tinh...
+   * Frontend sẽ gửi: ?tai_khoan=admin&ho_ten=Nguyen
+   * 
+   * Sử dụng [key: string]: any để cho phép nhận bất kỳ field nào
    */
-  @IsOptional()
-  @IsString({ message: 'Sort field phải là chuỗi' })
-  sort_field?: string;
-
-  /**
-   * Thứ tự sắp xếp
-   * 'ASC': tăng dần, 'DESC': giảm dần
-   * Mặc định: 'DESC'
-   */
-  @IsOptional()
-  @IsString({ message: 'Sort order phải là chuỗi' })
-  sort_order?: 'ASC' | 'DESC' = 'DESC';
-
-  /**
-   * Từ khóa tìm kiếm chung
-   * Sẽ tìm kiếm trên nhiều trường tùy theo từng entity
-   */
-  @IsOptional()
-  @IsString({ message: 'Từ khóa tìm kiếm phải là chuỗi' })
-  search?: string;
+  [key: string]: any;
 }
 
 /**

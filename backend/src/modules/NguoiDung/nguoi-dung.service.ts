@@ -266,7 +266,8 @@ export class NguoiDungService {
   }
 
   /**
-   * Lấy danh sách người dùng với phân trang, lọc, sắp xếp
+   * Lấy danh sách người dùng với phân trang và lọc theo field
+   * Không còn hỗ trợ sort động, mặc định sort theo ngay_tao DESC
    */
   async findAll(
     paginationDto: PaginationDto,
@@ -276,13 +277,24 @@ export class NguoiDungService {
       .createQueryBuilder('nguoi_dung')
       .leftJoinAndSelect('nguoi_dung.vai_tro', 'vai_tro');
 
-    // Áp dụng tìm kiếm, sắp xếp, phân trang
+    // Các field được phép filter (trừ id, mat_khau)
+    const allowedFields = [
+      'tai_khoan',
+      'ho_ten',
+      'email',
+      'sdt',
+      'dia_chi',
+      'ngay_sinh',
+      'gioi_tinh',
+      'ngay_cap_nhat',
+    ];
+
+    // Áp dụng field filtering và phân trang
     QueryUtils.applyQueryOptions(
       queryBuilder,
       paginationDto,
       'nguoi_dung',
-      ['tai_khoan', 'ho_ten', 'email', 'sdt'], // Các trường có thể tìm kiếm
-      'ngay_tao', // Trường sắp xếp mặc định
+      allowedFields,
     );
 
     // Lấy dữ liệu và tổng số bản ghi

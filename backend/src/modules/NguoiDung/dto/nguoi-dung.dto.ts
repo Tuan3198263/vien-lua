@@ -79,18 +79,20 @@ export class CreateNguoiDungDto {
 
   /**
    * Địa chỉ
-   * Tùy chọn
+   * Tùy chọn, tối đa 255 ký tự
    */
   @IsOptional()
   @IsString({ message: 'Địa chỉ phải là chuỗi' })
+  @MaxLength(255, { message: 'Địa chỉ không được vượt quá 255 ký tự' })
   dia_chi?: string;
 
   /**
    * Ghi chú
-   * Tùy chọn
+   * Tùy chọn, tối đa 255 ký tự
    */
   @IsOptional()
   @IsString({ message: 'Ghi chú phải là chuỗi' })
+  @MaxLength(255, { message: 'Ghi chú không được vượt quá 255 ký tự' })
   ghi_chu?: string;
 
   /**
@@ -150,6 +152,7 @@ export class UpdateNguoiDungDto {
    */
   @IsOptional()
   @IsString({ message: 'Địa chỉ phải là chuỗi' })
+  @MaxLength(255, { message: 'Địa chỉ không được vượt quá 255 ký tự' })
   dia_chi?: string;
 
   /**
@@ -157,6 +160,7 @@ export class UpdateNguoiDungDto {
    */
   @IsOptional()
   @IsString({ message: 'Ghi chú phải là chuỗi' })
+  @MaxLength(255, { message: 'Ghi chú không được vượt quá 255 ký tự' })
   ghi_chu?: string;
 
   /**

@@ -79,18 +79,27 @@ export class PhanQuyenService {
 
   /**
    * Kiểm tra vai trò có quyền thực hiện hành động trên module không
-   * Dùng trong PermissionGuard để kiểm tra permission
+   * Logic mới:
+   * - XEM: Mặc định luôn trả về true (không cần bản ghi DB)
+   * - THAO_TAC: Kiểm tra có bản ghi trong DB không
+   *   + Nếu có THAO_TAC => có toàn quyền (xem, thêm, sửa, xóa)
    */
   async kiemTraQuyen(
     vaiTroId: number,
     maModule: string,
     hanhDong: HanhDong,
   ): Promise<boolean> {
+    // Nếu yêu cầu quyền XEM, mặc định cho phép
+    if (hanhDong === HanhDong.XEM) {
+      return true;
+    }
+
+    // Nếu yêu cầu quyền THAO_TAC, kiểm tra trong DB
     const count = await this.phanQuyenRepository.count({
       where: {
         vai_tro_id: vaiTroId,
         ma_module: maModule,
-        hanh_dong: hanhDong,
+        hanh_dong: HanhDong.THAO_TAC,
       },
     });
 

@@ -2,7 +2,8 @@ import { SelectQueryBuilder } from 'typeorm';
 import { PaginationDto, PaginatedResult } from '../dto/pagination.dto';
 
 /**
- * Utility class để xử lý phân trang, lọc và sắp xếp
+ * Utility class để xử lý phân trang và lọc
+ * Version mới: Không còn sắp xếp động, chỉ mặc định ngay_tao DESC
  */
 export class QueryUtils {
   /**
@@ -22,50 +23,48 @@ export class QueryUtils {
   }
 
   /**
-   * Áp dụng sắp xếp cho query builder
+   * Áp dụng filter theo từng field
+   * Loại bỏ các field không hợp lệ (id, page, limit) và áp dụng LIKE cho các field còn lại
    * @param queryBuilder - TypeORM query builder
-   * @param paginationDto - Thông tin sắp xếp
+   * @param paginationDto - DTO chứa các field filter
    * @param alias - Alias của entity trong query
-   * @param defaultSortField - Trường sắp xếp mặc định
-   * @returns Query builder đã được áp dụng sắp xếp
+   * @param allowedFields - Danh sách các field được phép filter (không bao gồm id)
+   * @returns Query builder đã được áp dụng filter
    */
-  static applySorting<T>(
+  static applyFieldFilters<T>(
     queryBuilder: SelectQueryBuilder<T>,
     paginationDto: PaginationDto,
     alias: string,
-    defaultSortField: string = 'ngay_tao',
+    allowedFields: string[],
   ): SelectQueryBuilder<T> {
-    const { sort_field, sort_order = 'DESC' } = paginationDto;
-    const sortField = sort_field || defaultSortField;
+    // Các field không được filter
+    const excludedKeys = ['page', 'limit', 'id'];
 
-    return queryBuilder.orderBy(`${alias}.${sortField}`, sort_order);
-  }
+    // Duyệt qua tất cả các key trong paginationDto
+    Object.keys(paginationDto).forEach((key) => {
+      const value = paginationDto[key];
 
-  /**
-   * Áp dụng tìm kiếm cho query builder
-   * @param queryBuilder - TypeORM query builder
-   * @param searchTerm - Từ khóa tìm kiếm
-   * @param searchFields - Các trường cần tìm kiếm
-   * @param alias - Alias của entity trong query
-   * @returns Query builder đã được áp dụng tìm kiếm
-   */
-  static applySearch<T>(
-    queryBuilder: SelectQueryBuilder<T>,
-    searchTerm: string | undefined,
-    searchFields: string[],
-    alias: string,
-  ): SelectQueryBuilder<T> {
-    if (!searchTerm || !searchFields.length) {
-      return queryBuilder;
-    }
+      // Bỏ qua nếu:
+      // - Key nằm trong excludedKeys
+      // - Không nằm trong allowedFields
+      // - Value null/undefined hoặc empty string
+      if (
+        excludedKeys.includes(key) ||
+        !allowedFields.includes(key) ||
+        value === null ||
+        value === undefined ||
+        value === ''
+      ) {
+        return;
+      }
 
-    const conditions = searchFields
-      .map((field) => `${alias}.${field} LIKE :searchTerm`)
-      .join(' OR ');
-
-    return queryBuilder.andWhere(`(${conditions})`, {
-      searchTerm: `%${searchTerm}%`,
+      // Áp dụng LIKE filter cho field
+      queryBuilder.andWhere(`${alias}.${key} LIKE :${key}`, {
+        [key]: `%${value}%`,
+      });
     });
+
+    return queryBuilder;
   }
 
   /**
@@ -97,30 +96,31 @@ export class QueryUtils {
   }
 
   /**
-   * Áp dụng tất cả các utilities (phân trang, sắp xếp, tìm kiếm) cho query builder
+   * Áp dụng tất cả các utilities cho query builder
+   * Version mới: Chỉ áp dụng field filtering + phân trang
+   * Mặc định sort theo ngay_tao DESC (không thay đổi)
+   * 
    * @param queryBuilder - TypeORM query builder
-   * @param paginationDto - Thông tin phân trang
+   * @param paginationDto - Thông tin phân trang và filter
    * @param alias - Alias của entity trong query
-   * @param searchFields - Các trường cần tìm kiếm
-   * @param defaultSortField - Trường sắp xếp mặc định
+   * @param allowedFields - Các field được phép filter (không bao gồm id)
    * @returns Query builder đã được áp dụng đầy đủ
    */
   static applyQueryOptions<T>(
     queryBuilder: SelectQueryBuilder<T>,
     paginationDto: PaginationDto,
     alias: string,
-    searchFields: string[] = [],
-    defaultSortField: string = 'ngay_tao',
+    allowedFields: string[] = [],
   ): SelectQueryBuilder<T> {
-    // Áp dụng tìm kiếm
-    if (paginationDto.search && searchFields.length > 0) {
-      this.applySearch(queryBuilder, paginationDto.search, searchFields, alias);
+    // 1. Áp dụng field filtering
+    if (allowedFields.length > 0) {
+      this.applyFieldFilters(queryBuilder, paginationDto, alias, allowedFields);
     }
 
-    // Áp dụng sắp xếp
-    this.applySorting(queryBuilder, paginationDto, alias, defaultSortField);
+    // 2. Mặc định sort theo ngay_tao DESC
+    queryBuilder.orderBy(`${alias}.ngay_tao`, 'DESC');
 
-    // Áp dụng phân trang
+    // 3. Áp dụng phân trang
     this.applyPagination(queryBuilder, paginationDto);
 
     return queryBuilder;

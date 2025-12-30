@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -8,6 +8,7 @@ import { NguoiDungController } from './nguoi-dung.controller';
 import { AuthController } from './auth.controller';
 import { NguoiDung } from './nguoi-dung.entity';
 import { VaiTroModule } from '../VaiTro/vai-tro.module';
+import { PhanQuyenModule } from '../PhanQuyen/phan-quyen.module';
 import { JwtStrategy } from '../../common/strategies/jwt.strategy';
 import { JWT_EXPIRATION } from '../../shared/constants/app.constants';
 
@@ -22,6 +23,9 @@ import { JWT_EXPIRATION } from '../../shared/constants/app.constants';
 
     // Import VaiTroModule để sử dụng VaiTroService
     VaiTroModule,
+
+    // Import PhanQuyenModule để sử dụng PermissionGuard
+    forwardRef(() => PhanQuyenModule),
 
     // Passport Module
     PassportModule.register({ defaultStrategy: 'jwt' }),

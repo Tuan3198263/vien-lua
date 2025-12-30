@@ -265,6 +265,25 @@ export class NguoiDungController {
 - Luôn có `ngay_tao` và `ngay_cap_nhat`
 - Đặt unique constraint cho các field cần thiết
 - Đặt index cho các field thường xuyên query
+- **Luôn ràng buộc `length` cho các trường varchar:**
+  - Tài khoản, mã: 50 ký tự
+  - Tên, tiêu đề: 100 ký tự
+  - Email: 100 ký tự
+  - Số điện thoại: 20 ký tự
+  - Địa chỉ, ghi chú, mô tả: 255 ký tự
+  - Mật khẩu hash: 255 ký tự
+  - Sử dụng `text` chỉ khi thực sự cần (nội dung dài, không giới hạn)
+
+**Ví dụ:**
+
+```typescript
+@Column({
+  type: 'varchar',
+  length: 255,
+  nullable: true,
+})
+dia_chi: string;
+```
 
 #### 7.2. Relations
 

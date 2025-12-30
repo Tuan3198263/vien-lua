@@ -1,37 +1,21 @@
 /**
  * Enum định nghĩa các hành động (actions) trong hệ thống
- * Đây là các quyền cố định, không thay đổi
+ * Logic đơn giản: 
+ * - Mặc định: Xem (không cần bản ghi trong DB)
+ * - THAO_TAC: Toàn quyền (bao gồm xem, thêm, sửa, xóa)
  */
 export enum HanhDong {
   /**
-   * Xem danh sách
+   * Xem danh sách và chi tiết
+   * Quyền mặc định, không cần bản ghi trong DB
    */
   XEM = 'xem',
 
   /**
-   * Xem chi tiết một bản ghi
+   * Thao tác toàn quyền
+   * Bao gồm: Xem, Thêm, Sửa, Xóa, Xuất file
    */
-  XEM_CHI_TIET = 'xem_chi_tiet',
-
-  /**
-   * Thêm mới bản ghi
-   */
-  THEM = 'them',
-
-  /**
-   * Sửa/Cập nhật bản ghi
-   */
-  SUA = 'sua',
-
-  /**
-   * Xóa bản ghi
-   */
-  XOA = 'xoa',
-
-  /**
-   * Xuất file (Excel, PDF, etc.)
-   */
-  XUAT_FILE = 'xuat_file',
+  THAO_TAC = 'thao_tac',
 }
 
 /**
@@ -44,10 +28,6 @@ export const TAT_CA_HANH_DONG = Object.values(HanhDong);
  * Labels hiển thị cho từng hành động
  */
 export const HANH_DONG_LABELS: Record<HanhDong, string> = {
-  [HanhDong.XEM]: 'Xem danh sách',
-  [HanhDong.XEM_CHI_TIET]: 'Xem chi tiết',
-  [HanhDong.THEM]: 'Thêm mới',
-  [HanhDong.SUA]: 'Sửa/Cập nhật',
-  [HanhDong.XOA]: 'Xóa',
-  [HanhDong.XUAT_FILE]: 'Xuất file',
+  [HanhDong.XEM]: 'Xem',
+  [HanhDong.THAO_TAC]: 'Thao tác toàn quyền',
 };

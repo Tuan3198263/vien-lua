@@ -19,8 +19,8 @@ async function bootstrap() {
   // Bật validation pipe toàn cục
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // Loại bỏ các field không được định nghĩa trong DTO
-      forbidNonWhitelisted: true, // Throw error nếu có field không hợp lệ
+      whitelist: true, // Loại bỏ các field không được định nghĩa trong DTO (trừ khi có [key: string]: any)
+      forbidNonWhitelisted: false, // Không throw error cho additional properties (cho phép dynamic filtering)
       transform: true, // Tự động chuyển đổi kiểu dữ liệu
     }),
   );

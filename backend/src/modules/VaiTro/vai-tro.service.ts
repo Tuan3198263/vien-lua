@@ -85,21 +85,24 @@ export class VaiTroService {
   }
 
   /**
-   * Lấy danh sách vai trò với phân trang, lọc, sắp xếp
-   * @param paginationDto - Thông tin phân trang
+   * Lấy danh sách vai trò với phân trang và lọc theo field
+   * Không còn hỗ trợ sort động, mặc định sort theo ngay_tao DESC
+   * @param paginationDto - Thông tin phân trang và filter
    * @returns Danh sách vai trò với metadata phân trang
    */
   async findAll(paginationDto: PaginationDto): Promise<PaginatedResult<VaiTro>> {
     // Tạo query builder
     const queryBuilder = this.vaiTroRepository.createQueryBuilder('vai_tro');
 
-    // Áp dụng tìm kiếm, sắp xếp, phân trang
+    // Các field được phép filter (trừ id)
+    const allowedFields = ['ma_vai_tro', 'ten_vai_tro', 'mo_ta'];
+
+    // Áp dụng field filtering và phân trang
     QueryUtils.applyQueryOptions(
       queryBuilder,
       paginationDto,
       'vai_tro',
-      ['ma_vai_tro', 'ten_vai_tro', 'mo_ta'], // Các trường có thể tìm kiếm
-      'ngay_tao', // Trường sắp xếp mặc định
+      allowedFields,
     );
 
     // Lấy dữ liệu và tổng số bản ghi

@@ -36,19 +36,19 @@ export class VaiTroController {
    * Method: POST /api/vai-tro
    * Body: CreateVaiTroDto
    * Auth: Required
-   * Permission: Cần quyền THEM trên module VAI_TRO
+   * Permission: Cần quyền THAO_TAC trên module VAI_TRO
    */
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @RequirePermission('VAI_TRO', HanhDong.THEM)
+  @RequirePermission('VAI_TRO', HanhDong.THAO_TAC)
   async create(@Body(ValidationPipe) createVaiTroDto: CreateVaiTroDto) {
     return await this.vaiTroService.create(createVaiTroDto);
   }
 
   /**
-   * API: Lấy danh sách vai trò (có phân trang, tìm kiếm, sắp xếp)
+   * API: Lấy danh sách vai trò (có phân trang, tìm kiếm)
    * Method: GET /api/vai-tro
-   * Query params: page, limit, sort_field, sort_order, search
+   * Query params: page, limit, tai_khoan, ho_ten, email...
    * Auth: Public (có thể bỏ @Public() nếu muốn require auth)
    */
   @Get()
@@ -62,10 +62,10 @@ export class VaiTroController {
    * Method: GET /api/vai-tro/:id
    * Params: id (number)
    * Auth: Required
-   * Permission: Cần quyền XEM_CHI_TIET trên module VAI_TRO
+   * Permission: Quyền XEM (mặc định)
    */
   @Get(':id')
-  @RequirePermission('VAI_TRO', HanhDong.XEM_CHI_TIET)
+  @RequirePermission('VAI_TRO', HanhDong.XEM)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.vaiTroService.findOne(id);
   }
@@ -76,10 +76,10 @@ export class VaiTroController {
    * Params: id (number)
    * Body: UpdateVaiTroDto
    * Auth: Required
-   * Permission: Cần quyền SUA trên module VAI_TRO
+   * Permission: Cần quyền THAO_TAC trên module VAI_TRO
    */
   @Patch(':id')
-  @RequirePermission('VAI_TRO', HanhDong.SUA)
+  @RequirePermission('VAI_TRO', HanhDong.THAO_TAC)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) updateVaiTroDto: UpdateVaiTroDto,
@@ -92,11 +92,11 @@ export class VaiTroController {
    * Method: DELETE /api/vai-tro/:id
    * Params: id (number)
    * Auth: Required
-   * Permission: Cần quyền XOA trên module VAI_TRO
+   * Permission: Cần quyền THAO_TAC trên module VAI_TRO
    */
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @RequirePermission('VAI_TRO', HanhDong.XOA)
+  @RequirePermission('VAI_TRO', HanhDong.THAO_TAC)
   async remove(@Param('id', ParseIntPipe) id: number) {
     return await this.vaiTroService.remove(id);
   }
@@ -106,11 +106,11 @@ export class VaiTroController {
    * Method: DELETE /api/vai-tro
    * Body: { ids: number[] }
    * Auth: Required
-   * Permission: Cần quyền XOA trên module VAI_TRO
+   * Permission: Cần quyền THAO_TAC trên module VAI_TRO
    */
   @Delete()
   @HttpCode(HttpStatus.OK)
-  @RequirePermission('VAI_TRO', HanhDong.XOA)
+  @RequirePermission('VAI_TRO', HanhDong.THAO_TAC)
   async removeMultiple(@Body('ids') ids: number[]) {
     return await this.vaiTroService.removeMultiple(ids);
   }

@@ -22,8 +22,11 @@ import {
 import { RegisterDto, LoginDto } from './dto/auth.dto';
 import { PaginationDto } from '../../shared/dto/pagination.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { PermissionGuard } from '../../common/guards/permission.guard';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { RequirePermission } from '../../common/decorators/require-permission.decorator';
+import { HanhDong } from '../../shared/constants/hanh-dong.enum';
 
 /**
  * Controller xử lý các API liên quan đến Người Dùng (CRUD)
@@ -33,7 +36,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
  * với base path /api/auth
  */
 @Controller('nguoi-dung')
-@UseGuards(JwtAuthGuard) // Áp dụng JWT guard cho tất cả các route
+@UseGuards(JwtAuthGuard, PermissionGuard) // Áp dụng JWT guard và Permission guard
 export class NguoiDungController {
   constructor(private readonly nguoiDungService: NguoiDungService) {}
 
@@ -44,21 +47,32 @@ export class NguoiDungController {
    * Method: POST /api/nguoi-dung
    * Body: CreateNguoiDungDto
    * Auth: Required
+   * Permission: Cần quyền THAO_TAC
    */
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @RequirePermission('NGUOI_DUNG', HanhDong.THAO_TAC)
   async create(@Body(ValidationPipe) createNguoiDungDto: CreateNguoiDungDto) {
     return await this.nguoiDungService.create(createNguoiDungDto);
   }
 
   /**
-   * API: Lấy danh sách người dùng (có phân trang, tìm kiếm, sắp xếp)
+   * API: Lấy danh sách người dùng (có phân trang, filter)
    * Method: GET /api/nguoi-dung
-   * Query params: page, limit, sort_field, sort_order, search
+   * Query params: page, limit, tai_khoan, ho_ten, email...
    * Auth: Required
+   * Permission: Quyền XEM (mặc định)
    */
   @Get()
-  async findAll(@Query(ValidationPipe) paginationDto: PaginationDto) {
+  @RequirePermission('NGUOI_DUNG', HanhDong.XEM)
+  async findAll(@Query() queryParams: any) {
+    // Manual transform page và limit thành number
+    const paginationDto: PaginationDto = {
+      page: queryParams.page ? parseInt(queryParams.page, 10) : 1,
+      limit: queryParams.limit ? parseInt(queryParams.limit, 10) : 10,
+      ...queryParams,
+    };
+    
     return await this.nguoiDungService.findAll(paginationDto);
   }
 
@@ -67,8 +81,10 @@ export class NguoiDungController {
    * Method: GET /api/nguoi-dung/:id
    * Params: id (number)
    * Auth: Required
+   * Permission: Quyền XEM (mặc định)
    */
   @Get(':id')
+  @RequirePermission('NGUOI_DUNG', HanhDong.XEM)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.nguoiDungService.findOne(id);
   }
@@ -79,8 +95,10 @@ export class NguoiDungController {
    * Params: id (number)
    * Body: UpdateNguoiDungDto
    * Auth: Required
+   * Permission: Cần quyền THAO_TAC
    */
   @Patch(':id')
+  @RequirePermission('NGUOI_DUNG', HanhDong.THAO_TAC)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) updateNguoiDungDto: UpdateNguoiDungDto,
@@ -93,9 +111,11 @@ export class NguoiDungController {
    * Method: DELETE /api/nguoi-dung/:id
    * Params: id (number)
    * Auth: Required
+   * Permission: Cần quyền THAO_TAC
    */
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
+  @RequirePermission('NGUOI_DUNG', HanhDong.THAO_TAC)
   async remove(@Param('id', ParseIntPipe) id: number) {
     return await this.nguoiDungService.remove(id);
   }
@@ -105,9 +125,11 @@ export class NguoiDungController {
    * Method: DELETE /api/nguoi-dung
    * Body: { ids: number[] }
    * Auth: Required
+   * Permission: Cần quyền THAO_TAC
    */
   @Delete()
   @HttpCode(HttpStatus.OK)
+  @RequirePermission('NGUOI_DUNG', HanhDong.THAO_TAC)
   async removeMultiple(@Body('ids') ids: number[]) {
     return await this.nguoiDungService.removeMultiple(ids);
   }

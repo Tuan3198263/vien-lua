@@ -103,20 +103,22 @@ export class NguoiDung {
 
   /**
    * Địa chỉ
-   * Tùy chọn
+   * Tùy chọn, tối đa 255 ký tự
    */
   @Column({
-    type: 'text',
+    type: 'varchar',
+    length: 255,
     nullable: true,
   })
   dia_chi: string;
 
   /**
    * Ghi chú
-   * Tùy chọn
+   * Tùy chọn, tối đa 255 ký tự
    */
   @Column({
-    type: 'text',
+    type: 'varchar',
+    length: 255,
     nullable: true,
   })
   ghi_chu: string;
