@@ -1,0 +1,41 @@
+.dang-nhap-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.logo-image {
+  max-width: 120px;
+  height: auto;
+}
+
+.input-icon {
+  color: #52c41a;
+}
+
+/* Giảm khoảng cách label và input */
+.dang-nhap-card .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.dang-nhap-card .ant-form-item-label {
+  padding-bottom: 4px;
+}
+
+.submit-button {
+  height: 44px;
+  font-size: 16px;
+  font-weight: 500;
+  background: #52c41a;
+  border: none;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.submit-button:hover:not(:disabled) {
+  background: #73d13d !important;
+}
+
+.submit-button:active:not(:disabled) {
+  background: #389e0d !important;
+}

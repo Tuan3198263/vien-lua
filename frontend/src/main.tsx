@@ -1,19 +1,27 @@
-import React from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 import { ConfigProvider } from "antd";
 import viVN from "antd/locale/vi_VN";
+import { store } from "./stores";
+import App from "./App";
 import "antd/dist/reset.css";
 
 /**
  * Entry point của ứng dụng React
+ * - Setup Redux Provider
+ * - Setup React Router
  * - Cấu hình Ant Design với ngôn ngữ tiếng Việt
- * - Render component App chính
  */
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ConfigProvider locale={viVN}>
-      <App />
-    </ConfigProvider>
-  </React.StrictMode>
+  <StrictMode>
+    <Provider store={store}>
+      <ConfigProvider locale={viVN}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ConfigProvider>
+    </Provider>
+  </StrictMode>
 );

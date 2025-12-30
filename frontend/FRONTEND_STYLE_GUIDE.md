@@ -1,178 +1,533 @@
 # Frontend Development Style Guide
 
-## 📋 Mục Đích
+## 📋 Công Nghệ
 
-File này định nghĩa các quy tắc và best practices khi phát triển frontend React cho dự án Vien Lua Dashboard.
-
-**⚠️ File này được cập nhật liên tục - luôn kiểm tra phiên bản mới nhất**
-
----
-
-## 🎯 Tổng Quan Dự Án
-
-### Công Nghệ
-
-- **Framework:** React 18 + TypeScript
-- **UI Library:** Ant Design (antd)
+- **Framework:** React 18 + TypeScript + Vite
+- **UI Library:** Ant Design 5
 - **State Management:** Redux Toolkit
-- **HTTP Client:** Axios
 - **Routing:** React Router v6
-- **Build Tool:** Vite
+- **HTTP Client:** Axios
 
-### Loại Ứng Dụng
-
-Dashboard nội bộ với các chức năng:
-
-- CRUD (Create, Read, Update, Delete)
-- Tìm kiếm và lọc dữ liệu
-- Phân trang
-- Quản lý quyền và vai trò
-- Xử lý form phức tạp
+**⚠️ Quy tắc quan trọng:** Ưu tiên sử dụng các tính năng/component có sẵn của Ant Design. Chỉ tự xây dựng khi Ant Design không hỗ trợ.
 
 ---
 
-## 📁 Quy Tắc Đặt Tên
+## �️ Ưu Tiên Sử Dụng Ant Design Components
 
-### 1. Folder và Component
+### Nguyên Tắc Cơ Bản
 
-- **PascalCase, tiếng Việt không dấu**
-- Ví dụ: `DangNhap/`, `NguoiDung/`, `QuanLyVaiTro/`
+**Ưu tiên sử dụng các component của Ant Design thay vì thẻ HTML và CSS thông thường.**
 
-### 2. Files
+Chỉ custom CSS khi:
 
-- **PascalCase.tsx** cho components
-- **camelCase.ts** cho utilities, hooks, services
-- Ví dụ:
-  - `DangNhap.tsx` (component)
-  - `authApi.ts` (service)
-  - `usePagination.ts` (hook)
-  - `formatDate.ts` (utility)
+- Không có component Ant Design phù hợp
+- Ant Design không đáp ứng được thiết kế đẹp hoặc yêu cầu đặc biệt
 
-### 3. Interfaces/Types
+### Layout Components - Hạn Chế `div`
 
-- **PascalCase, tiếng Việt không dấu**
-- Prefix `I` cho interface (optional)
-- Ví dụ: `NguoiDung`, `VaiTro`, `ApiResponse`, `PaginationParams`
+**❌ KHÔNG NÊN:**
 
-### 4. Props Type
-
-- Tên component + `Props`
-- Ví dụ: `DangNhapProps`, `TableNguoiDungProps`
-
-### 5. Variables/Functions
-
-- **camelCase, tiếng Việt không dấu**
-- Ví dụ: `handleDangNhap()`, `danhSachNguoiDung`, `isLoading`
-
-### 6. Constants
-
-- **UPPER_SNAKE_CASE**
-- Ví dụ: `API_BASE_URL`, `DEFAULT_PAGE_SIZE`, `TOKEN_KEY`
-
-**Bảng tổng hợp:**
-| Loại | Format | Ví dụ |
-|------|--------|-------|
-| Component/Folder | PascalCase | `DangNhap`, `NguoiDung` |
-| Component File | PascalCase.tsx | `DangNhap.tsx` |
-| Service/Hook File | camelCase.ts | `authApi.ts` |
-| Interface/Type | PascalCase | `NguoiDung`, `ApiResponse` |
-| Props Type | Component + Props | `DangNhapProps` |
-| Variable/Function | camelCase | `handleSubmit`, `danhSach` |
-| Constant | UPPER_SNAKE | `API_BASE_URL` |
-
----
-
-## 💬 Quy Tắc Comment và Logging
-
-### 1. Comment Tiếng Việt
-
-- **Mọi component, function, logic phức tạp phải có comment tiếng Việt**
-- Comment ngắn gọn, súc tích, dễ hiểu
-- Giải thích "tại sao" chứ không chỉ "cái gì"
-
-**Ví dụ:**
-
-```typescript
-/**
- * Component đăng nhập
- * Xử lý xác thực người dùng và lưu token
- */
-const DangNhap: React.FC = () => {
-  // Gọi API đăng nhập và lưu token vào Redux store
-  const handleDangNhap = async (values: LoginFormValues) => {
-    // Implementation
-  };
-};
+```tsx
+// Tránh dùng div với CSS flexbox thủ công
+<div style={{ display: "flex", justifyContent: "space-between" }}>
+  <div style={{ display: "flex", alignItems: "center" }}>
+    <button>Button</button>
+  </div>
+  <div>
+    <span>Text</span>
+  </div>
+</div>
 ```
 
-### 2. Console.log và Error Messages
+**✅ NÊN LÀM:**
 
-- **Luôn dùng tiếng Việt**
-- Rõ ràng, dễ debug
+```tsx
+import { Flex, Space, Row, Col } from 'antd';
 
-**Ví dụ:**
+// Dùng Flex component
+<Flex justify="space-between" align="center">
+  <Flex align="center">
+    <Button>Button</Button>
+  </Flex>
+  <span>Text</span>
+</Flex>
 
-```typescript
-console.log("Đang gọi API lấy danh sách người dùng...");
-console.error("Lỗi khi đăng nhập:", error);
-throw new Error("Không thể kết nối đến server");
+// Dùng Space cho spacing
+<Space size="large">
+  <Button>Button 1</Button>
+  <Button>Button 2</Button>
+</Space>
+
+// Dùng Row/Col cho grid layout
+<Row gutter={[16, 16]}>
+  <Col span={12}><Card>Content 1</Card></Col>
+  <Col span={12}><Card>Content 2</Card></Col>
+</Row>
 ```
+
+### Các Component Thường Dùng
+
+#### 1. Flex Component
+
+```tsx
+import { Flex } from 'antd';
+
+// Horizontal layout (mặc định)
+<Flex justify="space-between" align="center" gap="middle">
+  <div>Left</div>
+  <div>Right</div>
+</Flex>
+
+// Vertical layout
+<Flex vertical gap="small">
+  <div>Top</div>
+  <div>Bottom</div>
+</Flex>
+```
+
+**Props:** `justify`, `align`, `gap` (small|middle|large), `vertical`, `wrap`
+
+#### 2. Space Component
+
+```tsx
+import { Space } from 'antd';
+
+<Space size="middle">
+  <Button>Button 1</Button>
+  <Button>Button 2</Button>
+</Space>
+
+// Vertical spacing
+<Space direction="vertical" size="large" style={{ width: '100%' }}>
+  <Input placeholder="Input 1" />
+  <Input placeholder="Input 2" />
+</Space>
+```
+
+**Props:** `size` (8px|16px|24px), `direction`, `align`
+
+#### 3. Row & Col (Grid System - 24 columns)
+
+```tsx
+import { Row, Col } from 'antd';
+
+<Row gutter={16}>
+  <Col span={12}><div>50% width</div></Col>
+  <Col span={12}><div>50% width</div></Col>
+</Row>
+
+// Responsive
+<Row gutter={[16, 16]}>
+  <Col xs={24} sm={12} md={8} lg={6}>
+    <Card>Responsive</Card>
+  </Col>
+</Row>
+```
+
+**Props:** `gutter`, `justify`, `align` | **Col:** `span`, `offset`, responsive breakpoints
+
+### Khi Nào Cần CSS?
+
+- Custom style cụ thể (màu sắc, border-radius, shadow...)
+- Animation và transition
+- Pseudo-classes (:hover, :active, :focus...)
+- Media queries phức tạp
+
+```tsx
+// Flex cho layout + CSS cho styling
+<Flex justify="center" align="center" className="custom-container">
+  <Card className="custom-card">
+    <Flex vertical gap="middle">
+      <Title level={3}>Title</Title>
+      <Button type="primary">Action</Button>
+    </Flex>
+  </Card>
+</Flex>
+```
+
+```css
+/* CSS chỉ cho styling, không layout */
+.custom-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.custom-card:hover {
+  transform: translateY(-2px);
+  transition: all 0.3s;
+}
+```
+
+### Best Practices
+
+✅ **DO:**
+
+- Dùng `Flex` cho layout 1 chiều (horizontal/vertical)
+- Dùng `Row/Col` cho grid layout phức tạp
+- Dùng `Space` cho khoảng cách giữa elements
+- Dùng `gap` prop thay vì margin/padding
+- Kết hợp Ant Design components với CSS cho styling
+
+❌ **DON'T:**
+
+- Không dùng `<div style={{ display: 'flex' }}>`
+- Không dùng `<div className="row">` với custom CSS
+- Không hardcode margin/padding (dùng `gap`)
+- Không tạo custom grid khi đã có Row/Col
 
 ---
 
-## 🏗️ Cấu Trúc Component
+## �🎯 Quy Tắc Đặt Tên
 
-### 1. Cấu Trúc File Component Chuẩn
+| Loại              | Format           | Ví dụ                       |
+| ----------------- | ---------------- | --------------------------- |
+| Component/Folder  | PascalCase       | `DangNhap`, `NguoiDung`     |
+| File component    | PascalCase.tsx   | `DangNhap.tsx`              |
+| Service/Hook/Util | camelCase.ts     | `authApi.ts`, `useAuth.ts`  |
+| Interface/Type    | PascalCase       | `NguoiDung`, `LoginDto`     |
+| Variable/Function | camelCase        | `handleSubmit`, `isLoading` |
+| Constant          | UPPER_SNAKE_CASE | `API_BASE_URL`, `ROUTES`    |
+
+**Lưu ý:** Dùng tiếng Việt không dấu cho tên file/folder/biến.
+
+---
+
+## 💻 Cách Viết Component
+
+**Cách viết hiện đại - sử dụng function:**
 
 ```typescript
-import React, { useState, useEffect } from "react";
-import { Button, Form, Input } from "antd";
-import { useAppDispatch } from "@/hooks/useRedux";
+import { useState } from "react";
+import { Button, Form } from "antd";
 
-// ===== INTERFACES =====
 interface DangNhapProps {
   onSuccess?: () => void;
 }
 
-interface LoginFormValues {
-  tai_khoan: string;
-  mat_khau: string;
-}
-
-// ===== COMPONENT =====
 /**
  * Component đăng nhập
  */
-const DangNhap: React.FC<DangNhapProps> = ({ onSuccess }) => {
-  // --- State ---
+function DangNhap({ onSuccess }: DangNhapProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  // --- Hooks ---
-  const dispatch = useAppDispatch();
-  const [form] = Form.useForm();
-
-  // --- Effects ---
-  useEffect(() => {
-    // Kiểm tra nếu đã đăng nhập
-  }, []);
-
-  // --- Handlers ---
-  const handleSubmit = async (values: LoginFormValues) => {
-    // Xử lý đăng nhập
+  const handleSubmit = async (values: any) => {
+    // Logic xử lý
   };
 
-  // --- Render ---
-  return (
-    <div className="dang-nhap-container">
-      <Form form={form} onFinish={handleSubmit}>
-        {/* Form fields */}
-      </Form>
-    </div>
-  );
-};
+  return <Form onFinish={handleSubmit}>{/* UI */}</Form>;
+}
 
 export default DangNhap;
 ```
+
+**Thứ tự trong component:**
+
+1. Imports
+2. Interfaces/Types
+3. Component function
+4. State & Hooks
+5. Handlers
+6. Return JSX
+7. Export
+
+---
+
+## 📁 Cấu Trúc Thư Mục
+
+```
+src/
+├── assets/           # Hình ảnh, fonts
+├── components/       # Shared components
+├── pages/            # Page components
+├── layouts/          # Layout components
+├── router/           # Router configuration
+├── services/         # API services
+│   ├── api/
+│   └── axios.ts
+├── stores/           # Redux slices
+├── hooks/            # Custom hooks
+├── utils/            # Utility functions (notification, etc.)
+├── validators/       # Form validation rules
+├── constants/        # Constants (routes, messages)
+├── interfaces/       # TypeScript interfaces
+└── styles/           # Global styles
+```
+
+---
+
+## 🔐 Validation & Form Handling
+
+### 1. Validation Rules
+
+**Tách validation theo module trong `src/validators/`:**
+
+```typescript
+// validators/auth.validator.ts
+import type { Rule } from "antd/es/form";
+import { MESSAGES } from "@/constants/messages";
+
+export const LOGIN_VALIDATOR = {
+  tai_khoan: [
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
+    { min: 3, message: "Tài khoản phải có ít nhất 3 ký tự" },
+    { max: 50, message: "Tài khoản không được quá 50 ký tự" },
+    { whitespace: true, message: "Tài khoản không được chỉ chứa khoảng trắng" },
+  ] as Rule[],
+
+  mat_khau: [
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
+    { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự" },
+    { whitespace: true, message: "Mật khẩu không được chỉ chứa khoảng trắng" },
+  ] as Rule[],
+};
+```
+
+### 2. Form Component với Notification
+
+**✅ ĐÚNG - Hiển thị notification cho cả validation error:**
+
+```typescript
+import { Form, Input, Button } from "antd";
+import { notifyError, notifySuccess } from "@/utils/notification";
+
+function MyForm() {
+  const [form] = Form.useForm();
+
+  // Xử lý submit thành công
+  const handleSubmit = async (values: any) => {
+    try {
+      await someApi.create(values);
+      notifySuccess("Tạo thành công!");
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.message || "Có lỗi xảy ra";
+      notifyError("Thao tác thất bại", errorMsg);
+    }
+  };
+
+  // Xử lý validation thất bại - QUAN TRỌNG
+  const handleSubmitFailed = (errorInfo: any) => {
+    console.log("Validation thất bại:", errorInfo);
+
+    // Lấy lỗi đầu tiên để hiển thị
+    const firstError = errorInfo.errorFields[0];
+    if (firstError && firstError.errors.length > 0) {
+      notifyError("Lỗi nhập liệu", firstError.errors[0]);
+    }
+  };
+
+  return (
+    <Form
+      form={form}
+      onFinish={handleSubmit}
+      onFinishFailed={handleSubmitFailed} // Bắt buộc
+    >
+      <Form.Item name="field" rules={MY_VALIDATOR.field}>
+        <Input />
+      </Form.Item>
+      <Button type="primary" htmlType="submit">
+        Submit
+      </Button>
+    </Form>
+  );
+}
+```
+
+**❌ SAI - Không xử lý validation error:**
+
+```typescript
+// Thiếu onFinishFailed
+<Form onFinish={handleSubmit}>
+  <Form.Item name="field" rules={[{ required: true }]}>
+    <Input />
+  </Form.Item>
+</Form>
+```
+
+### 3. Validation Rules Thường Dùng
+
+```typescript
+// Required
+{ required: true, message: 'Trường này là bắt buộc' }
+
+// Min/Max length
+{ min: 3, message: 'Phải có ít nhất 3 ký tự' }
+{ max: 50, message: 'Không được quá 50 ký tự' }
+
+// Email
+{ type: 'email' as const, message: 'Email không hợp lệ' }
+
+// Pattern (regex)
+{ pattern: /^[0-9]+$/, message: 'Chỉ được nhập số' }
+
+// Whitespace
+{ whitespace: true, message: 'Không được chỉ chứa khoảng trắng' }
+
+// Custom validator
+{
+  validator: async (_, value) => {
+    if (value && value.length < 6) {
+      return Promise.reject('Mật khẩu quá ngắn');
+    }
+    return Promise.resolve();
+  }
+}
+```
+
+### 4. Quy Tắc Validation
+
+✅ **DO:**
+
+- Luôn thêm `onFinishFailed` handler cho Form
+- Hiển thị notification khi validation thất bại
+- Thêm console.log để debug validation errors
+- Sử dụng message tiếng Việt rõ ràng
+- Thêm `whitespace: true` cho các trường text quan trọng
+- Mỗi module có file validator riêng trong `validators/`
+
+❌ **DON'T:**
+
+- Không bỏ qua `onFinishFailed` - validation error sẽ không được thông báo
+- Không để form submit mà không có validation
+- Không hardcode validation message
+
+---
+
+## 🌐 API Handling
+
+```typescript
+// services/api/authApi.ts
+import axiosInstance from "../axios";
+
+export const authApi = {
+  login: async (data: LoginDto) => {
+    const response = await axiosInstance.post("/auth/login", data);
+    return response.data;
+  },
+};
+
+// Sử dụng trong component
+import { notifySuccess, notifyError } from "@/utils/notification";
+
+try {
+  const response = await authApi.login(values);
+  notifySuccess("Đăng nhập thành công");
+} catch (error: any) {
+  const errorMessage = error.response?.data?.message || "Lỗi không xác định";
+  notifyError("Đăng nhập thất bại", errorMessage);
+}
+```
+
+---
+
+## 🔔 Thông Báo (Notification)
+
+**Sử dụng notification helper (đã cấu hình sẵn):**
+
+```typescript
+import {
+  notifySuccess,
+  notifyError,
+  notifyWarning,
+  notifyInfo,
+} from "@/utils/notification";
+
+// Success - thông báo ngắn
+notifySuccess("Thao tác thành công");
+
+// Success - có mô tả chi tiết
+notifySuccess("Đăng nhập thành công", "Chào mừng bạn quay trở lại");
+
+// Error
+notifyError("Đã xảy ra lỗi", "Vui lòng thử lại sau");
+
+// Warning
+notifyWarning("Cảnh báo", "Dữ liệu chưa được lưu");
+
+// Info
+notifyInfo("Thông tin", "Hệ thống đang bảo trì");
+```
+
+**Cấu hình:**
+
+- File: `src/utils/notification.ts`
+- Vị trí: `topRight`
+- Thời gian hiển thị: 3 giây
+- Số lượng tối đa: 3 notification cùng lúc
+
+---
+
+## 🎨 Styling
+
+1. **CSS Modules** (preferred):
+
+```typescript
+import styles from "./Component.module.css";
+<div className={styles.container} />;
+```
+
+2. **Inline styles** (chỉ cho dynamic styles):
+
+```typescript
+<div style={{ color: isActive ? "green" : "gray" }} />
+```
+
+3. **Ant Design classes**: Sử dụng built-in classes của Ant Design khi có thể
+
+---
+
+## 🛣️ Routing
+
+**File riêng:** `src/router/index.tsx`
+
+```typescript
+import { Routes, Route } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
+
+function AppRouter() {
+  return (
+    <Routes>
+      <Route path={ROUTES.DANG_NHAP} element={<DangNhap />} />
+      {/* ... */}
+    </Routes>
+  );
+}
+```
+
+---
+
+## 💬 Comments và Messages
+
+- **Comments:** Tiếng Việt, ngắn gọn, giải thích "tại sao"
+- **Console.log:** Tiếng Việt
+- **User messages:** Tiếng Việt, lưu trong `constants/messages.ts`
+
+```typescript
+/**
+ * Xử lý đăng nhập
+ */
+const handleLogin = async (values: LoginDto) => {
+  // Gọi API và lưu token
+};
+```
+
+---
+
+## ✅ Checklist
+
+- [ ] Dùng function (không dùng React.FC)
+- [ ] Import chỉ những gì cần
+- [ ] Ưu tiên dùng Ant Design components/features
+- [ ] Validation dùng Ant Design Form
+- [ ] Notification dùng `notifySuccess/Error/Warning/Info`
+- [ ] Validators tách riêng theo module
+- [ ] Routes định nghĩa trong constants
+- [ ] Comments tiếng Việt
+- [ ] TypeScript types đầy đủ
+- [ ] Error handling cho mọi API call
+
+---
+
+**Cập nhật:** 2025-12-30
 
 ### 2. Thứ Tự Trong Component
 
@@ -193,15 +548,12 @@ export default DangNhap;
 - Component nhỏ gọn, tập trung vào 1 nhiệm vụ
 - Tách logic phức tạp ra custom hooks
 - Sử dụng React.memo() cho component render nhiều lần
-- Dùng React.FC<Props> type cho function component
 
 ---
 
 ## 🔧 Code Đồng Bộ Giữa Các Module
 
-### 1. CRUD Pages
-
-Mỗi module CRUD phải có cấu trúc tương tự:
+### 1. CRUD Pages Structure
 
 ```
 pages/NguoiDung/
@@ -209,81 +561,15 @@ pages/NguoiDung/
 ├── ThemMoi.tsx            # Create page
 ├── ChiTiet.tsx            # Detail page
 ├── ChinhSua.tsx           # Edit page
-├── components/
-│   ├── FormNguoiDung.tsx  # Reusable form
-│   ├── FilterBar.tsx      # Search & filter
-│   └── TableColumns.tsx   # Table column config
 └── types.ts               # Local types
 ```
 
-### 2. Cấu Trúc Page List Chuẩn
-
-```typescript
-const DanhSachNguoiDung: React.FC = () => {
-  // State
-  const [dataSource, setDataSource] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-    total: 0,
-  });
-  const [filters, setFilters] = useState({});
-
-  // Fetch data
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await nguoiDungApi.getAll({ ...pagination, ...filters });
-      setDataSource(response.data);
-      setPagination({ ...pagination, total: response.meta.total });
-    } catch (error) {
-      console.error("Lỗi khi lấy dữ liệu:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Effects
-  useEffect(() => {
-    fetchData();
-  }, [pagination.current, pagination.pageSize, filters]);
-
-  // Handlers
-  const handleTableChange = (newPagination, newFilters, sorter) => {
-    setPagination(newPagination);
-  };
-
-  const handleSearch = (values) => {
-    setFilters(values);
-    setPagination({ ...pagination, current: 1 });
-  };
-
-  const handleDelete = async (id) => {
-    // Handle delete with confirmation
-  };
-
-  // Render
-  return (
-    <div>
-      <FilterBar onSearch={handleSearch} />
-      <Table
-        dataSource={dataSource}
-        loading={loading}
-        pagination={pagination}
-        onChange={handleTableChange}
-      />
-    </div>
-  );
-};
-```
-
-### 3. Consistency Rules
+### 2. Consistency Rules
 
 - Tất cả list page phải có: search, filter, pagination, sort
 - Tất cả form phải có validation với antd Form
 - Tất cả API call phải có loading state
-- Tất cả error phải được handle và hiển thị message
+- Tất cả error phải được handle và hiển thị notification
 - Tất cả success action phải có notification
 
 ---
@@ -297,23 +583,18 @@ const DanhSachNguoiDung: React.FC = () => {
 import { getData, postData, updateData, deleteData } from "./coreApi";
 
 export const nguoiDungApi = {
-  // Lấy danh sách với phân trang
   getAll: (params: PaginationParams) =>
     getData<PaginatedResponse<NguoiDung>>(API_URL.NGUOI_DUNG.LIST, params),
 
-  // Lấy chi tiết
   getById: (id: number) =>
     getData<NguoiDung>(`${API_URL.NGUOI_DUNG.DETAIL}/${id}`),
 
-  // Tạo mới
   create: (data: CreateNguoiDungDto) =>
     postData<NguoiDung>(API_URL.NGUOI_DUNG.CREATE, data),
 
-  // Cập nhật
   update: (id: number, data: UpdateNguoiDungDto) =>
     updateData<NguoiDung>(`${API_URL.NGUOI_DUNG.UPDATE}/${id}`, data),
 
-  // Xóa
   delete: (id: number) => deleteData(`${API_URL.NGUOI_DUNG.DELETE}/${id}`),
 };
 ```
@@ -321,12 +602,14 @@ export const nguoiDungApi = {
 ### 2. Error Handling
 
 ```typescript
+import { notifySuccess, notifyError } from "@/utils/notification";
+
 try {
-  const response = await nguoiDungApi.create(data);
-  message.success(MESSAGES.SUCCESS.CREATE);
+  await nguoiDungApi.create(data);
+  notifySuccess(MESSAGES.SUCCESS.CREATE);
 } catch (error: any) {
   const errorMessage = error.response?.data?.message || MESSAGES.ERROR.CREATE;
-  message.error(errorMessage);
+  notifyError("Thao tác thất bại", errorMessage);
   console.error("Lỗi khi tạo người dùng:", error);
 }
 ```
@@ -341,17 +624,24 @@ try {
 
 ## 🎨 Styling Guidelines
 
-### 1. CSS Modules (Recommended)
+### 1. CSS Files
 
-- Sử dụng CSS Modules để tránh conflict
-- File name: `ComponentName.module.css`
+- File name: `ComponentName.css`
+- Sử dụng class names có ý nghĩa
+- Dùng BEM hoặc prefix để tránh conflict
 
-```typescript
-import styles from "./DangNhap.module.css";
+```css
+/* DangNhap.css */
+.dang-nhap-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-<div className={styles.container}>
-  <div className={styles.formWrapper}>{/* Content */}</div>
-</div>;
+.dang-nhap-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
 ```
 
 ### 2. Inline Styles
@@ -361,8 +651,8 @@ import styles from "./DangNhap.module.css";
 
 ### 3. Ant Design Theme
 
-- Override theme trong `App.tsx` hoặc `main.tsx`
-- Sử dụng ConfigProvider
+- Override theme trong `main.tsx` với ConfigProvider
+- Sử dụng token để customize
 
 ---
 
@@ -371,16 +661,11 @@ import styles from "./DangNhap.module.css";
 ### 1. Protected Routes
 
 ```typescript
-// Component PrivateRoute
-const PrivateRoute = ({ children, requiredPermission }) => {
-  const { isAuthenticated, permissions } = useAuth();
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   if (!isAuthenticated) {
-    return <Navigate to="/dang-nhap" />;
-  }
-
-  if (requiredPermission && !hasPermission(permissions, requiredPermission)) {
-    return <Navigate to="/khong-co-quyen" />;
+    return <Navigate to="/dang-nhap" replace />;
   }
 
   return children;
@@ -390,36 +675,34 @@ const PrivateRoute = ({ children, requiredPermission }) => {
 ### 2. Token Management
 
 - Lưu token trong Redux store và localStorage
-- Tự động refresh token khi hết hạn
 - Clear token khi logout hoặc 401 error
+- Tự động gửi token trong headers (xem axiosInstance)
 
 ---
 
 ## ✅ Validation & Form Handling
 
-### 1. Ant Design Form
+### 1. Validator Modules
+
+Tách validators theo module trong `src/validators/`:
 
 ```typescript
-const rules = {
-  tai_khoan: [
-    { required: true, message: "Vui lòng nhập tài khoản" },
-    { min: 3, message: "Tài khoản phải có ít nhất 3 ký tự" },
-  ],
-  mat_khau: [
-    { required: true, message: "Vui lòng nhập mật khẩu" },
-    { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự" },
-  ],
-};
+// src/validators/auth.validator.ts
+import { MESSAGES } from "@/constants/messages";
 
-<Form.Item name="tai_khoan" rules={rules.tai_khoan}>
-  <Input placeholder="Nhập tài khoản" />
-</Form.Item>;
+export const LOGIN_VALIDATOR = {
+  tai_khoan: [{ required: true, message: MESSAGES.ERROR.REQUIRED }],
+  mat_khau: [{ required: true, message: MESSAGES.ERROR.REQUIRED }],
+};
 ```
 
-### 2. Custom Validation
+### 2. Ant Design Form
 
-- Tạo custom validators trong `utils/validators.ts`
-- Reuse validators giữa các form
+```typescript
+<Form.Item name="tai_khoan" rules={LOGIN_VALIDATOR.tai_khoan}>
+  <Input placeholder="Nhập tài khoản" />
+</Form.Item>
+```
 
 ---
 
@@ -433,24 +716,14 @@ const rules = {
 - Lazy load routes và components lớn
 - Debounce search inputs
 
-### 2. Accessibility
-
-- Sử dụng semantic HTML
-- Thêm aria labels khi cần
-- Keyboard navigation support
-
-### 3. Error Boundaries
-
-- Wrap app trong Error Boundary
-- Hiển thị fallback UI khi có error
-
-### 4. Code Splitting
+### 2. Code Splitting
 
 ```typescript
+import { lazy } from "react";
 const DanhSachNguoiDung = lazy(() => import("@/pages/NguoiDung"));
 ```
 
-### 5. Environment Variables
+### 3. Environment Variables
 
 - Sử dụng `.env` files
 - Access với `import.meta.env.VITE_*`
@@ -465,61 +738,32 @@ src/
 ├── components/        # Shared components
 ├── pages/            # Page components
 ├── layouts/          # Layout components
+├── router/           # Routing configuration
 ├── services/         # API services
-│   ├── api/
-│   └── config/
 ├── stores/           # Redux slices
 ├── hooks/            # Custom hooks
 ├── utils/            # Utility functions
+├── validators/       # Form validators
 ├── constants/        # Constants & configs
-├── interfaces/       # TypeScript interfaces
+├── types/            # TypeScript types
 ├── styles/           # Global styles
-├── assets/           # Static assets
-└── types/            # Global types
+└── assets/           # Static assets
 ```
 
 ---
 
 ## 📝 Checklist Trước Khi Commit
 
-- [ ] Code có comment tiếng Việt đầy đủ
+- [ ] Code có comment tiếng Việt khi cần
 - [ ] Tên file/folder tuân theo quy tắc
 - [ ] Component có proper TypeScript types
 - [ ] API calls có error handling
 - [ ] Form có validation đầy đủ
 - [ ] Loading states được xử lý
-- [ ] Console.log/error bằng tiếng Việt
+- [ ] Dùng notification cho user feedback
 - [ ] Không có hardcoded strings (dùng constants)
 - [ ] Không có unused imports/variables
-- [ ] Code format với Prettier
 - [ ] Không có TypeScript errors
-- [ ] Test trên browser (UI/UX hoạt động tốt)
-
----
-
-## 🔄 Git Commit Guidelines
-
-### Commit Message Format
-
-```
-<type>: <subject>
-```
-
-### Types
-
-- `feat`: Tính năng mới
-- `fix`: Sửa lỗi
-- `style`: Cập nhật UI/styling
-- `refactor`: Cải thiện code
-- `docs`: Cập nhật documentation
-
-### Examples
-
-```bash
-feat: thêm trang quản lý người dùng với CRUD đầy đủ
-fix: sửa lỗi phân trang không hoạt động khi search
-style: cập nhật giao diện form đăng nhập
-```
 
 ---
 

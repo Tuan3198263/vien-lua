@@ -58,19 +58,16 @@ const authSlice = createSlice({
      * Đăng nhập thành công
      */
     loginSuccess: (state, action: PayloadAction<LoginResponse>) => {
-      const { access_token, refresh_token, user } = action.payload;
+      const { access_token, user } = action.payload;
 
       state.user = user;
       state.accessToken = access_token;
-      state.refreshToken = refresh_token || null;
+      state.refreshToken = null;
       state.isAuthenticated = true;
       state.isLoading = false;
 
       // Lưu vào localStorage
       localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, access_token);
-      if (refresh_token) {
-        localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refresh_token);
-      }
       localStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(user));
     },
 

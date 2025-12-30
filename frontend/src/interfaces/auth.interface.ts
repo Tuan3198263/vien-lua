@@ -15,7 +15,6 @@ export interface LoginDto {
  */
 export interface LoginResponse {
   access_token: string;
-  refresh_token?: string;
   user: {
     id: number;
     tai_khoan: string;
@@ -27,27 +26,6 @@ export interface LoginResponse {
       ten_vai_tro: string;
     };
   };
-}
-
-/**
- * DTO đăng ký tài khoản
- */
-export interface RegisterDto {
-  tai_khoan: string;
-  mat_khau: string;
-  email: string;
-  ho_ten: string;
-}
-
-/**
- * Response sau khi đăng ký thành công
- */
-export interface RegisterResponse {
-  id: number;
-  tai_khoan: string;
-  email: string;
-  ho_ten: string;
-  message?: string;
 }
 
 /**

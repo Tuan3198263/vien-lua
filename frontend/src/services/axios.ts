@@ -70,19 +70,30 @@ axiosInstance.interceptors.response.use(
 
     // 401 Unauthorized - Token hết hạn hoặc không hợp lệ
     if (status === 401) {
-      console.log('Token hết hạn hoặc không hợp lệ, đăng xuất...');
+      console.log('401 Unauthorized:', error.config?.url);
       
-      // Clear token
-      localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-      localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-      localStorage.removeItem(STORAGE_KEYS.USER_INFO);
+      // Chỉ clear token và redirect nếu KHÔNG phải đang ở trang đăng nhập
+      // Nếu đang ở trang đăng nhập, chỉ trả về lỗi để hiển thị thông báo
+      const currentPath = window.location.pathname;
+      const isLoginPage = currentPath === '/dang-nhap' || currentPath.includes('/dang-nhap');
+      
+      if (!isLoginPage) {
+        console.log('Token hết hạn, đăng xuất và redirect về login...');
+        
+        // Clear token
+        localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+        localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+        localStorage.removeItem(STORAGE_KEYS.USER_INFO);
 
-      // Redirect về trang đăng nhập
-      window.location.href = '/dang-nhap';
+        // Redirect về trang đăng nhập
+        window.location.href = '/dang-nhap';
+      }
 
+      // Trả về lỗi với message từ backend
       return Promise.reject({
-        message: ERROR_MESSAGES.TOKEN_EXPIRED,
+        message: data?.message || ERROR_MESSAGES.TOKEN_EXPIRED,
         statusCode: 401,
+        response: error.response,
       });
     }
 
@@ -91,6 +102,7 @@ axiosInstance.interceptors.response.use(
       return Promise.reject({
         message: data?.message || ERROR_MESSAGES.FORBIDDEN,
         statusCode: 403,
+        response: error.response,
       });
     }
 
@@ -99,6 +111,7 @@ axiosInstance.interceptors.response.use(
       return Promise.reject({
         message: data?.message || 'Không tìm thấy tài nguyên',
         statusCode: 404,
+        response: error.response,
       });
     }
 
@@ -107,14 +120,16 @@ axiosInstance.interceptors.response.use(
       return Promise.reject({
         message: ERROR_MESSAGES.SERVER,
         statusCode: status,
+        response: error.response,
       });
     }
 
-    // Các lỗi khác
+    // Các lỗi khác (400, 422, etc.)
     return Promise.reject({
       message: data?.message || ERROR_MESSAGES.UNKNOWN,
       statusCode: status,
       errors: data?.errors,
+      response: error.response,
     });
   }
 );

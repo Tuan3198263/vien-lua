@@ -18,6 +18,7 @@ export const SUCCESS_MESSAGES = {
  * Thông báo lỗi
  */
 export const ERROR_MESSAGES = {
+  REQUIRED: 'Trường này là bắt buộc',
   UNKNOWN: 'Đã xảy ra lỗi không xác định',
   NETWORK: 'Lỗi kết nối mạng',
   SERVER: 'Lỗi máy chủ',
