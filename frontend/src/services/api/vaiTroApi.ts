@@ -45,4 +45,10 @@ export const vaiTroApi = {
    */
   delete: (id: number) => 
     deleteData(`${API_URL.VAI_TRO}/${id}`),
+
+  /**
+   * Xóa nhiều vai trò
+   */
+  deleteMultiple: (ids: number[]) => 
+    deleteData(API_URL.VAI_TRO, { ids }),
 };

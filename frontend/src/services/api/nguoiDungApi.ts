@@ -47,11 +47,8 @@ export const nguoiDungApi = {
     deleteData(`${API_URL.NGUOI_DUNG}/${id}`),
 
   /**
-   * Tìm kiếm người dùng
+   * Xóa nhiều người dùng
    */
-  search: (keyword: string, params?: PaginationParams) => 
-    getPaginatedData<NguoiDung>(API_URL.NGUOI_DUNG, { 
-      ...params, 
-      search: keyword 
-    }),
+  deleteMultiple: (ids: number[]) => 
+    deleteData(API_URL.NGUOI_DUNG, { ids }),
 };

@@ -22,9 +22,7 @@
   transition: background 0.3s;
 }
 
-.user-info:hover {
-  background: #f0f0f0;
-}
+
 
 .user-name {
   font-weight: 500;

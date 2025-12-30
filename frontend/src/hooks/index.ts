@@ -7,3 +7,4 @@ export * from './useAuth';
 export * from './useMount';
 export * from './useDebounce';
 export * from './usePagination';
+export * from './useDocumentTitle';

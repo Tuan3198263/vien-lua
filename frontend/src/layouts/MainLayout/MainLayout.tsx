@@ -4,10 +4,11 @@
  */
 
 import { useState } from "react";
-import { Layout, Flex } from "antd";
+import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
 import AppHeader from "./AppHeader";
 import AppSider from "./AppSider";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import "./MainLayout.css";
 
 const { Content } = Layout;
@@ -17,6 +18,9 @@ const { Content } = Layout;
  */
 function MainLayout() {
   const [collapsed, setCollapsed] = useState(false);
+
+  // Áp dụng document title động theo route
+  useDocumentTitle();
 
   /**
    * Toggle sidebar collapsed state
@@ -35,19 +39,11 @@ function MainLayout() {
         />
         <Content
           style={{
-            margin: "24px 16px",
+            padding: "24px 16px",
+            minHeight: 360,
           }}
         >
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: "#fff",
-              borderRadius: "8px",
-            }}
-          >
-            <Outlet />
-          </div>
+          <Outlet />
         </Content>
       </Layout>
     </Layout>
