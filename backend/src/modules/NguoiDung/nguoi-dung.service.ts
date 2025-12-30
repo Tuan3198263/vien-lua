@@ -165,6 +165,17 @@ export class NguoiDungService {
   }
 
   /**
+   * Đăng xuất
+   * Ở phía backend chỉ cần trả về message thành công
+   * Token sẽ được xóa ở phía client (localStorage/Redux)
+   */
+  async logout(userId: number): Promise<{ message: string }> {
+    // Có thể thêm logic như: blacklist token, log hoạt động, v.v.
+    // Hiện tại chỉ trả về message
+    return { message: 'Đăng xuất thành công' };
+  }
+
+  /**
    * Lấy thông tin profile người dùng hiện tại
    */
   async getProfile(userId: number): Promise<NguoiDung> {

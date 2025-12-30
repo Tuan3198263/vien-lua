@@ -26,66 +26,16 @@ import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 /**
- * Controller xử lý các API liên quan đến Người Dùng
+ * Controller xử lý các API liên quan đến Người Dùng (CRUD)
  * Base path: /api/nguoi-dung
+ * 
+ * Note: Các API authentication đã được chuyển sang AuthController
+ * với base path /api/auth
  */
 @Controller('nguoi-dung')
 @UseGuards(JwtAuthGuard) // Áp dụng JWT guard cho tất cả các route
 export class NguoiDungController {
   constructor(private readonly nguoiDungService: NguoiDungService) {}
-
-  // ==================== AUTH APIs ====================
-
-  /**
-   * API: Đăng ký tài khoản mới
-   * Method: POST /api/nguoi-dung/auth/register
-   * Body: RegisterDto
-   * Auth: Public
-   */
-  @Post('auth/register')
-  @Public()
-  @HttpCode(HttpStatus.CREATED)
-  async register(@Body(ValidationPipe) registerDto: RegisterDto) {
-    return await this.nguoiDungService.register(registerDto);
-  }
-
-  /**
-   * API: Đăng nhập
-   * Method: POST /api/nguoi-dung/auth/login
-   * Body: LoginDto
-   * Auth: Public
-   */
-  @Post('auth/login')
-  @Public()
-  @HttpCode(HttpStatus.OK)
-  async login(@Body(ValidationPipe) loginDto: LoginDto) {
-    return await this.nguoiDungService.login(loginDto);
-  }
-
-  /**
-   * API: Lấy thông tin profile của user hiện tại
-   * Method: GET /api/nguoi-dung/auth/profile
-   * Auth: Required
-   */
-  @Get('auth/profile')
-  async getProfile(@CurrentUser('id') userId: number) {
-    return await this.nguoiDungService.getProfile(userId);
-  }
-
-  /**
-   * API: Đổi mật khẩu
-   * Method: POST /api/nguoi-dung/auth/change-password
-   * Body: ChangePasswordDto
-   * Auth: Required
-   */
-  @Post('auth/change-password')
-  @HttpCode(HttpStatus.OK)
-  async changePassword(
-    @CurrentUser('id') userId: number,
-    @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
-  ) {
-    return await this.nguoiDungService.changePassword(userId, changePasswordDto);
-  }
 
   // ==================== CRUD APIs ====================
 

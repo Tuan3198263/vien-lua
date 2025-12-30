@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NguoiDungService } from './nguoi-dung.service';
 import { NguoiDungController } from './nguoi-dung.controller';
+import { AuthController } from './auth.controller';
 import { NguoiDung } from './nguoi-dung.entity';
 import { VaiTroModule } from '../VaiTro/vai-tro.module';
 import { JwtStrategy } from '../../common/strategies/jwt.strategy';
@@ -37,7 +38,7 @@ import { JWT_EXPIRATION } from '../../shared/constants/app.constants';
       inject: [ConfigService],
     }),
   ],
-  controllers: [NguoiDungController],
+  controllers: [NguoiDungController, AuthController],
   providers: [NguoiDungService, JwtStrategy],
   exports: [NguoiDungService, JwtStrategy, PassportModule],
 })
