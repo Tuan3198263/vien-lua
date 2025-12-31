@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Backend Service - Sử dụng pre-built image từ Docker Hub
+  backend:
+    image: tuanle2901/vien-lua-backend:latest
+    container_name: vien-lua-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME}
+    restart: unless-stopped
+    networks:
+      - vien-lua-network
+
+  # Frontend Service - Sử dụng pre-built image từ Docker Hub
+  frontend:
+    image: tuanle2901/vien-lua-frontend:latest
+    container_name: vien-lua-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - vien-lua-network
+
+networks:
+  vien-lua-network:
+    driver: bridge

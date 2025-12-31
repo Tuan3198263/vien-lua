@@ -64,7 +64,7 @@ jobs:
 
   # Build Docker images
   docker-build:
-    name: Build Docker Images
+    name: Build & Push Docker Images
     runs-on: ubuntu-latest
     needs: [backend-build, frontend-build]
     if: github.ref == 'refs/heads/main'
@@ -76,13 +76,29 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build backend image
-        working-directory: ./backend
-        run: docker build -t vien-lua-backend:latest .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build frontend image
-        working-directory: ./frontend
-        run: docker build -t vien-lua-frontend:latest .
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: tuanle2901/vien-lua-backend:latest
+          cache-from: type=registry,ref=tuanle2901/vien-lua-backend:buildcache
+          cache-to: type=registry,ref=tuanle2901/vien-lua-backend:buildcache,mode=max
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: tuanle2901/vien-lua-frontend:latest
+          cache-from: type=registry,ref=tuanle2901/vien-lua-frontend:buildcache
+          cache-to: type=registry,ref=tuanle2901/vien-lua-frontend:buildcache,mode=max
 
   # Deploy to AWS EC2
   deploy:
@@ -104,9 +120,9 @@ jobs:
           script: |
             cd /home/ubuntu/vien-lua
             git pull origin main
-            sudo docker-compose down
-            sudo docker-compose up -d --build
-            sudo docker system prune -f
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d
+            docker image prune -f
 
       - name: Verify deployment
         uses: appleboy/ssh-action@master
@@ -115,5 +131,6 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker-compose ps
-            curl -f http://localhost:3001/api || exit 1
+            docker compose -f docker-compose.prod.yml ps
+            docker logs vien-lua-backend
+            curl -f http://localhost:3001 || exit 1
