@@ -29,7 +29,10 @@ export const useDocumentTitle = () => {
       case '/vai-tro':
         pageTitle = ROUTE_LABELS.VAI_TRO;
         break;
-       case '/tai-lieu':
+      case '/hop-dong':
+        pageTitle = ROUTE_LABELS.HOP_DONG;
+        break;
+      case '/tai-lieu':
         pageTitle = ROUTE_LABELS.TAI_LIEU;
         break;
       case '/dang-nhap':

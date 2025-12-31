@@ -78,28 +78,32 @@ export interface FileHeThong {
 }
 
 /**
+ * Entity Hợp Đồng
+ */
+export interface HopDong {
+  id?: number;
+  so_hop_dong: string;
+  doi_tac: string;
+  ghi_chu?: string;
+  nguoi_cap_nhat_id?: number;
+  nguoi_cap_nhat?: {
+    id: number;
+    ho_ten: string;
+  };
+  file_hop_dong?: {
+    id: number;
+    ten_goc: string;
+    url_xem?: string;  // Chỉ có ở findAll, không có ở findOne
+  };
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
  * Thông tin module (dùng cho constants)
  */
 export interface ModuleInfo {
   ma_module: string;
   ten_module: string;
   thu_tu?: number;
-}
-
-/**
- * DTO để tạo / sửa vai trò
- */
-export interface VaiTroDto {
-  ma_vai_tro: string;
-  ten_vai_tro: string;
-  mo_ta?: string;
-  permissions?: QuyenModuleDto[];
-}
-
-/**
- * DTO cho phân quyền theo từng module
- */
-export interface QuyenModuleDto {
-  ma_module: string;
-  hanh_dong: string[];    // Ví dụ: ['xem', 'them', 'xoa']
 }

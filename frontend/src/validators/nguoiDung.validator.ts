@@ -1,6 +1,6 @@
 /**
  * Validation rules cho module Người Dùng
- * Mirror từ backend DTOs để đảm bảo đồng bộ
+ * Mirror từ backend để đảm bảo đồng bộ
  */
 
 import type { Rule } from 'antd/es/form';
@@ -8,7 +8,7 @@ import { MESSAGES } from '@/constants/messages';
 
 /**
  * Validation rules cho người dùng
- * Đồng bộ với CreateNguoiDungDto và UpdateNguoiDungDto ở backend
+ * Đồng bộ với backend validation
  */
 export const NGUOI_DUNG_RULES = {
   /**

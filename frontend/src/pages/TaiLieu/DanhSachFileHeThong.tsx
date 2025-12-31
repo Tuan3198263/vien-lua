@@ -166,9 +166,7 @@ function DanhSachFileHeThong() {
       dataIndex: "loai_file",
       key: "loai_file",
       width: 120,
-      ...getColumnSearchProps("loai_file", "Loại file"),
-      filteredValue: filters.loai_file ? [filters.loai_file] : null,
-      onFilter: () => true,
+      align: "center",
       render: (loaiFile: string) => (
         <Tag color={getFileTypeColor(loaiFile)}>
           {getFileTypeLabel(loaiFile)}
