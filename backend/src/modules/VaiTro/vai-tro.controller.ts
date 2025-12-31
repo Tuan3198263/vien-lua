@@ -42,18 +42,29 @@ export class VaiTroController {
   @HttpCode(HttpStatus.CREATED)
   @RequirePermission('VAI_TRO', HanhDong.THAO_TAC)
   async create(@Body(ValidationPipe) createVaiTroDto: CreateVaiTroDto) {
-    return await this.vaiTroService.create(createVaiTroDto);
+    const data = await this.vaiTroService.create(createVaiTroDto);
+    return {
+      success: true,
+      data,
+    };
   }
 
   /**
    * API: Lấy danh sách vai trò (có phân trang, tìm kiếm)
    * Method: GET /api/vai-tro
-   * Query params: page, limit, tai_khoan, ho_ten, email...
+   * Query params: page, limit, ma_vai_tro, ten_vai_tro...
    * Auth: Public (có thể bỏ @Public() nếu muốn require auth)
    */
   @Get()
   @Public() // Cho phép truy cập không cần đăng nhập
-  async findAll(@Query(ValidationPipe) paginationDto: PaginationDto) {
+  async findAll(@Query() queryParams: any) {
+    // Manual transform page và limit thành number
+    const paginationDto: PaginationDto = {
+      page: queryParams.page ? parseInt(queryParams.page, 10) : 1,
+      limit: queryParams.limit ? parseInt(queryParams.limit, 10) : 10,
+      ...queryParams,
+    };
+    
     return await this.vaiTroService.findAll(paginationDto);
   }
 
@@ -67,7 +78,11 @@ export class VaiTroController {
   @Get(':id')
   @RequirePermission('VAI_TRO', HanhDong.XEM)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.vaiTroService.findOne(id);
+    const data = await this.vaiTroService.findOne(id);
+    return {
+      success: true,
+      data,
+    };
   }
 
   /**
@@ -84,7 +99,11 @@ export class VaiTroController {
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) updateVaiTroDto: UpdateVaiTroDto,
   ) {
-    return await this.vaiTroService.update(id, updateVaiTroDto);
+    const data = await this.vaiTroService.update(id, updateVaiTroDto);
+    return {
+      success: true,
+      data,
+    };
   }
 
   /**
@@ -98,7 +117,11 @@ export class VaiTroController {
   @HttpCode(HttpStatus.OK)
   @RequirePermission('VAI_TRO', HanhDong.THAO_TAC)
   async remove(@Param('id', ParseIntPipe) id: number) {
-    return await this.vaiTroService.remove(id);
+    const data = await this.vaiTroService.remove(id);
+    return {
+      success: true,
+      data,
+    };
   }
 
   /**
@@ -112,6 +135,10 @@ export class VaiTroController {
   @HttpCode(HttpStatus.OK)
   @RequirePermission('VAI_TRO', HanhDong.THAO_TAC)
   async removeMultiple(@Body('ids') ids: number[]) {
-    return await this.vaiTroService.removeMultiple(ids);
+    const data = await this.vaiTroService.removeMultiple(ids);
+    return {
+      success: true,
+      data,
+    };
   }
 }

@@ -53,7 +53,11 @@ export class NguoiDungController {
   @HttpCode(HttpStatus.CREATED)
   @RequirePermission('NGUOI_DUNG', HanhDong.THAO_TAC)
   async create(@Body(ValidationPipe) createNguoiDungDto: CreateNguoiDungDto) {
-    return await this.nguoiDungService.create(createNguoiDungDto);
+    const data = await this.nguoiDungService.create(createNguoiDungDto);
+    return {
+      success: true,
+      data,
+    };
   }
 
   /**
@@ -86,7 +90,11 @@ export class NguoiDungController {
   @Get(':id')
   @RequirePermission('NGUOI_DUNG', HanhDong.XEM)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.nguoiDungService.findOne(id);
+    const data = await this.nguoiDungService.findOne(id);
+    return {
+      success: true,
+      data,
+    };
   }
 
   /**
@@ -103,7 +111,11 @@ export class NguoiDungController {
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) updateNguoiDungDto: UpdateNguoiDungDto,
   ) {
-    return await this.nguoiDungService.update(id, updateNguoiDungDto);
+    const data = await this.nguoiDungService.update(id, updateNguoiDungDto);
+    return {
+      success: true,
+      data,
+    };
   }
 
   /**
@@ -117,7 +129,11 @@ export class NguoiDungController {
   @HttpCode(HttpStatus.OK)
   @RequirePermission('NGUOI_DUNG', HanhDong.THAO_TAC)
   async remove(@Param('id', ParseIntPipe) id: number) {
-    return await this.nguoiDungService.remove(id);
+    const data = await this.nguoiDungService.remove(id);
+    return {
+      success: true,
+      data,
+    };
   }
 
   /**
@@ -131,6 +147,10 @@ export class NguoiDungController {
   @HttpCode(HttpStatus.OK)
   @RequirePermission('NGUOI_DUNG', HanhDong.THAO_TAC)
   async removeMultiple(@Body('ids') ids: number[]) {
-    return await this.nguoiDungService.removeMultiple(ids);
+    const data = await this.nguoiDungService.removeMultiple(ids);
+    return {
+      success: true,
+      data,
+    };
   }
 }

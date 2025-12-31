@@ -95,7 +95,7 @@ export class VaiTroService {
     const queryBuilder = this.vaiTroRepository.createQueryBuilder('vai_tro');
 
     // Các field được phép filter (trừ id)
-    const allowedFields = ['ma_vai_tro', 'ten_vai_tro', 'mo_ta'];
+    const allowedFields = ['ma_vai_tro', 'ten_vai_tro', 'mo_ta', 'ngay_cap_nhat'];
 
     // Áp dụng field filtering và phân trang
     QueryUtils.applyQueryOptions(
@@ -113,13 +113,14 @@ export class VaiTroService {
   }
 
   /**
-   * Lấy một vai trò theo ID
+   * Lấy một vai trò theo ID (kèm quyền)
    * @param id - ID của vai trò
-   * @returns Vai trò tìm được
+   * @returns Vai trò tìm được kèm danh sách quyền
    */
   async findOne(id: number): Promise<VaiTro> {
     const vaiTro = await this.vaiTroRepository.findOne({
       where: { id },
+      relations: ['phanQuyen'],
     });
 
     if (!vaiTro) {
