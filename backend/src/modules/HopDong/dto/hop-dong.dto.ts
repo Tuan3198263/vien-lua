@@ -1,4 +1,6 @@
 import { IsNotEmpty, IsString, MaxLength, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { PaginationDto } from '../../../shared/dto/pagination.dto';
 
 /**
  * DTO để tạo hợp đồng mới
@@ -57,4 +59,39 @@ export class UpdateHopDongDto {
   @IsString({ message: 'Ghi chú phải là chuỗi' })
   @MaxLength(255, { message: 'Ghi chú không được vượt quá 255 ký tự' })
   ghi_chu?: string;
+}
+
+/**
+ * DTO cho filter và phân trang hợp đồng
+ * Kế thừa PaginationDto và thêm các field filter riêng
+ */
+export class FilterHopDongDto extends PaginationDto {
+  /**
+   * Filter theo số hợp đồng (tìm kiếm gần đúng)
+   */
+  @IsOptional()
+  @IsString({ message: 'Số hợp đồng phải là chuỗi' })
+  so_hop_dong?: string;
+
+  /**
+   * Filter theo tên đối tác (tìm kiếm gần đúng)
+   */
+  @IsOptional()
+  @IsString({ message: 'Đối tác phải là chuỗi' })
+  doi_tac?: string;
+
+  /**
+   * Filter theo ghi chú (tìm kiếm gần đúng)
+   */
+  @IsOptional()
+  @IsString({ message: 'Ghi chú phải là chuỗi' })
+  ghi_chu?: string;
+
+  /**
+   * Filter theo ngày cập nhật
+   * Format: YYYY-MM-DD
+   */
+  @IsOptional()
+  @IsString({ message: 'Ngày cập nhật phải là chuỗi' })
+  ngay_cap_nhat?: string;
 }

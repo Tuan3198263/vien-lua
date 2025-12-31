@@ -16,18 +16,19 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { HopDongService } from './hop-dong.service';
-import { CreateHopDongDto, UpdateHopDongDto } from './dto/hop-dong.dto';
+import { CreateHopDongDto, UpdateHopDongDto, FilterHopDongDto } from './dto/hop-dong.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { PermissionGuard } from '../../common/guards/permission.guard';
 import { RequirePermission } from '../../common/decorators/require-permission.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { HanhDong } from '../../shared/constants/hanh-dong.enum';
-import { PaginationDto } from '../../shared/dto/pagination.dto';
 import { FileHeThongService } from '../FileHeThong/file-he-thong.service';
 import { UploadFileDto } from '../FileHeThong/dto/file-he-thong.dto';
 
 /**
  * Controller xử lý các API cho module Hợp Đồng
+ * Tất cả thao tác file đều được thực hiện thông qua các endpoint hợp đồng
+ * Không có endpoint file riêng lẻ
  */
 @Controller('hop-dong')
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -104,8 +105,8 @@ export class HopDongController {
    */
   @Get()
   @RequirePermission('HOP_DONG', HanhDong.XEM)
-  async findAll(@Query() paginationDto: PaginationDto) {
-    const result = await this.hopDongService.findAll(paginationDto);
+  async findAll(@Query() filterDto: FilterHopDongDto) {
+    const result = await this.hopDongService.findAll(filterDto);
     return {
       success: true,
       ...result,

@@ -51,24 +51,66 @@ export class HopDongService {
       nguoi_cap_nhat_id,
     });
 
-    return await this.hopDongRepository.save(hopDong);
+    const saved = await this.hopDongRepository.save(hopDong);
+    
+    // Load lại relation và map
+    const result = await this.hopDongRepository.findOne({
+      where: { id: saved.id },
+      relations: ['nguoi_cap_nhat'],
+    });
+    
+    return this.mapNguoiCapNhat(result);
+  }
+
+  /**
+   * Map thông tin người cập nhật (chỉ lấy id và ho_ten)
+   * @param hopDong - Hợp đồng có relation nguoi_cap_nhat
+   * @returns Hợp đồng với nguoi_cap_nhat đã được map
+   */
+  private mapNguoiCapNhat(hopDong: any): any {
+    return {
+      ...hopDong,
+      nguoi_cap_nhat: hopDong.nguoi_cap_nhat ? {
+        id: hopDong.nguoi_cap_nhat.id,
+        ho_ten: hopDong.nguoi_cap_nhat.ho_ten,
+      } : null,
+    };
+  }
+
+  /**
+   * Lấy file của một hợp đồng (có URL)
+   * @param hopDongId - ID hợp đồng
+   * @returns Thông tin file với URL hoặc null
+   */
+  private async layFileCuaHopDong(hopDongId: number): Promise<any> {
+    return await this.fileHeThongService.layFile({
+      module: 'HOP_DONG',
+      ban_ghi_id: hopDongId,
+      ten_truong: 'file_hop_dong',
+    });
   }
 
   /**
    * Lấy danh sách hợp đồng với phân trang và filter
+   * Bao gồm thông tin file (id, tên, url) của mỗi hợp đồng
    * @param paginationDto - Thông tin phân trang và filter
-   * @returns Danh sách hợp đồng đã phân trang
+   * @returns Danh sách hợp đồng đã phân trang kèm file
    */
   async findAll(
     paginationDto: PaginationDto,
-  ): Promise<PaginatedResult<HopDong>> {
+  ): Promise<PaginatedResult<any>> {
     // Tạo query builder
     const queryBuilder = this.hopDongRepository
       .createQueryBuilder('hop_dong')
       .leftJoinAndSelect('hop_dong.nguoi_cap_nhat', 'nguoi_dung');
 
     // Các field được phép filter
-    const allowedFields = ['so_hop_dong', 'doi_tac', 'ghi_chu'];
+    const allowedFields = [
+      'so_hop_dong',
+      'doi_tac',
+      'ghi_chu',
+      'ngay_cap_nhat',
+    ];
 
     // Áp dụng field filtering và phân trang
     QueryUtils.applyQueryOptions(
@@ -79,18 +121,34 @@ export class HopDongService {
     );
 
     // Lấy dữ liệu và tổng số bản ghi
-    const [data, total] = await queryBuilder.getManyAndCount();
+    const [hopDongs, total] = await queryBuilder.getManyAndCount();
+
+    // Lấy file cho từng hợp đồng và map nguoi_cap_nhat (parallel)
+    const dataWithFiles = await Promise.all(
+      hopDongs.map(async (hopDong) => {
+        const file = await this.layFileCuaHopDong(hopDong.id);
+        const mapped = this.mapNguoiCapNhat(hopDong);
+        return {
+          ...mapped,
+          file_hop_dong: file ? {
+            id: file.id,
+            ten_goc: file.ten_goc,
+            url_xem: file.url_xem,
+          } : null,
+        };
+      }),
+    );
 
     // Tạo kết quả phân trang
-    return QueryUtils.createPaginatedResult(data, total, paginationDto);
+    return QueryUtils.createPaginatedResult(dataWithFiles, total, paginationDto);
   }
 
   /**
    * Lấy thông tin chi tiết hợp đồng theo ID
    * @param id - ID hợp đồng
-   * @returns Thông tin hợp đồng
+   * @returns Thông tin hợp đồng (với nguoi_cap_nhat chỉ có id và ho_ten)
    */
-  async findOne(id: number): Promise<HopDong> {
+  async findOne(id: number): Promise<any> {
     const hopDong = await this.hopDongRepository.findOne({
       where: { id },
       relations: ['nguoi_cap_nhat'],
@@ -100,36 +158,26 @@ export class HopDongService {
       throw new NotFoundException(`Không tìm thấy hợp đồng với ID ${id}`);
     }
 
-    return hopDong;
+    return this.mapNguoiCapNhat(hopDong);
   }
 
   /**
-   * Lấy hợp đồng kèm thông tin file
+   * Lấy hợp đồng kèm thông tin file (không cần URL)
    * @param id - ID hợp đồng
-   * @returns Hợp đồng kèm thông tin file
+   * @returns Hợp đồng kèm thông tin file (id, tên)
    */
   async findOneWithFile(id: number): Promise<any> {
     const hopDong = await this.findOne(id);
 
-    // Chỉ lấy thông tin cần thiết từ nguoi_cap_nhat
-    const result: any = {
-      ...hopDong,
-      nguoi_cap_nhat: hopDong.nguoi_cap_nhat ? {
-        id: hopDong.nguoi_cap_nhat.id,
-        ho_ten: hopDong.nguoi_cap_nhat.ho_ten,
-      } : null,
-    };
-
     // Lấy file của hợp đồng (nếu có)
-    const file = await this.fileHeThongService.layFile({
-      module: 'HOP_DONG',
-      ban_ghi_id: id,
-      ten_truong: 'file_hop_dong',
-    });
+    const file = await this.layFileCuaHopDong(id);
 
     return {
-      ...result,
-      file_hop_dong: file,
+      ...hopDong,
+      file_hop_dong: file ? {
+        id: file.id,
+        ten_goc: file.ten_goc,
+      } : null,
     };
   }
 
@@ -166,7 +214,15 @@ export class HopDongService {
     Object.assign(hopDong, updateHopDongDto);
     hopDong.nguoi_cap_nhat_id = nguoi_cap_nhat_id;
 
-    return await this.hopDongRepository.save(hopDong);
+    const updated = await this.hopDongRepository.save(hopDong);
+    
+    // Load lại relation và map
+    const result = await this.hopDongRepository.findOne({
+      where: { id: updated.id },
+      relations: ['nguoi_cap_nhat'],
+    });
+    
+    return this.mapNguoiCapNhat(result);
   }
 
   /**
