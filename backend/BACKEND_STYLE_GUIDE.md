@@ -335,6 +335,39 @@ export class TenEntity {
 - Sử dụng `@ManyToOne`, `@OneToMany`, `@ManyToMany` phù hợp
 - Đặt `eager: true` cho relations thường xuyên load
 - Dùng `cascade` cẩn thận, tránh xóa nhầm data
+- **QUAN TRỌNG: Khi load relations, CHỈ select các fields cần thiết**
+  - **Không load toàn bộ thông tin relation (tránh lộ thông tin nhạy cảm)**
+  - **Với relation `nguoi_cap_nhat` hoặc `nguoi_tao`: chỉ select `id` và `ho_ten`**
+  - Sử dụng QueryBuilder hoặc `.select()` để chọn fields cụ thể
+  - Ví dụ: `relations: ['nguoi_cap_nhat']` → Sau đó map để chỉ lấy `{ id, ho_ten }`
+
+**Ví dụ đúng:**
+
+```typescript
+// Trong service
+async findOne(id: number): Promise<any> {
+  const entity = await this.repository.findOne({
+    where: { id },
+    relations: ['nguoi_cap_nhat'],
+  });
+
+  // Chỉ lấy thông tin cần thiết từ relation
+  return {
+    ...entity,
+    nguoi_cap_nhat: entity.nguoi_cap_nhat ? {
+      id: entity.nguoi_cap_nhat.id,
+      ho_ten: entity.nguoi_cap_nhat.ho_ten,
+    } : null,
+  };
+}
+```
+
+**Ví dụ SAI (không làm):**
+
+```typescript
+// SAI: Trả về toàn bộ thông tin người dùng
+return entity; // Bao gồm cả tai_khoan, email, mat_khau, etc.
+```
 
 #### 7.3. Transactions
 

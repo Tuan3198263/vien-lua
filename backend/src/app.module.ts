@@ -8,6 +8,7 @@ import { VaiTroModule } from './modules/VaiTro/vai-tro.module';
 import { NguoiDungModule } from './modules/NguoiDung/nguoi-dung.module';
 import { PhanQuyenModule } from './modules/PhanQuyen/phan-quyen.module';
 import { FileHeThongModule } from './modules/FileHeThong/file-he-thong.module';
+import { HopDongModule } from './modules/HopDong/hop-dong.module';
 
 /**
  * Module chính của ứng dụng
@@ -33,6 +34,7 @@ import { FileHeThongModule } from './modules/FileHeThong/file-he-thong.module';
     NguoiDungModule,
     PhanQuyenModule,
     FileHeThongModule,
+    HopDongModule,
    
   ],
   controllers: [AppController],

@@ -6,6 +6,7 @@ import { VaiTro } from '../modules/VaiTro/vai-tro.entity';
 import { NguoiDung } from '../modules/NguoiDung/nguoi-dung.entity';
 import { PhanQuyen } from '../modules/PhanQuyen/phan-quyen.entity';
 import { FileHeThong } from '../modules/FileHeThong/file-he-thong.entity';
+import { HopDong } from '../modules/HopDong/hop-dong.entity';
 
 /**
  * Cấu hình kết nối database
@@ -25,7 +26,7 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('DB_NAME'),
       
       // Import trực tiếp tất cả entities
-      entities: [VaiTro, NguoiDung, PhanQuyen, FileHeThong],
+      entities: [VaiTro, NguoiDung, PhanQuyen, FileHeThong, HopDong],
       
       // Chỉ bật synchronize trong development
       // KHÔNG bật trong production
