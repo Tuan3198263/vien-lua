@@ -14,6 +14,7 @@ export const API_URL = {
   VAI_TRO: '/vai-tro',
   PHAN_QUYEN: '/phan-quyen',
   MODULE_HE_THONG: '/module-he-thong',
+  FILE_HE_THONG: '/file-he-thong',
 } as const;
 
 /**

@@ -25,38 +25,60 @@ export interface NguoiDung {
   gioi_tinh?: GioiTinh;
   dia_chi?: string;
   ghi_chu?: string;
-  vai_tro?: VaiTro;
-  vai_tro_id?: number;
-  ngay_tao?: string;
-  ngay_cap_nhat?: string;
-}
-
-/**
- * Entity Vai Trò (kèm quyền)
- */
-export interface VaiTro {
-  id?: number;
-  ma_vai_tro: string;
-  ten_vai_tro: string;
-  mo_ta?: string;
-  phanQuyen?: PhanQuyen[]; // Relations từ backend
+  vai_tro?: VaiTro;       // Quan hệ đến vai trò
+  vai_tro_id?: number;    // Khóa ngoại
   ngay_tao?: string;
   ngay_cap_nhat?: string;
 }
 
 /**
  * Entity Phân Quyền
+ * (một quyền ứng với 1 module + 1 hành động)
  */
 export interface PhanQuyen {
   id?: number;
   vai_tro_id: number;
-  ma_module: string; // Mã module (VAI_TRO, NGUOI_DUNG...)
-  hanh_dong: string; // Hành động (xem, thao_tac)
+  ma_module: string;   // Ví dụ: VAI_TRO, NGUOI_DUNG
+  hanh_dong: string;   // Ví dụ: xem, them, sua, xoa
   ngay_tao?: string;
+  ngay_cap_nhat?: string;
 }
 
 /**
- * Thông tin module từ constants
+ * Entity Vai Trò
+ */
+export interface VaiTro {
+  id?: number;
+  ma_vai_tro: string;
+  ten_vai_tro: string;
+  mo_ta?: string;
+  phanQuyen?: PhanQuyen[];   // Danh sách quyền
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
+ * Entity File Hệ Thống (lưu metadata file S3)
+ */
+export interface FileHeThong {
+  id: number;
+  ten_goc: string;
+  ten_luu_tru: string;
+  duong_dan_s3: string;
+  kich_thuoc: number;
+  loai_file: string;
+  module: string;
+  ban_ghi_id: number;
+  ten_truong: string;
+  nguoi_cap_nhat: number;
+  nguoi_cap_nhat_info?: NguoiDung;  // relation người cập nhật
+  ngay_tao: string;
+  ngay_cap_nhat: string;
+  url_xem?: string;     // presigned URL
+}
+
+/**
+ * Thông tin module (dùng cho constants)
  */
 export interface ModuleInfo {
   ma_module: string;
@@ -65,7 +87,7 @@ export interface ModuleInfo {
 }
 
 /**
- * DTO để tạo/sửa vai trò
+ * DTO để tạo / sửa vai trò
  */
 export interface VaiTroDto {
   ma_vai_tro: string;
@@ -75,9 +97,9 @@ export interface VaiTroDto {
 }
 
 /**
- * DTO cho quyền của 1 module
+ * DTO cho phân quyền theo từng module
  */
 export interface QuyenModuleDto {
   ma_module: string;
-  hanh_dong: string[]; // Mảng các hành động (xem, thao_tac)
+  hanh_dong: string[];    // Ví dụ: ['xem', 'them', 'xoa']
 }

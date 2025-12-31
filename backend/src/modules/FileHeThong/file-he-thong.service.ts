@@ -191,26 +191,56 @@ export class FileHeThongService {
    * @returns Danh sách file đã phân trang (kèm url_xem)
    */
   async findAll(paginationDto: PaginationDto): Promise<PaginatedResult<FileResponseDto>> {
-    const { page = 1, limit = 10, ...filters } = paginationDto;
-
     // Tạo query builder
-    const queryBuilder = this.fileHeThongRepository.createQueryBuilder('file');
+    const queryBuilder = this.fileHeThongRepository
+      .createQueryBuilder('file');
 
-    // Áp dụng filter động
-    QueryUtils.applyFieldFilters(queryBuilder, filters, 'file', [
+    // Các field được phép filter
+    const allowedFields = [
       'module',
       'loai_file',
       'ten_goc',
-    ]);
+    ];
 
-    // Sort mặc định theo ngay_tao DESC
-    queryBuilder.orderBy('file.ngay_tao', 'DESC');
+    // Áp dụng field filtering và phân trang
+    QueryUtils.applyQueryOptions(
+      queryBuilder,
+      paginationDto,
+      'file',
+      allowedFields,
+    );
 
-    // Phân trang
-    const [data, total] = await queryBuilder
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getManyAndCount();
+    // Lấy dữ liệu và tổng số bản ghi
+    const [entities, total] = await queryBuilder.getManyAndCount();
+
+    // Load thông tin người cập nhật cho từng file
+    const data = await Promise.all(
+      entities.map(async (file) => {
+        let nguoi_cap_nhat_info = null;
+        
+        if (file.nguoi_cap_nhat) {
+          // Query để lấy thông tin người dùng
+          const nguoiDung = await this.fileHeThongRepository.manager
+            .createQueryBuilder()
+            .select(['nguoi_dung.id', 'nguoi_dung.ho_ten'])
+            .from('nguoi_dung', 'nguoi_dung')
+            .where('nguoi_dung.id = :id', { id: file.nguoi_cap_nhat })
+            .getRawOne();
+          
+          if (nguoiDung) {
+            nguoi_cap_nhat_info = {
+              id: nguoiDung.nguoi_dung_id,
+              ho_ten: nguoiDung.nguoi_dung_ho_ten,
+            };
+          }
+        }
+
+        return {
+          ...file,
+          nguoi_cap_nhat_info,
+        };
+      })
+    );
 
     // Tạo presigned URL cho từng file
     const dataWithUrls = await Promise.all(

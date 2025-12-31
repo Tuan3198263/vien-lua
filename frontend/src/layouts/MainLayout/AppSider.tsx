@@ -16,6 +16,7 @@ import {
   MenuUnfoldOutlined,
   LeftOutlined,
   RightOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import { ROUTES, ROUTE_LABELS } from "@/constants/routes";
 import logoImage from "@/assets/logo.png";
@@ -46,6 +47,11 @@ function AppSider({ collapsed, onCollapse }: AppSiderProps) {
       key: ROUTES.TRANG_CHU,
       icon: <HomeOutlined />,
       label: ROUTE_LABELS.TRANG_CHU,
+    },
+    {
+      key: ROUTES.TAI_LIEU,
+      icon: <FileTextOutlined />,
+      label: ROUTE_LABELS.TAI_LIEU,
     },
     {
       key: "phan-quyen",

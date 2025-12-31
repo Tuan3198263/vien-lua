@@ -10,6 +10,7 @@ import DangNhap from "@/pages/DangNhap/DangNhap";
 import TrangChu from "@/pages/TrangChu/TrangChu";
 import NguoiDung from "@/pages/NguoiDung/NguoiDung";
 import VaiTro from "@/pages/VaiTro/VaiTro";
+import TaiLieu from "@/pages/TaiLieu/TaiLieu";
 import KhongCoQuyen from "@/pages/KhongCoQuyen/KhongCoQuyen";
 import { ROUTES } from "@/constants/routes";
 
@@ -33,6 +34,7 @@ function AppRouter() {
         <Route path={ROUTES.TRANG_CHU} element={<TrangChu />} />
         <Route path={ROUTES.NGUOI_DUNG} element={<NguoiDung />} />
         <Route path={ROUTES.VAI_TRO} element={<VaiTro />} />
+        <Route path={ROUTES.TAI_LIEU} element={<TaiLieu />} />
       </Route>
 
       {/* 403 page */}

@@ -14,6 +14,7 @@ export const ROUTES = {
   TRANG_CHU: '/',
   NGUOI_DUNG: '/nguoi-dung',
   VAI_TRO: '/vai-tro',
+  TAI_LIEU: '/tai-lieu',
 } as const;
 
 /**
@@ -24,6 +25,7 @@ export const ROUTE_LABELS = {
   PHAN_QUYEN: 'Phân quyền',
   NGUOI_DUNG: 'Người dùng',
   VAI_TRO: 'Vai trò',
+  TAI_LIEU: 'Tài liệu',
   DANG_NHAP: 'Đăng nhập',
   KHONG_CO_QUYEN: 'Không có quyền truy cập',
 } as const;
