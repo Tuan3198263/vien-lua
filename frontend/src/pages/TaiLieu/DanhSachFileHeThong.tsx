@@ -154,7 +154,7 @@ function DanhSachFileHeThong() {
       ...getColumnSearchProps("ten_goc", "Tên file"),
       filteredValue: filters.ten_goc ? [filters.ten_goc] : null,
       onFilter: () => true,
-      render: (text: string, record: FileHeThong) => (
+      render: (text: string) => (
         <Space>
           <FileTextOutlined />
           <span>{text}</span>
