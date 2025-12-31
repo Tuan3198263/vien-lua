@@ -131,6 +131,6 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker compose -f docker-compose.prod.yml ps
-            docker logs vien-lua-backend
-            curl -f http://localhost:3001 || exit 1
+            docker compose -f /home/ubuntu/vien-lua/docker-compose.prod.yml ps
+            docker logs vien-lua-backend --tail 20
+            curl -f http://localhost:3001/api || exit 1
