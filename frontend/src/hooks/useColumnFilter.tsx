@@ -116,7 +116,7 @@ export const useColumnFilter = () => {
       const parsedValue = selectedKeys[0]
         ? typeof selectedKeys[0] === "string"
           ? dayjs(selectedKeys[0])
-          : (selectedKeys[0] as Dayjs)
+          : dayjs(selectedKeys[0] as any)
         : null;
 
       return (

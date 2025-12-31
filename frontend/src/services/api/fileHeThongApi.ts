@@ -4,8 +4,7 @@
 
 import { 
   FileHeThong,
-  PaginationParams,
-  PaginatedResponse 
+  PaginationParams
 } from '@/interfaces';
 import { API_URL } from '@/config/api.config';
 import { getData, getPaginatedData } from './coreApi';

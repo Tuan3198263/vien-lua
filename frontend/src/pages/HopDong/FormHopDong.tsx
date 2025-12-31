@@ -29,7 +29,7 @@ interface FormHopDongProps {
  */
 function FormHopDong({
   form,
-  mode,
+  mode: _mode,
   initialValues,
   onFileChange,
   onDeleteCurrentFile,

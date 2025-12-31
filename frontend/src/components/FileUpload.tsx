@@ -5,11 +5,7 @@
 
 import React, { useState } from "react";
 import { Upload, Button, Space, Typography, message } from "antd";
-import {
-  UploadOutlined,
-  FileOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps, UploadFile } from "antd";
 import { FILE_VALIDATION } from "@/validators/hopDong.validator";
 

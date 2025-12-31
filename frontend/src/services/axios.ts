@@ -2,7 +2,7 @@
  * Axios instance với interceptors
  */
 
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { API_BASE_URL, API_TIMEOUT } from '@/config/api.config';
 import { STORAGE_KEYS } from '@/config/app.config';
 import { ApiErrorResponse } from '@/interfaces';
