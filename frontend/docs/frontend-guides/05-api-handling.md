@@ -27,17 +27,37 @@ export const nguoiDungApi = {
 
 ## Error Handling
 
+**Sử dụng constants từ messages.ts:**
+
 ```typescript
 import { notifySuccess, notifyError } from "@/utils/notification";
+import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "@/constants/messages";
 
 try {
-  const response = await authApi.login(values);
-  notifySuccess("Đăng nhập thành công");
+  await api.create(values);
+  notifySuccess(SUCCESS_MESSAGES.CREATE);
 } catch (error: any) {
-  const errorMessage = error.response?.data?.message || "Lỗi không xác định";
-  notifyError("Đăng nhập thất bại", errorMessage);
-  console.error("Lỗi:", error);
+  const errorMessage = error.response?.data?.message || error.message;
+  notifyError(ERROR_MESSAGES.CREATE_FAILED, errorMessage);
 }
+```
+
+**Messages constants:**
+
+```typescript
+// constants/messages.ts
+export const SUCCESS_MESSAGES = {
+  CREATE: "Thêm thành công",
+  UPDATE: "Cập nhật thành công",
+  DELETE: "Xóa thành công",
+};
+
+export const ERROR_MESSAGES = {
+  CREATE_FAILED: "Thêm thất bại",
+  UPDATE_FAILED: "Cập nhật thất bại",
+  DELETE_FAILED: "Xóa thất bại",
+  FETCH_FAILED: "Lấy dữ liệu thất bại",
+};
 ```
 
 ---

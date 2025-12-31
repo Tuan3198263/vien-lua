@@ -56,13 +56,19 @@ export default DangNhap;
 
 ```
 pages/NguoiDung/
-├── NguoiDung.tsx          # Main component
-├── DanhSachNguoiDung.tsx  # List/Table component
-├── FormNguoiDung.tsx      # Form component (reusable)
-├── ThemNguoiDung.tsx      # Create page
-├── SuaNguoiDung.tsx       # Edit page
-└── types.ts               # Local types
+├── NguoiDung.tsx          # Main container (handlers, state)
+├── DanhSachNguoiDung.tsx  # Table with filters
+├── FormNguoiDung.tsx      # Reusable form component
+├── ThemNguoiDung.tsx      # Create modal
+└── SuaNguoiDung.tsx       # Edit modal
 ```
+
+**Pattern:**
+
+- **Container (NguoiDung.tsx)**: Quản lý state, API calls, handlers
+- **DanhSach**: Table + filters, gọi `onEdit`/`onDelete` từ props
+- **Form**: Reusable UI, nhận `form` instance qua props
+- **Modal (Them/Sua)**: Wrap Form với Modal, xử lý submit logic
 
 ---
 

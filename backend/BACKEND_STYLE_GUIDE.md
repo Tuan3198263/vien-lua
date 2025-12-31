@@ -191,10 +191,24 @@ if (existingUser) {
 
 #### 5.4. Response Format
 
-- Luôn trả về object (không trả về array trực tiếp)
-- Có phân trang: trả về `{ data: [], meta: {} }`
-- Không phân trang: trả về object hoặc array
-- Success message: `{ message: 'Thao tác thành công' }`
+- **Luôn wrap response với format `{ success: true, data: ... }`**
+- Có phân trang: `{ data: [], meta: { current_page, per_page, total, total_pages, has_previous, has_next } }`
+- Chi tiết/Tạo mới/Cập nhật: `{ success: true, data: {...} }`
+- Xóa: `{ success: true, data: { message: 'Xóa thành công' } }`
+
+**Ví dụ:**
+
+```typescript
+// Controller
+@Get(':id')
+async findOne(@Param('id') id: number) {
+  const data = await this.service.findOne(id);
+  return {
+    success: true,
+    data,
+  };
+}
+```
 
 ---
 
@@ -202,9 +216,8 @@ if (existingUser) {
 
 #### 6.1. Authentication & Authorization
 
-- Luôn dùng `@UseGuards(JwtAuthGuard)` cho protected routes
-- Dùng `@Public()` cho public routes
-- Dùng `@UseGuards(JwtAuthGuard, PermissionGuard)` khi cần kiểm tra quyền
+- Luôn dùng `@UseGuards(JwtAuthGuard, PermissionGuard)` cho protected routes
+- Dùng `@Public()` cho public routes (login, register, modules list)
 - Dùng `@RequirePermission(module, action)` để chỉ định quyền cần thiết
 
 **Ví dụ:**
@@ -214,13 +227,13 @@ if (existingUser) {
 @UseGuards(JwtAuthGuard, PermissionGuard)
 export class NguoiDungController {
   @Post()
-  @RequirePermission("NGUOI_DUNG", HanhDong.THEM)
+  @RequirePermission("NGUOI_DUNG", HanhDong.THAO_TAC)
   async create(@Body() dto: CreateNguoiDungDto) {
     // ...
   }
 
   @Get()
-  @Public() // Route công khai
+  @RequirePermission("NGUOI_DUNG", HanhDong.XEM)
   async findAll() {
     // ...
   }
@@ -263,6 +276,7 @@ export class NguoiDungController {
 
 - Mỗi entity phải có primary key `id`
 - Luôn có `ngay_tao` và `ngay_cap_nhat`
+- **Luôn có cột `nguoi_cap_nhat_id` (foreign key tới bảng nguoi_dung) để ghi nhận người thực hiện cập nhật cuối cùng**
 - Đặt unique constraint cho các field cần thiết
 - Đặt index cho các field thường xuyên query
 - **Luôn ràng buộc `length` cho các trường varchar:**

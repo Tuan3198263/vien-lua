@@ -29,7 +29,39 @@ export const LOGIN_VALIDATOR = {
 
 ## Form Component với Notification
 
-### ✅ ĐÚNG - Hiển thị notification cho cả validation error:
+### ✅ ĐÚNG - Modal Pattern (Hiện tại):
+
+```typescript
+import { Modal, Form } from "antd";
+import { notifyError } from "@/utils/notification";
+
+function ThemModal({ open, onSubmit, onCancel }) {
+  const [form] = Form.useForm();
+
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      onSubmit(values);
+      form.resetFields();
+    } catch (error: any) {
+      // Hiển thị notification khi validation thất bại
+      if (error.errorFields && error.errorFields.length > 0) {
+        notifyError("Lỗi nhập liệu", error.errorFields[0].errors[0]);
+      }
+    }
+  };
+
+  return (
+    <Modal open={open} onOk={handleSubmit} onCancel={onCancel}>
+      <Form form={form}>
+        <FormContent />
+      </Form>
+    </Modal>
+  );
+}
+```
+
+### ✅ ĐÚNG - Page Form Pattern:
 
 ```typescript
 import { Form, Input, Button } from "antd";
@@ -38,25 +70,19 @@ import { notifyError, notifySuccess } from "@/utils/notification";
 function MyForm() {
   const [form] = Form.useForm();
 
-  // Xử lý submit thành công
   const handleSubmit = async (values: any) => {
     try {
       await someApi.create(values);
-      notifySuccess("Tạo thành công!");
+      notifySuccess("Thêm thành công");
     } catch (error: any) {
       const errorMsg = error.response?.data?.message || "Có lỗi xảy ra";
-      notifyError("Thao tác thất bại", errorMsg);
+      notifyError("Thất bại", errorMsg);
     }
   };
 
-  // Xử lý validation thất bại - QUAN TRỌNG
   const handleSubmitFailed = (errorInfo: any) => {
-    console.log("Validation thất bại:", errorInfo);
-
-    // Lấy lỗi đầu tiên để hiển thị
-    const firstError = errorInfo.errorFields[0];
-    if (firstError && firstError.errors.length > 0) {
-      notifyError("Lỗi nhập liệu", firstError.errors[0]);
+    if (errorInfo.errorFields && errorInfo.errorFields.length > 0) {
+      notifyError("Lỗi nhập liệu", errorInfo.errorFields[0].errors[0]);
     }
   };
 
@@ -64,7 +90,7 @@ function MyForm() {
     <Form
       form={form}
       onFinish={handleSubmit}
-      onFinishFailed={handleSubmitFailed} // Bắt buộc
+      onFinishFailed={handleSubmitFailed}
     >
       <Form.Item name="field" rules={MY_VALIDATOR.field}>
         <Input />
