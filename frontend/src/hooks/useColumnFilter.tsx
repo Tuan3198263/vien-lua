@@ -2,7 +2,7 @@ import { Input, Button, Space, DatePicker } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import type { ColumnType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import dayjs, { type Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 /**
  * Custom hook cho column filtering với Ant Design Table
@@ -25,7 +25,7 @@ export const useColumnFilter = () => {
    * Xử lý khi confirm filter
    */
   const handleSearch = (
-    selectedKeys: string[],
+    _selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void
   ) => {
     confirm();

@@ -3,7 +3,7 @@
  */
 
 import axiosInstance from '../axios';
-import { ApiSuccessResponse, PaginationParams } from '@/interfaces';
+import { ApiSuccessResponse, PaginatedResponse, PaginationParams } from '@/interfaces';
 
 /**
  * GET request - Lấy dữ liệu

@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from "react";
-import { Upload, Button, Space, Typography, message } from "antd";
+import { Upload, Button, Typography, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps, UploadFile } from "antd";
 import { FILE_VALIDATION } from "@/validators/hopDong.validator";
