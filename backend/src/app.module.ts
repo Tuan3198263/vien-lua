@@ -7,6 +7,7 @@ import { DatabaseConfig } from './config/database.config';
 import { VaiTroModule } from './modules/VaiTro/vai-tro.module';
 import { NguoiDungModule } from './modules/NguoiDung/nguoi-dung.module';
 import { PhanQuyenModule } from './modules/PhanQuyen/phan-quyen.module';
+import { FileHeThongModule } from './modules/FileHeThong/file-he-thong.module';
 
 /**
  * Module chính của ứng dụng
@@ -31,6 +32,7 @@ import { PhanQuyenModule } from './modules/PhanQuyen/phan-quyen.module';
     VaiTroModule,
     NguoiDungModule,
     PhanQuyenModule,
+    FileHeThongModule,
    
   ],
   controllers: [AppController],
