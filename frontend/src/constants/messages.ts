@@ -30,6 +30,14 @@ export const ERROR_MESSAGES = {
   UNAUTHORIZED: 'Bạn chưa đăng nhập',
   FORBIDDEN: 'Bạn không có quyền thực hiện thao tác này',
   TOKEN_EXPIRED: 'Phiên đăng nhập đã hết hạn',
+  // Validation errors - đồng bộ với backend entity validation
+  MAX_LENGTH_255: 'Trường này tối đa 255 ký tự',
+  MAX_LENGTH_100: 'Trường này tối đa 100 ký tự',
+  MAX_LENGTH_50: 'Trường này tối đa 50 ký tự',
+  MAX_VALUE: 'Giá trị không vượt quá', // Sử dụng: `${ERROR_MESSAGES.MAX_VALUE} ${max}`
+  MIN_VALUE_ZERO: 'Giá trị phải lớn hơn hoặc bằng 0',
+  NEGATIVE_NOT_ALLOWED: 'Giá trị không được âm',
+  INVALID_NUMBER: 'Giá trị phải là số',
 } as const;
 
 /**

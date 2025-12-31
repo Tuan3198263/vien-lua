@@ -286,18 +286,49 @@ export class NguoiDungController {
   - Số điện thoại: 20 ký tự
   - Địa chỉ, ghi chú, mô tả: 255 ký tự
   - Mật khẩu hash: 255 ký tự
-  - Sử dụng `text` chỉ khi thực sự cần (nội dung dài, không giới hạn)
+  - **Mặc định: 255 ký tự cho các trường varchar khác**
+- **Validation cho cột số:**
+  - Luôn đặt giới hạn tối đa (VD: `unsigned: true` hoặc `@Max(2147483647)`)
+  - Không cho phép giá trị âm nếu không cần thiết (`@Min(0)`)
+  - Dùng `int` cho số nguyên, `decimal` cho số thập phân
 
 **Ví dụ:**
 
 ```typescript
-@Column({
-  type: 'varchar',
-  length: 255,
-  nullable: true,
-})
-dia_chi: string;
+@Entity("ten_bang")
+export class TenEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({
+    type: "varchar",
+    length: 255, // Mặc định cho varchar
+  })
+  ten_truong: string;
+
+  @Column({
+    type: "int",
+    unsigned: true, // Không cho phép âm
+    default: 0,
+  })
+  so_luong: number;
+
+  @ManyToOne(() => NguoiDung, { nullable: true })
+  @JoinColumn({ name: "nguoi_cap_nhat_id" })
+  nguoi_cap_nhat: NguoiDung;
+
+  @Column({ nullable: true })
+  nguoi_cap_nhat_id: number;
+
+  @CreateDateColumn({ type: "datetime" })
+  ngay_tao: Date;
+
+  @UpdateDateColumn({ type: "datetime" })
+  ngay_cap_nhat: Date;
+}
 ```
+
+**Lưu ý:** Module Vai Trò và Người Dùng đã triển khai trước khi có rules này, các module sau phải tuân theo đầy đủ.
 
 #### 7.2. Relations
 
