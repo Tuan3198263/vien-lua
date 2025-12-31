@@ -1,0 +1,55 @@
+/**
+ * Global styles cho toàn bộ ứng dụng
+ * Bao gồm custom scrollbar và các styles chung
+ */
+
+/* Custom Scrollbar - Áp dụng cho toàn bộ app */
+* {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #bfbfbf #f0f0f0;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #bfbfbf;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #8c8c8c;
+}
+
+*::-webkit-scrollbar-corner {
+  background: #f0f0f0;
+}
+
+/* Modal scrollbar */
+.ant-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ant-modal-body::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+}
+
+.ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+/* Table scrollbar */
+.ant-table-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}

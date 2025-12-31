@@ -168,7 +168,12 @@ function FormNguoiDung({
             name="dia_chi"
             rules={NGUOI_DUNG_RULES.dia_chi}
           >
-            <TextArea placeholder="Nhập địa chỉ" rows={2} />
+            <TextArea
+              placeholder="Nhập địa chỉ"
+              rows={2}
+              showCount
+              maxLength={255}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -180,7 +185,12 @@ function FormNguoiDung({
             name="ghi_chu"
             rules={NGUOI_DUNG_RULES.ghi_chu}
           >
-            <TextArea placeholder="Nhập ghi chú" rows={2} />
+            <TextArea
+              placeholder="Nhập ghi chú"
+              rows={2}
+              showCount
+              maxLength={255}
+            />
           </Form.Item>
         </Col>
       </Row>

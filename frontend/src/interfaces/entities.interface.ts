@@ -32,13 +32,14 @@ export interface NguoiDung {
 }
 
 /**
- * Entity Vai Trò
+ * Entity Vai Trò (kèm quyền)
  */
 export interface VaiTro {
   id?: number;
   ma_vai_tro: string;
   ten_vai_tro: string;
   mo_ta?: string;
+  phanQuyen?: PhanQuyen[]; // Relations từ backend
   ngay_tao?: string;
   ngay_cap_nhat?: string;
 }
@@ -49,22 +50,34 @@ export interface VaiTro {
 export interface PhanQuyen {
   id?: number;
   vai_tro_id: number;
-  module_he_thong_id: number;
-  hanh_dong: string;
-  vai_tro?: VaiTro;
-  module_he_thong?: ModuleHeThong;
+  ma_module: string; // Mã module (VAI_TRO, NGUOI_DUNG...)
+  hanh_dong: string; // Hành động (xem, thao_tac)
   ngay_tao?: string;
-  ngay_cap_nhat?: string;
 }
 
 /**
- * Entity Module Hệ Thống
+ * Thông tin module từ constants
  */
-export interface ModuleHeThong {
-  id?: number;
+export interface ModuleInfo {
   ma_module: string;
   ten_module: string;
+  thu_tu?: number;
+}
+
+/**
+ * DTO để tạo/sửa vai trò
+ */
+export interface VaiTroDto {
+  ma_vai_tro: string;
+  ten_vai_tro: string;
   mo_ta?: string;
-  ngay_tao?: string;
-  ngay_cap_nhat?: string;
+  permissions?: QuyenModuleDto[];
+}
+
+/**
+ * DTO cho quyền của 1 module
+ */
+export interface QuyenModuleDto {
+  ma_module: string;
+  hanh_dong: string[]; // Mảng các hành động (xem, thao_tac)
 }

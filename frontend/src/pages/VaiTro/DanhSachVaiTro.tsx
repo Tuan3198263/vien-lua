@@ -1,35 +1,30 @@
 /**
- * Danh sách Người Dùng
+ * Danh sách Vai Trò
  * Table với column filtering, pagination
- * Version 2.0: Xóa bộ lọc chung, sử dụng filter dropdown cho từng cột
  */
 
 import { useState, useEffect } from "react";
 import { Table, Space, Button, Tooltip, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
-import { NguoiDung } from "@/interfaces";
-import { nguoiDungApi } from "@/services/api/nguoiDungApi";
+import { VaiTro } from "@/interfaces";
+import { vaiTroApi } from "@/services/api/vaiTroApi";
 import { notifyError } from "@/utils/notification";
 import dayjs from "dayjs";
 import { useColumnFilter } from "@/hooks/useColumnFilter";
 
-interface DanhSachNguoiDungProps {
-  onEdit: (record: NguoiDung) => void;
+interface DanhSachVaiTroProps {
+  onEdit: (record: VaiTro) => void;
   onDelete: (id: number) => void;
   refresh?: number;
 }
 
 /**
- * Component Danh sách người dùng
+ * Component Danh sách vai trò
  */
-function DanhSachNguoiDung({
-  onEdit,
-  onDelete,
-  refresh,
-}: DanhSachNguoiDungProps) {
+function DanhSachVaiTro({ onEdit, onDelete, refresh }: DanhSachVaiTroProps) {
   const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState<NguoiDung[]>([]);
+  const [dataSource, setDataSource] = useState<VaiTro[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
@@ -40,7 +35,6 @@ function DanhSachNguoiDung({
     position: ["bottomCenter"],
   });
 
-  // Custom hook cho column filtering
   const { getColumnSearchProps, getColumnDateProps } = useColumnFilter();
 
   /**
@@ -57,7 +51,7 @@ function DanhSachNguoiDung({
   ) => {
     try {
       setLoading(true);
-      const response = await nguoiDungApi.getAll({
+      const response = await vaiTroApi.getAll({
         page,
         limit: pageSize,
         ...currentFilters,
@@ -77,9 +71,9 @@ function DanhSachNguoiDung({
   };
 
   /**
-   * Định nghĩa các cột của bảng với column filtering
+   * Định nghĩa các cột của bảng
    */
-  const columns: ColumnsType<NguoiDung> = [
+  const columns: ColumnsType<VaiTro> = [
     {
       title: "STT",
       key: "stt",
@@ -91,47 +85,22 @@ function DanhSachNguoiDung({
       },
     },
     {
-      title: "Tài khoản",
-      dataIndex: "tai_khoan",
-      key: "tai_khoan",
-      width: 140,
-      ...getColumnSearchProps("tai_khoan", "Tài khoản"),
-      filteredValue: filters.tai_khoan ? [filters.tai_khoan] : null,
-      onFilter: () => true, // Server-side filtering
+      title: "Mã vai trò",
+      dataIndex: "ma_vai_tro",
+      key: "ma_vai_tro",
+      width: 150,
+      ...getColumnSearchProps("ma_vai_tro", "Mã vai trò"),
+      filteredValue: filters.ma_vai_tro ? [filters.ma_vai_tro] : null,
+      onFilter: () => true,
     },
     {
-      title: "Vai trò",
-      dataIndex: ["vai_tro", "ten_vai_tro"],
-      key: "vai_tro",
-      width: 120,
-    },
-    {
-      title: "Họ tên",
-      dataIndex: "ho_ten",
-      key: "ho_ten",
-      width: 160,
-      ...getColumnSearchProps("ho_ten", "Họ tên"),
-      filteredValue: filters.ho_ten ? [filters.ho_ten] : null,
-      onFilter: () => true, // Server-side filtering
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Tên vai trò",
+      dataIndex: "ten_vai_tro",
+      key: "ten_vai_tro",
       width: 200,
-      ...getColumnSearchProps("email", "Email"),
-      filteredValue: filters.email ? [filters.email] : null,
-      onFilter: () => true, // Server-side filtering
-    },
-    {
-      title: "Sdt",
-      dataIndex: "sdt",
-      key: "sdt",
-      width: 100,
-      render: (value) => value || "-",
-      ...getColumnSearchProps("sdt", "Số điện thoại"),
-      filteredValue: filters.sdt ? [filters.sdt] : null,
-      onFilter: () => true, // Server-side filtering
+      ...getColumnSearchProps("ten_vai_tro", "Tên vai trò"),
+      filteredValue: filters.ten_vai_tro ? [filters.ten_vai_tro] : null,
+      onFilter: () => true,
     },
     {
       title: "Thời gian cập nhật",
@@ -143,7 +112,7 @@ function DanhSachNguoiDung({
         value ? dayjs(value).format("DD/MM/YYYY HH:mm") : "-",
       ...getColumnDateProps("ngay_cap_nhat", "Thời gian cập nhật"),
       filteredValue: filters.ngay_cap_nhat ? [filters.ngay_cap_nhat] : null,
-      onFilter: () => true, // Server-side filtering
+      onFilter: () => true,
     },
     {
       title: "Hành động",
@@ -162,8 +131,8 @@ function DanhSachNguoiDung({
           </Tooltip>
           <Tooltip title="Xóa">
             <Popconfirm
-              title="Xóa người dùng"
-              description={`Bạn có chắc chắn muốn xóa người dùng "${record.tai_khoan}" không?`}
+              title="Xóa vai trò"
+              description={`Bạn có chắc chắn muốn xóa vai trò "${record.ten_vai_tro}" không?`}
               onConfirm={() => onDelete(record.id!)}
               okText="Xóa"
               cancelText="Hủy"
@@ -178,29 +147,19 @@ function DanhSachNguoiDung({
   ];
 
   /**
-   * Xử lý thay đổi table (pagination, filters, sorter)
-   * Filters được apply tự động từ column filterDropdown
+   * Xử lý thay đổi table (pagination, filters)
    */
   const handleTableChange = async (
     newPagination: TablePaginationConfig,
     tableFilters: Record<string, any>
   ) => {
-    console.log("[📋 handleTableChange] Called with:", {
-      newPagination,
-      tableFilters,
-    });
-
-    // Chuyển đổi filters từ Table sang dạng API params
     const apiFilters: Record<string, string> = {};
     Object.keys(tableFilters).forEach((key) => {
       const filterValue = tableFilters[key];
       if (filterValue && filterValue.length > 0) {
-        // Ant Design filters trả về mảng, lấy phần tử đầu tiên
         apiFilters[key] = filterValue[0];
       }
     });
-
-    console.log("[📋 handleTableChange] Converted apiFilters:", apiFilters);
 
     setFilters(apiFilters);
     await loadData(
@@ -212,7 +171,6 @@ function DanhSachNguoiDung({
 
   return (
     <Space direction="vertical" size="small" style={{ width: "100%" }}>
-      {/* Bảng dữ liệu với column filtering tích hợp */}
       <Table
         columns={columns}
         dataSource={dataSource}
@@ -229,4 +187,4 @@ function DanhSachNguoiDung({
   );
 }
 
-export default DanhSachNguoiDung;
+export default DanhSachVaiTro;

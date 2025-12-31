@@ -7,6 +7,7 @@ import viVN from "antd/locale/vi_VN";
 import { store } from "./stores";
 import App from "./App";
 import "antd/dist/reset.css";
+import "./styles/global.css";
 
 /**
  * Entry point của ứng dụng React

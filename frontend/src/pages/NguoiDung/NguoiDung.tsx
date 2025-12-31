@@ -12,6 +12,7 @@ import { NguoiDung } from "@/interfaces";
 import { notifySuccess, notifyError } from "@/utils/notification";
 import { nguoiDungApi } from "@/services/api/nguoiDungApi";
 import { ROUTE_LABELS } from "@/constants/routes";
+import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "@/constants/messages";
 
 const { Title } = Typography;
 
@@ -62,12 +63,12 @@ function NguoiDungPage() {
     try {
       setLoading(true);
       await nguoiDungApi.create(values);
-      notifySuccess("Thêm người dùng thành công");
+      notifySuccess(SUCCESS_MESSAGES.CREATE);
       handleCloseThemForm();
       setRefreshKey((prev) => prev + 1);
     } catch (error: any) {
       const message = error.response?.data?.message || error.message;
-      notifyError("Thêm người dùng thất bại", message);
+      notifyError(ERROR_MESSAGES.CREATE_FAILED, message);
     } finally {
       setLoading(false);
     }
@@ -86,12 +87,12 @@ function NguoiDungPage() {
       const { tai_khoan, ...updateData } = values;
 
       await nguoiDungApi.update(selectedRecord.id, updateData);
-      notifySuccess("Cập nhật người dùng thành công");
+      notifySuccess(SUCCESS_MESSAGES.UPDATE);
       handleCloseSuaForm();
       setRefreshKey((prev) => prev + 1);
     } catch (error: any) {
       const message = error.response?.data?.message || error.message;
-      notifyError("Cập nhật người dùng thất bại", message);
+      notifyError(ERROR_MESSAGES.UPDATE_FAILED, message);
     } finally {
       setLoading(false);
     }
@@ -103,11 +104,11 @@ function NguoiDungPage() {
   const handleDelete = async (id: number) => {
     try {
       await nguoiDungApi.delete(id);
-      notifySuccess("Xóa người dùng thành công");
+      notifySuccess(SUCCESS_MESSAGES.DELETE);
       setRefreshKey((prev) => prev + 1);
     } catch (error: any) {
       const message = error.response?.data?.message || error.message;
-      notifyError("Xóa người dùng thất bại", message);
+      notifyError(ERROR_MESSAGES.DELETE_FAILED, message);
     }
   };
 

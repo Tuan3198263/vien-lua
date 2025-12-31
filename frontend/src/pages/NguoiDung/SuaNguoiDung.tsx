@@ -76,8 +76,11 @@ function SuaNguoiDung({
 
       onSubmit(values);
       form.resetFields();
-    } catch (error) {
+    } catch (error: any) {
       console.log("Validation failed:", error);
+      if (error.errorFields && error.errorFields.length > 0) {
+        notifyError("Lỗi nhập liệu", error.errorFields[0].errors[0]);
+      }
     }
   };
 
@@ -91,6 +94,7 @@ function SuaNguoiDung({
       width={800}
       okText="Cập nhật"
       cancelText="Hủy"
+      style={{ top: 40 }}
     >
       <FormNguoiDung
         form={form}

@@ -6,7 +6,7 @@
  * Thông báo thành công
  */
 export const SUCCESS_MESSAGES = {
-  CREATE: 'Tạo mới thành công',
+  CREATE: 'Thêm thành công',
   UPDATE: 'Cập nhật thành công',
   DELETE: 'Xóa thành công',
   SAVE: 'Lưu thành công',
@@ -23,7 +23,7 @@ export const ERROR_MESSAGES = {
   NETWORK: 'Lỗi kết nối mạng',
   SERVER: 'Lỗi máy chủ',
   TIMEOUT: 'Yêu cầu hết thời gian chờ',
-  CREATE_FAILED: 'Tạo mới thất bại',
+  CREATE_FAILED: 'Thêm thất bại',
   UPDATE_FAILED: 'Cập nhật thất bại',
   DELETE_FAILED: 'Xóa thất bại',
   FETCH_FAILED: 'Lấy dữ liệu thất bại',

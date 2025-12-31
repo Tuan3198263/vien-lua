@@ -3,7 +3,7 @@
  */
 
 import { useAppSelector } from './useRedux';
-import { AuthUser } from '@/interfaces';
+
 
 /**
  * Hook để lấy thông tin auth từ Redux store

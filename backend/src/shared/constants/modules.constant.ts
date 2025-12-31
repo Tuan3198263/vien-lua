@@ -8,8 +8,6 @@
 export interface ModuleInfo {
   ma_module: string;      // Mã module (dùng trong code và permission check)
   ten_module: string;     // Tên module (hiển thị trên frontend)
-  mo_ta?: string;         // Mô tả module
-  icon?: string;          // Icon cho UI
   thu_tu?: number;        // Thứ tự sắp xếp
 }
 
@@ -20,16 +18,12 @@ export interface ModuleInfo {
 export const DANH_SACH_MODULE: ModuleInfo[] = [
   {
     ma_module: 'VAI_TRO',
-    ten_module: 'Quản lý vai trò',
-    mo_ta: 'Module quản lý vai trò người dùng và phân quyền',
-    icon: 'users',
+    ten_module: 'Vai trò',
     thu_tu: 1,
   },
   {
     ma_module: 'NGUOI_DUNG',
-    ten_module: 'Quản lý người dùng',
-    mo_ta: 'Module quản lý người dùng hệ thống',
-    icon: 'user',
+    ten_module: 'Người dùng',
     thu_tu: 2,
   },
 ];
