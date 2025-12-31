@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
@@ -146,4 +147,11 @@ export class NguoiDung {
     type: 'datetime',
   })
   ngay_cap_nhat: Date;
+
+  /**
+   * Ngày xóa (soft delete)
+   * Null = chưa xóa, có giá trị = đã xóa
+   */
+  @DeleteDateColumn({ type: 'datetime', nullable: true })
+  deleted_at: Date;
 }

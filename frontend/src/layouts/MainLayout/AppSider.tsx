@@ -12,8 +12,6 @@ import {
   SafetyOutlined,
   UserOutlined,
   TeamOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   LeftOutlined,
   RightOutlined,
   FileTextOutlined,

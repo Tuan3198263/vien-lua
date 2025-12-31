@@ -219,6 +219,21 @@ export class VaiTroService {
     // Kiểm tra vai trò có tồn tại không
     const vaiTro = await this.findOne(id);
 
+    // Kiểm tra xem có người dùng nào đang sử dụng vai trò này không
+    const countNguoiDung = await this.vaiTroRepository.manager
+      .createQueryBuilder()
+      .select('COUNT(*)', 'count')
+      .from('nguoi_dung', 'nguoi_dung')
+      .where('nguoi_dung.vai_tro_id = :vaiTroId', { vaiTroId: id })
+      .getRawOne();
+
+    if (countNguoiDung && parseInt(countNguoiDung.count) > 0) {
+      throw new ConflictException(
+        `Không thể xóa vai trò này vì đang có ${countNguoiDung.count} người dùng sử dụng. ` +
+        `Vui lòng chuyển người dùng sang vai trò khác trước khi xóa.`
+      );
+    }
+
     // Xóa vai trò
     await this.vaiTroRepository.remove(vaiTro);
 
@@ -231,6 +246,23 @@ export class VaiTroService {
    * @returns Thông báo xóa thành công
    */
   async removeMultiple(ids: number[]): Promise<{ message: string; count: number }> {
+    // Kiểm tra từng vai trò trước khi xóa
+    for (const id of ids) {
+      const countNguoiDung = await this.vaiTroRepository.manager
+        .createQueryBuilder()
+        .select('COUNT(*)', 'count')
+        .from('nguoi_dung', 'nguoi_dung')
+        .where('nguoi_dung.vai_tro_id = :vaiTroId', { vaiTroId: id })
+        .getRawOne();
+
+      if (countNguoiDung && parseInt(countNguoiDung.count) > 0) {
+        const vaiTro = await this.vaiTroRepository.findOne({ where: { id } });
+        throw new ConflictException(
+          `Không thể xóa vai trò "${vaiTro?.ten_vai_tro || id}" vì đang có ${countNguoiDung.count} người dùng sử dụng.`
+        );
+      }
+    }
+
     const result = await this.vaiTroRepository.delete(ids);
 
     return {

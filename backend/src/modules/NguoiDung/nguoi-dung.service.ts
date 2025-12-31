@@ -358,23 +358,26 @@ export class NguoiDungService {
   }
 
   /**
-   * Xóa người dùng
+   * Xóa người dùng (soft delete)
+   * Không xóa thật khỏi database, chỉ đánh dấu deleted_at
+   * Điều này đảm bảo dữ liệu liên quan không bị ảnh hưởng
    */
   async remove(id: number): Promise<{ message: string }> {
     // Kiểm tra người dùng có tồn tại không
     const nguoiDung = await this.findOne(id);
 
-    // Xóa người dùng
-    await this.nguoiDungRepository.remove(nguoiDung);
+    // Soft delete: đánh dấu deleted_at thay vì xóa thật
+    await this.nguoiDungRepository.softRemove(nguoiDung);
 
     return { message: 'Xóa người dùng thành công' };
   }
 
   /**
-   * Xóa nhiều người dùng
+   * Xóa nhiều người dùng (soft delete)
    */
   async removeMultiple(ids: number[]): Promise<{ message: string; count: number }> {
-    const result = await this.nguoiDungRepository.delete(ids);
+    // Soft delete: sử dụng softDelete thay vì delete
+    const result = await this.nguoiDungRepository.softDelete(ids);
 
     return {
       message: 'Xóa người dùng thành công',
