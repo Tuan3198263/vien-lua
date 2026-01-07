@@ -114,9 +114,9 @@ function SuaVaiTro({
       onCancel={handleCancel}
       confirmLoading={loading}
       width={900}
-      centered
       okText="Cập nhật"
       cancelText="Hủy"
+      style={{ top: 40 }}
     >
       <Form form={form}>
         <FormVaiTro

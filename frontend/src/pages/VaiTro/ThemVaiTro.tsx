@@ -74,9 +74,9 @@ function ThemVaiTro({
       onCancel={handleCancel}
       confirmLoading={loading}
       width={900}
-      centered
       okText="Thêm"
       cancelText="Hủy"
+      style={{ top: 40 }}
     >
       <Form form={form}>
         <FormVaiTro
