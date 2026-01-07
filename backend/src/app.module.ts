@@ -9,6 +9,7 @@ import { NguoiDungModule } from './modules/NguoiDung/nguoi-dung.module';
 import { PhanQuyenModule } from './modules/PhanQuyen/phan-quyen.module';
 import { FileHeThongModule } from './modules/FileHeThong/file-he-thong.module';
 import { HopDongModule } from './modules/HopDong/hop-dong.module';
+import { DanhMucModule } from './modules/DanhMuc/danh-muc.module';
 
 /**
  * Module chính của ứng dụng
@@ -35,6 +36,7 @@ import { HopDongModule } from './modules/HopDong/hop-dong.module';
     PhanQuyenModule,
     FileHeThongModule,
     HopDongModule,
+    DanhMucModule,
    
   ],
   controllers: [AppController],
