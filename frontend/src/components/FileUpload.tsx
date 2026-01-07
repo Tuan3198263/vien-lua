@@ -148,7 +148,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           type="secondary"
           style={{ fontSize: "12px", display: "block", marginTop: "8px" }}
         >
-          Định dạng: PDF, DOC, DOCX, TXT, JPG, PNG, GIF, WEBP (Tối đa 10MB)
+          Định dạng: PDF, DOC, DOCX, TXT, JPG, PNG, GIF, WEBP (Tối đa 4MB)
         </Text>
       </div>
     </div>
