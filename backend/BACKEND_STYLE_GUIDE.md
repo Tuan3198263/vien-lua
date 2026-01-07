@@ -328,8 +328,6 @@ export class TenEntity {
 }
 ```
 
-**Lưu ý:** Module Vai Trò và Người Dùng đã triển khai trước khi có rules này, các module sau phải tuân theo đầy đủ.
-
 #### 7.2. Relations
 
 - Sử dụng `@ManyToOne`, `@OneToMany`, `@ManyToMany` phù hợp
@@ -376,43 +374,176 @@ return entity; // Bao gồm cả tai_khoan, email, mat_khau, etc.
 
 ---
 
-### 8. Utilities và Helpers
+### 8. QueryUtils - Xử Lý Phân Trang và Filter
 
-#### 8.1. Pagination
+#### 8.1. Quy Tắc Sử Dụng QueryUtils
 
-- Luôn sử dụng `QueryUtils` để xử lý pagination
-- Trả về metadata đầy đủ: `total`, `total_pages`, `has_next`, `has_previous`
+**Tất cả các module PHẢI sử dụng `QueryUtils.applyQueryOptions()` theo cùng 1 pattern:**
 
-#### 8.2. Constants
+```typescript
+// Trong service findAll()
+async findAll(paginationDto: PaginationDto): Promise<PaginatedResult<Entity>> {
+  // 1. Tạo query builder
+  const queryBuilder = this.repository.createQueryBuilder('alias');
+
+  // 2. Join relations nếu cần (trước khi apply QueryUtils)
+  queryBuilder.leftJoinAndSelect('alias.relation', 'relation');
+
+  // 3. Định nghĩa allowed fields cho filter (KHÔNG BAO GỒM 'id')
+  const allowedFields = ['ten_truong_1', 'ten_truong_2', 'ngay_cap_nhat'];
+
+  // 4. Áp dụng QueryUtils (filter + phân trang + sort mặc định)
+  QueryUtils.applyQueryOptions(
+    queryBuilder,
+    paginationDto,
+    'alias',      // ← PHẢI KHỚP với alias ở bước 1
+    allowedFields,
+  );
+
+  // 5. Lấy dữ liệu và tổng số
+  const [data, total] = await queryBuilder.getManyAndCount();
+
+  // 6. Trả về kết quả phân trang
+  return QueryUtils.createPaginatedResult(data, total, paginationDto);
+}
+```
+
+**Lưu ý quan trọng:**
+
+- **`alias` phải khớp:** Alias trong `createQueryBuilder('alias')` và `applyQueryOptions(..., 'alias', ...)` phải giống nhau
+- **`allowedFields` không bao gồm `id`:** Field `id` không được phép filter
+- **Sort mặc định:** `QueryUtils` tự động sort theo `ngay_tao DESC`, không cần thêm `.orderBy()`
+- **Join trước apply:** Phải `.leftJoinAndSelect()` trước khi gọi `applyQueryOptions()`
+- **Không bắt buộc phải map relation:** Nếu không cần giới hạn thông tin relation, có thể trả về trực tiếp
+
+#### 8.2. Ví Dụ Thực Tế
+
+**Module HopDong:**
+
+```typescript
+async findAll(paginationDto: PaginationDto): Promise<PaginatedResult<any>> {
+  const queryBuilder = this.hopDongRepository
+    .createQueryBuilder('hop_dong')
+    .leftJoinAndSelect('hop_dong.nguoi_cap_nhat', 'nguoi_dung');
+
+  const allowedFields = ['so_hop_dong', 'doi_tac', 'ghi_chu', 'ngay_cap_nhat'];
+
+  QueryUtils.applyQueryOptions(queryBuilder, paginationDto, 'hop_dong', allowedFields);
+
+  const [hopDongs, total] = await queryBuilder.getManyAndCount();
+
+  // Xử lý thêm (map relation, thêm file info...)
+  const dataWithFiles = await Promise.all(
+    hopDongs.map(async (hopDong) => {
+      const file = await this.layFileCuaHopDong(hopDong.id);
+      return { ...hopDong, file_hop_dong: file };
+    }),
+  );
+
+  return QueryUtils.createPaginatedResult(dataWithFiles, total, paginationDto);
+}
+```
+
+**Module VaiTro:**
+
+```typescript
+async findAll(paginationDto: PaginationDto): Promise<PaginatedResult<VaiTro>> {
+  const queryBuilder = this.vaiTroRepository.createQueryBuilder('vai_tro');
+  const allowedFields = ['ma_vai_tro', 'ten_vai_tro', 'mo_ta', 'ngay_cap_nhat'];
+
+  QueryUtils.applyQueryOptions(queryBuilder, paginationDto, 'vai_tro', allowedFields);
+
+  const [data, total] = await queryBuilder.getManyAndCount();
+  return QueryUtils.createPaginatedResult(data, total, paginationDto);
+}
+```
+
+#### 8.3. Lỗi Thường Gặp
+
+**❌ Lỗi: Alias không khớp**
+
+```typescript
+const qb = this.repository.createQueryBuilder("entity");
+QueryUtils.applyQueryOptions(qb, dto, "wrong_alias", fields); // ← Sai!
+```
+
+**✅ Đúng:**
+
+```typescript
+const qb = this.repository.createQueryBuilder("entity");
+QueryUtils.applyQueryOptions(qb, dto, "entity", fields); // ← Đúng!
+```
+
+**❌ Lỗi: Thêm `id` vào allowedFields**
+
+```typescript
+const allowedFields = ["id", "ten", "ma"]; // ← Sai! Không filter theo id
+```
+
+**✅ Đúng:**
+
+```typescript
+const allowedFields = ["ten", "ma"]; // ← Đúng! Không có id
+```
+
+**❌ Lỗi: Sort thủ công sau khi apply QueryUtils**
+
+```typescript
+QueryUtils.applyQueryOptions(qb, dto, "entity", fields);
+qb.orderBy("entity.ngay_tao", "ASC"); // ← Sai! Ghi đè sort mặc định
+```
+
+**✅ Đúng:**
+
+```typescript
+QueryUtils.applyQueryOptions(qb, dto, "entity", fields); // Đã có sort mặc định DESC
+```
+
+#### 8.4. Checklist Khi Implement Module Mới
+
+- [ ] Tạo query builder với alias rõ ràng
+- [ ] Join relations (nếu cần) trước khi apply QueryUtils
+- [ ] Định nghĩa `allowedFields` (không có `id`)
+- [ ] Gọi `QueryUtils.applyQueryOptions()` với alias đúng
+- [ ] Sử dụng `QueryUtils.createPaginatedResult()` để trả về
+- [ ] Không thêm `.orderBy()` thủ công
+- [ ] Test filter với các field trong `allowedFields`
+- [ ] Test phân trang (page, limit)
+
+---
+
+### 9. Utilities và Helpers
+
+#### 9.1. Constants
 
 - Đưa các giá trị cố định vào `shared/constants/`
 - Dùng enum cho các giá trị có giới hạn
 
 ---
 
-### 9. Testing
+### 10. Testing
 
-#### 9.1. Unit Tests
+#### 10.1. Unit Tests
 
 - Viết test cho các service methods
 - Coverage tối thiểu 70%
 
-#### 9.2. E2E Tests
+#### 10.2. E2E Tests
 
 - Test các API endpoints quan trọng
 - Test các flows chính của hệ thống
 
 ---
 
-### 10. Documentation
+### 11. Documentation
 
-#### 10.1. Code Documentation
+#### 11.1. Code Documentation
 
 - Mọi public method phải có JSDoc
 - Comment tiếng Việt dễ hiểu
 - Giải thích các logic phức tạp
 
-#### 10.2. API Documentation
+#### 11.2. API Documentation
 
 - Tạo file hướng dẫn test API (Postman)
 - Cập nhật khi có API mới
