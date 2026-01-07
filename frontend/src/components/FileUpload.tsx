@@ -3,7 +3,7 @@
  * Component upload file với Ant Design và validation logic
  */
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Upload, Button, Typography, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import type { UploadProps, UploadFile } from "antd";
@@ -50,19 +50,19 @@ interface FileUploadProps {
  * - Validate theo file.utils.ts (định dạng, dung lượng)
  * - Hỗ trợ xem và xóa file hiện tại
  */
-export const FileUpload: React.FC<FileUploadProps> = ({
+export function FileUpload({
   currentFile,
   onChange,
   onDeleteCurrent,
   disabled = false,
   label = "File đính kèm",
-}) => {
+}: FileUploadProps) {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   /**
    * Cập nhật fileList khi currentFile thay đổi
    */
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentFile) {
       // Hiển thị file hiện tại trong fileList
       setFileList([
@@ -153,4 +153,4 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       </div>
     </div>
   );
-};
+}
