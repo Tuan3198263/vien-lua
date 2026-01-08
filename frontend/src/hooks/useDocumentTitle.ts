@@ -26,6 +26,9 @@ export const useDocumentTitle = () => {
       case '/nguoi-dung':
         pageTitle = ROUTE_LABELS.NGUOI_DUNG;
         break;
+         case '/de-tai':
+        pageTitle = ROUTE_LABELS.DE_TAI;
+        break;
       case '/vai-tro':
         pageTitle = ROUTE_LABELS.VAI_TRO;
         break;

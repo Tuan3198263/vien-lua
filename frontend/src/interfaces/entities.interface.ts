@@ -107,3 +107,90 @@ export interface ModuleInfo {
   ten_module: string;
   thu_tu?: number;
 }
+
+/**
+ * Entity Đề Tài
+ */
+export interface DeTai {
+  id?: number;
+  ten_de_tai: string;
+  ma_de_tai?: string;
+  don_vi_phe_duyet: string;
+  cap_quan_ly_de_tai: string;
+  ngay_bat_dau: string;
+  ngay_ket_thuc: string;
+  phuong_thuc_khoang_chi?: string;
+  noi_dung_khoang_chi?: string;
+  linh_vuc_khoa_hoc?: string;
+  nguon_goc_de_tai?: string;
+  hop_dong?: string;
+  bien_ban_thanh_ly?: string;
+  chu_nhiem_de_tai: string;
+  thu_ky_de_tai: string;
+  hien_trang_nghiem_thu: string;
+  thong_tin_doi_tac?: string;
+  kinh_phi_tong: number;
+  nguoi_cap_nhat_id?: number;
+  nguoi_cap_nhat?: {
+    id: number;
+    ho_ten: string;
+  };
+  kinh_phi_nam?: KinhPhiNam[];
+  san_pham?: SanPham[];
+  san_pham_thuc_te?: SanPhamThucTe[];
+  ho_so_luu_tru?: HoSoLuuTru[];
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
+ * Entity Kinh Phí Năm
+ */
+export interface KinhPhiNam {
+  id?: number;
+  de_tai_id: number;
+  nam: number;
+  kinh_phi: number;
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
+ * Entity Sản Phẩm Dự Kiến
+ */
+export interface SanPham {
+  id?: number;
+  de_tai_id: number;
+  ten_san_pham: string;
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
+ * Entity Sản Phẩm Thực Tế
+ */
+export interface SanPhamThucTe {
+  id?: number;
+  de_tai_id: number;
+  ten_san_pham: string;
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
+ * Entity Hồ Sơ Lưu Trữ
+ */
+export interface HoSoLuuTru {
+  id?: number;
+  de_tai_id: number;
+  loai_ho_so: string;
+  ten_file?: string;
+  nam: number;
+  file_ho_so?: {
+    id: number;
+    ten_goc: string;
+    url_xem?: string;
+  };
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}

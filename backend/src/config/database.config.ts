@@ -2,15 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 
+// Import tất cả entities (phải import thủ công để tránh lỗi runtime)
 import { VaiTro } from '../modules/VaiTro/vai-tro.entity';
 import { NguoiDung } from '../modules/NguoiDung/nguoi-dung.entity';
 import { PhanQuyen } from '../modules/PhanQuyen/phan-quyen.entity';
 import { FileHeThong } from '../modules/FileHeThong/file-he-thong.entity';
 import { HopDong } from '../modules/HopDong/hop-dong.entity';
+import { DeTai } from '../modules/DeTai/entities/de-tai.entity';
+import { KinhPhiNam } from '../modules/DeTai/entities/kinh-phi-nam.entity';
+import { SanPham } from '../modules/DeTai/entities/san-pham.entity';
+import { SanPhamThucTe } from '../modules/DeTai/entities/san-pham-thuc-te.entity';
+import { HoSoLuuTru } from '../modules/DeTai/entities/ho-so-luu-tru.entity';
 
 /**
  * Cấu hình kết nối database
  * Sử dụng TypeORM để kết nối MySQL
+ * 
+ * LƯU Ý: Khi thêm module mới có entity, phải import thủ công vào đây
  */
 @Injectable()
 export class DatabaseConfig implements TypeOrmOptionsFactory {
@@ -25,8 +33,19 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
       password: this.configService.get<string>('DB_PASSWORD'),
       database: this.configService.get<string>('DB_NAME'),
       
-      // Import trực tiếp tất cả entities
-      entities: [VaiTro, NguoiDung, PhanQuyen, FileHeThong, HopDong],
+      // Import thủ công tất cả entities (bao gồm cả sub-entities)
+      entities: [
+        VaiTro,
+        NguoiDung,
+        PhanQuyen,
+        FileHeThong,
+        HopDong,
+        DeTai,
+        KinhPhiNam,
+        SanPham,
+        SanPhamThucTe,
+        HoSoLuuTru,
+      ],
       
       // Chỉ bật synchronize trong development
       // KHÔNG bật trong production

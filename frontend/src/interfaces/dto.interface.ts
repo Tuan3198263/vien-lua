@@ -49,3 +49,61 @@ export interface QuyenModuleDto {
   ma_module: string;
   hanh_dong: string[];    // Ví dụ: ['xem', 'them', 'xoa']
 }
+
+/**
+ * DTO Đề Tài
+ * Dùng cho create/update đề tài
+ */
+export interface DeTaiDto {
+  ten_de_tai: string;
+  ma_de_tai?: string;
+  don_vi_phe_duyet: string;
+  cap_quan_ly_de_tai: string;
+  ngay_bat_dau: string;
+  ngay_ket_thuc: string;
+  phuong_thuc_khoang_chi?: string;
+  noi_dung_khoang_chi?: string;
+  linh_vuc_khoa_hoc?: string;
+  nguon_goc_de_tai?: string;
+  hop_dong?: string;
+  bien_ban_thanh_ly?: string;
+  chu_nhiem_de_tai: string;
+  thu_ky_de_tai: string;
+  hien_trang_nghiem_thu: string;
+  thong_tin_doi_tac?: string;
+  kinh_phi_tong: number;
+}
+
+/**
+ * DTO Kinh Phí Năm
+ * Dùng cho create/update kinh phí theo năm
+ */
+export interface KinhPhiNamDto {
+  nam: number;
+  kinh_phi: number;
+}
+
+/**
+ * DTO Sản Phẩm Dự Kiến
+ * Dùng cho create/update sản phẩm dự kiến
+ */
+export interface SanPhamDto {
+  ten_san_pham: string;
+}
+
+/**
+ * DTO Sản Phẩm Thực Tế
+ * Dùng cho create/update sản phẩm thực tế
+ */
+export interface SanPhamThucTeDto {
+  ten_san_pham: string;
+}
+
+/**
+ * DTO Hồ Sơ Lưu Trữ
+ * Dùng cho create/update hồ sơ lưu trữ
+ */
+export interface HoSoLuuTruDto {
+  loai_ho_so: string;
+  nam: number;
+}

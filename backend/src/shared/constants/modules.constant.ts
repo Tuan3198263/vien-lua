@@ -31,6 +31,11 @@ export const DANH_SACH_MODULE: ModuleInfo[] = [
     ten_module: 'Hợp đồng',
     thu_tu: 3,
   },
+  {
+    ma_module: 'DE_TAI',
+    ten_module: 'Đề tài',
+    thu_tu: 4,
+  },
 ];
 
 /**
