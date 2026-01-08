@@ -37,8 +37,8 @@ export class DeTaiController {
 
   @Get()
   @RequirePermission('DE_TAI', HanhDong.XEM)
-  async layDanhSach(@Query() paginationDto: PaginationDto) {
-    return this.deTaiService.layDanhSach(paginationDto);
+  async layDanhSach(@Query() filterDto: FilterDeTaiDto) {
+    return this.deTaiService.layDanhSach(filterDto);
   }
 
   @Get(':id')

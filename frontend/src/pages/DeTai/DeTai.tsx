@@ -11,6 +11,7 @@ import { notifySuccess, notifyError } from "@/utils/notification";
 import { deTaiApi } from "@/services/api/deTaiApi";
 import { ROUTE_LABELS } from "@/constants/routes";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "@/constants/messages";
+import { useDocumentTitle } from "@/hooks";
 
 const { Title } = Typography;
 
@@ -18,6 +19,7 @@ const { Title } = Typography;
  * Component trang quản lý đề tài
  */
 function DeTaiPage() {
+  useDocumentTitle();
   const [refreshKey, setRefreshKey] = useState(0);
 
   /**
