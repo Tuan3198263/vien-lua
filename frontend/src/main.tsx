@@ -16,13 +16,11 @@ import "./styles/global.css";
  * - Cấu hình Ant Design với ngôn ngữ tiếng Việt
  */
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <Provider store={store}>
-      <ConfigProvider locale={viVN}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </ConfigProvider>
-    </Provider>
-  </StrictMode>
+  <Provider store={store}>
+    <ConfigProvider locale={viVN}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ConfigProvider>
+  </Provider>
 );
