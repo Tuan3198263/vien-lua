@@ -71,17 +71,6 @@ export const DANH_SACH_DANH_MUC: DanhMucInfo[] = [
     ],
   },
   {
-    ma_danh_muc: 'HIEN_TRANG_NGHIEM_THU',
-    ten_danh_muc: 'Hiện trạng nghiệm thu',
-    danh_sach_gia_tri: [
-      'Chưa nghiệm thu',
-      'Đã nghiệm thu cấp cơ sở',
-      'Đã nghiệm thu Hội đồng nghiệm thu Nhà nước',
-      'Đã nghiệm thu Hội đồng khoa học công nghệ cấp Bộ',
-      'Đã nghiệm thu khác',
-    ],
-  },
-  {
     ma_danh_muc: 'LOAI_HO_SO',
     ten_danh_muc: 'Loại hồ sơ lưu trữ',
     danh_sach_gia_tri: [

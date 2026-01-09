@@ -9,12 +9,14 @@ import { DeTai } from './entities/de-tai.entity';
 import { CreateDeTaiDto, UpdateDeTaiDto, FilterDeTaiDto } from './dto/de-tai.dto';
 import { PaginationDto, PaginatedResult } from '../../shared/dto/pagination.dto';
 import { QueryUtils } from '../../shared/utils/query.utils';
+import { HoSoLuuTruService } from './ho-so-luu-tru.service';
 
 @Injectable()
 export class DeTaiService {
   constructor(
     @InjectRepository(DeTai)
     private readonly deTaiRepository: Repository<DeTai>,
+    private readonly hoSoLuuTruService: HoSoLuuTruService,
   ) {}
 
   /**
@@ -99,7 +101,6 @@ export class DeTaiService {
       'bien_ban_thanh_ly',
       'chu_nhiem_de_tai',
       'thu_ky_de_tai',
-      'hien_trang_nghiem_thu',
       'thong_tin_doi_tac',
       'ngay_bat_dau',
       'ngay_ket_thuc',
@@ -211,14 +212,29 @@ export class DeTaiService {
 
 
   /**
-   * Xóa đề tài (cascade delete tất cả danh sách con)
+   * Xóa đề tài (cascade delete tất cả danh sách con và files liên quan)
    * @param id - ID đề tài cần xóa
    */
   async xoa(id: number): Promise<void> {
-    const deTai = await this.deTaiRepository.findOne({ where: { id } });
+    const deTai = await this.deTaiRepository.findOne({ 
+      where: { id },
+      relations: ['danh_sach_ho_so'],
+    });
 
     if (!deTai) {
       throw new NotFoundException(`Không tìm thấy đề tài với id ${id}`);
+    }
+
+    // Xóa files của hồ sơ lưu trữ (trước khi cascade delete)
+    if (deTai.danh_sach_ho_so && deTai.danh_sach_ho_so.length > 0) {
+      for (const hoSo of deTai.danh_sach_ho_so) {
+        try {
+          await this.hoSoLuuTruService.xoa(hoSo.id);
+        } catch (error) {
+          console.error(`Lỗi xóa hồ sơ lưu trữ ${hoSo.id}:`, error);
+          // Tiếp tục xóa dù có lỗi
+        }
+      }
     }
 
     await this.deTaiRepository.remove(deTai);

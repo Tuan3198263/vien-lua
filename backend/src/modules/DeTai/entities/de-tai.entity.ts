@@ -64,9 +64,6 @@ export class DeTai {
   @Column({ type: 'varchar', length: 255 })
   thu_ky_de_tai: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  hien_trang_nghiem_thu: string;
-
   @Column({ type: 'text', nullable: true })
   thong_tin_doi_tac: string;
 

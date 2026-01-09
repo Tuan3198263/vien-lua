@@ -141,14 +141,6 @@ export class CreateDeTaiDto {
   thu_ky_de_tai: string;
 
   /**
-   * Hiện trạng nghiệm thu - bắt buộc
-   */
-  @IsNotEmpty({ message: 'Hiện trạng nghiệm thu không được để trống' })
-  @IsString()
-  @MaxLength(255)
-  hien_trang_nghiem_thu: string;
-
-  /**
    * Thông tin đối tác - tùy chọn
    */
   @IsOptional()
@@ -243,11 +235,6 @@ export class UpdateDeTaiDto {
   @IsString()
   @MaxLength(255)
   thu_ky_de_tai?: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  hien_trang_nghiem_thu?: string;
 
   @IsOptional()
   @IsString()

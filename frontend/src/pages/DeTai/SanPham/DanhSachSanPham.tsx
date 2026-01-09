@@ -61,7 +61,7 @@ function DanhSachSanPham({
     if (!onEdit || !selectedRecord) return;
     try {
       setActionLoading(true);
-      await onEdit(selectedRecord.id, values);
+      await onEdit(selectedRecord.id!, values);
       setSuaModalOpen(false);
       setSelectedRecord(null);
     } catch (error: any) {
@@ -122,7 +122,7 @@ function DanhSachSanPham({
           <Popconfirm
             title="Xác nhận xóa?"
             description="Bạn có chắc muốn xóa sản phẩm này?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => record.id && handleDelete(record.id)}
             okText="Xóa"
             cancelText="Hủy"
           >

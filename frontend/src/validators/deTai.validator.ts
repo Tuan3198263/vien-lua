@@ -72,12 +72,6 @@ export const DE_TAI_VALIDATOR = {
     { whitespace: true, message: 'Thư ký đề tài không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
-  hien_trang_nghiem_thu: [
-    { required: true,  message: MESSAGES.ERROR.REQUIRED },
-    { max: 255, message: 'Hiện trạng nghiệm thu không được quá 255 ký tự' },
-    { whitespace: true, message: 'Hiện trạng nghiệm thu không được chỉ chứa khoảng trắng' },
-  ] as Rule[],
-
   kinh_phi_tong: [
     { required: true,  message: MESSAGES.ERROR.REQUIRED },
    

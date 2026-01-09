@@ -20,7 +20,7 @@ import {
   hoSoLuuTruApi,
 } from "@/services/api/deTaiApi";
 import { notifyError, notifySuccess } from "@/utils/notification";
-import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "@/constants/messages";
+import { SUCCESS_MESSAGES } from "@/constants/messages";
 import type {
   DeTai,
   KinhPhiNam,

@@ -127,7 +127,6 @@ export interface DeTai {
   bien_ban_thanh_ly?: string;
   chu_nhiem_de_tai: string;
   thu_ky_de_tai: string;
-  hien_trang_nghiem_thu: string;
   thong_tin_doi_tac?: string;
   kinh_phi_tong: number;
   nguoi_cap_nhat_id?: number;

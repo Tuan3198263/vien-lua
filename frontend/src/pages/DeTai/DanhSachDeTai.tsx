@@ -280,18 +280,6 @@ function DanhSachDeTai({
       ellipsis: true,
     },
     {
-      title: "Hiện trạng",
-      dataIndex: "hien_trang_nghiem_thu",
-      key: "hien_trang_nghiem_thu",
-      width: 180,
-      ...getColumnSearchProps("hien_trang_nghiem_thu", "Hiện trạng nghiệm thu"),
-      filteredValue: filters.hien_trang_nghiem_thu
-        ? [filters.hien_trang_nghiem_thu]
-        : null,
-      onFilter: () => true,
-      ellipsis: true,
-    },
-    {
       title: "Thông tin đối tác",
       dataIndex: "thong_tin_doi_tac",
       key: "thong_tin_doi_tac",

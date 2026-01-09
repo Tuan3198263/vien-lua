@@ -80,7 +80,7 @@ function DanhSachHoSoLuuTru({
   };
 
   const handleEdit = async () => {
-    if (!onEdit || !selectedRecord) return;
+    if (!onEdit || !selectedRecord || !selectedRecord.id) return;
     try {
       const values = await suaForm.validateFields();
       setActionLoading(true);
@@ -183,7 +183,7 @@ function DanhSachHoSoLuuTru({
           <Popconfirm
             title="Xác nhận xóa?"
             description="Bạn có chắc muốn xóa hồ sơ này?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => record.id && handleDelete(record.id)}
             okText="Xóa"
             cancelText="Hủy"
           >
