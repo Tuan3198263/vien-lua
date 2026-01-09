@@ -117,12 +117,6 @@ export class CreateDeTaiDto {
   @MaxLength(255)
   bien_ban_thanh_ly?: string;
 
-  /**
-   * ID file biên bản - tùy chọn
-   */
-  @IsOptional()
-  @IsNumber()
-  file_bien_ban_id?: number;
 
   /**
    * Chủ nhiệm đề tài - bắt buộc
@@ -214,17 +208,10 @@ export class UpdateDeTaiDto {
   hop_dong?: string;
 
   @IsOptional()
-  @IsNumber()
-  file_hop_dong_id?: number;
-
-  @IsOptional()
   @IsString()
   @MaxLength(255)
   bien_ban_thanh_ly?: string;
 
-  @IsOptional()
-  @IsNumber()
-  file_bien_ban_id?: number;
 
   @IsOptional()
   @IsString()
