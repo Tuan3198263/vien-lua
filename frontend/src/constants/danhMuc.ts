@@ -49,6 +49,17 @@ export const DANH_SACH_DANH_MUC: DanhMucInfo[] = [
     ],
   },
   {
+    ma_danh_muc: 'PHUONG_THUC_KHOANG_CHI',
+    ten_danh_muc: 'Phương thức khoáng chi',
+    danh_sach_gia_tri: [
+      'Tạm ứng',
+      'Thanh toán theo tiến độ',
+      'Thanh toán sau khi hoàn thành',
+      'Thanh toán một lần',
+      'Khác',
+    ],
+  },
+  {
     ma_danh_muc: 'NGUON_GOC_DE_TAI',
     ten_danh_muc: 'Nguồn gốc đề tài',
     danh_sach_gia_tri: [

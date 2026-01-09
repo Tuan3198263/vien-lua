@@ -17,6 +17,7 @@ export const API_URL = {
   FILE_HE_THONG: '/file-he-thong',
   DANH_MUC: '/danh-muc',
   HOP_DONG: '/hop-dong',
+  DE_TAI: '/de-tai',
 } as const;
 
 /**

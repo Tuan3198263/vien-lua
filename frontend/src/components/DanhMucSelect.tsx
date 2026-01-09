@@ -36,7 +36,7 @@ interface DanhMucSelectProps extends Omit<SelectProps, "options"> {
  *   placeholder="Chọn hoặc nhập loại hồ sơ"
  * />
  */
-function DanhMucSelect({
+export function DanhMucSelect({
   maDanhMuc,
   allowCustom = false,
   ...props
@@ -44,15 +44,6 @@ function DanhMucSelect({
   const options = taoOptionsTuDanhMuc(maDanhMuc);
 
   return (
-    <Select
-      options={options}
-      showSearch
-      optionFilterProp="label"
-      mode={allowCustom ? "tags" : undefined}
-      maxTagCount={allowCustom ? 1 : undefined}
-      {...props}
-    />
+    <Select options={options} showSearch optionFilterProp="label" {...props} />
   );
 }
-
-export default DanhMucSelect;

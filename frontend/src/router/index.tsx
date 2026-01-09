@@ -13,6 +13,9 @@ import VaiTro from "@/pages/VaiTro/VaiTro";
 import TaiLieu from "@/pages/TaiLieu/TaiLieu";
 import HopDong from "@/pages/HopDong/HopDong";
 import DeTai from "@/pages/DeTai/DeTai";
+import ThemDeTai from "@/pages/DeTai/ThemDeTai";
+import SuaDeTai from "@/pages/DeTai/SuaDeTai";
+import ChiTietDeTai from "@/pages/DeTai/ChiTietDeTai";
 import KhongCoQuyen from "@/pages/KhongCoQuyen/KhongCoQuyen";
 import { ROUTES } from "@/constants/routes";
 
@@ -38,7 +41,15 @@ function AppRouter() {
         <Route path={ROUTES.VAI_TRO} element={<VaiTro />} />
         <Route path={ROUTES.TAI_LIEU} element={<TaiLieu />} />
         <Route path={ROUTES.HOP_DONG} element={<HopDong />} />
-        <Route path={ROUTES.DE_TAI} element={<DeTai />} />
+
+        {/* ====== ĐỀ TÀI (nested routes) ====== */}
+        <Route path={ROUTES.DE_TAI}>
+          <Route index element={<DeTai />} /> {/* /de-tai */}
+          <Route path="them" element={<ThemDeTai />} /> {/* /de-tai/them */}
+          <Route path="sua/:id" element={<SuaDeTai />} />{" "}
+          {/* /de-tai/sua/:id */}
+          <Route path=":id" element={<ChiTietDeTai />} /> {/* /de-tai/:id */}
+        </Route>
       </Route>
 
       {/* 403 page */}

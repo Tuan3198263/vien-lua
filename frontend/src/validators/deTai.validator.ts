@@ -3,40 +3,41 @@
  */
 
 import type { Rule } from 'antd/es/form';
+import { MESSAGES } from '@/constants/messages';
 
 /**
  * Validator cho Đề Tài chính
  */
 export const DE_TAI_VALIDATOR = {
   ten_de_tai: [
-    { required: true, message: 'Tên đề tài không được để trống' },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Tên đề tài không được quá 255 ký tự' },
     { whitespace: true, message: 'Tên đề tài không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   ma_de_tai: [
-    { max: 100, message: 'Mã đề tài không được quá 100 ký tự' },
+    { max: 100,  message: MESSAGES.ERROR.REQUIRED},
     { whitespace: true, message: 'Mã đề tài không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   don_vi_phe_duyet: [
-    { required: true, message: 'Đơn vị phê duyệt không được để trống' },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Đơn vị phê duyệt không được quá 255 ký tự' },
     { whitespace: true, message: 'Đơn vị phê duyệt không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   cap_quan_ly_de_tai: [
-    { required: true, message: 'Cấp quản lý đề tài không được để trống' },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Cấp quản lý đề tài không được quá 255 ký tự' },
     { whitespace: true, message: 'Cấp quản lý đề tài không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   ngay_bat_dau: [
-    { required: true, message: 'Ngày bắt đầu không được để trống' },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
   ] as Rule[],
 
   ngay_ket_thuc: [
-    { required: true, message: 'Ngày kết thúc không được để trống' },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
   ] as Rule[],
 
   phuong_thuc_khoang_chi: [
@@ -60,31 +61,26 @@ export const DE_TAI_VALIDATOR = {
   ] as Rule[],
 
   chu_nhiem_de_tai: [
-    { required: true, message: 'Chủ nhiệm đề tài không được để trống' },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Chủ nhiệm đề tài không được quá 255 ký tự' },
     { whitespace: true, message: 'Chủ nhiệm đề tài không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   thu_ky_de_tai: [
-    { required: true, message: 'Thư ký đề tài không được để trống' },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Thư ký đề tài không được quá 255 ký tự' },
     { whitespace: true, message: 'Thư ký đề tài không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   hien_trang_nghiem_thu: [
-    { required: true, message: 'Hiện trạng nghiệm thu không được để trống' },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Hiện trạng nghiệm thu không được quá 255 ký tự' },
     { whitespace: true, message: 'Hiện trạng nghiệm thu không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   kinh_phi_tong: [
-    { required: true, message: 'Kinh phí tổng không được để trống' },
-    { type: 'number', message: 'Kinh phí tổng phải là số' },
-    { 
-      type: 'number', 
-      min: 0, 
-      message: 'Kinh phí tổng phải lớn hơn hoặc bằng 0' 
-    },
+    { required: true,  message: MESSAGES.ERROR.REQUIRED },
+   
   ] as Rule[],
 };
 
@@ -93,7 +89,7 @@ export const DE_TAI_VALIDATOR = {
  */
 export const KINH_PHI_NAM_VALIDATOR = {
   nam: [
-    { required: true, message: 'Năm không được để trống' },
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
     { type: 'number', message: 'Năm phải là số' },
     { 
       type: 'number', 
@@ -103,7 +99,7 @@ export const KINH_PHI_NAM_VALIDATOR = {
   ] as Rule[],
 
   kinh_phi: [
-    { required: true, message: 'Kinh phí không được để trống' },
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
     { type: 'number', message: 'Kinh phí phải là số' },
     { 
       type: 'number', 
@@ -118,7 +114,7 @@ export const KINH_PHI_NAM_VALIDATOR = {
  */
 export const SAN_PHAM_VALIDATOR = {
   ten_san_pham: [
-    { required: true, message: 'Tên sản phẩm không được để trống' },
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Tên sản phẩm không được quá 255 ký tự' },
     { whitespace: true, message: 'Tên sản phẩm không được chỉ chứa khoảng trắng' },
   ] as Rule[],
@@ -129,7 +125,7 @@ export const SAN_PHAM_VALIDATOR = {
  */
 export const SAN_PHAM_THUC_TE_VALIDATOR = {
   ten_san_pham: [
-    { required: true, message: 'Tên sản phẩm không được để trống' },
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Tên sản phẩm không được quá 255 ký tự' },
     { whitespace: true, message: 'Tên sản phẩm không được chỉ chứa khoảng trắng' },
   ] as Rule[],
@@ -140,13 +136,13 @@ export const SAN_PHAM_THUC_TE_VALIDATOR = {
  */
 export const HO_SO_LUU_TRU_VALIDATOR = {
   loai_ho_so: [
-    { required: true, message: 'Loại hồ sơ không được để trống' },
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Loại hồ sơ không được quá 255 ký tự' },
     { whitespace: true, message: 'Loại hồ sơ không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   nam: [
-    { required: true, message: 'Năm không được để trống' },
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
     { type: 'number', message: 'Năm phải là số' },
     { 
       type: 'number', 

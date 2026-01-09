@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { Card, Typography, Button, Flex } from "antd";
 import { PlusOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import DanhSachDeTai from "./DanhSachDeTai";
 import { DeTai } from "@/interfaces";
 import { notifySuccess, notifyError } from "@/utils/notification";
@@ -20,30 +21,28 @@ const { Title } = Typography;
  */
 function DeTaiPage() {
   useDocumentTitle();
+  const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
 
   /**
    * Mở form thêm mới
    */
   const handleOpenCreate = () => {
-    notifySuccess("Chức năng đang được phát triển");
-    // TODO: Implement modal thêm mới
+    navigate("/de-tai/them");
   };
 
   /**
    * Mở form sửa
    */
-  const handleOpenEdit = async (record: DeTai) => {
-    try {
-      // Gọi API getById để lấy đầy đủ thông tin
-      const detail = await deTaiApi.getById(record.id!);
-      console.log("Chi tiết đề tài:", detail);
-      notifySuccess("Chức năng đang được phát triển");
-      // TODO: Implement modal sửa
-    } catch (error: any) {
-      const message = error.response?.data?.message || error.message;
-      notifyError("Lỗi tải thông tin", message);
-    }
+  const handleOpenEdit = (record: DeTai) => {
+    navigate(`/de-tai/sua/${record.id}`);
+  };
+
+  /**
+   * Xem chi tiết
+   */
+  const handleView = (record: DeTai) => {
+    navigate(`/de-tai/${record.id}`);
   };
 
   /**
@@ -64,7 +63,7 @@ function DeTaiPage() {
    * Xử lý export Excel
    */
   const handleExport = () => {
-    notifySuccess("Xuất Excel thành công");
+    notifySuccess("Tính năng đang phát triển");
     console.log("Export to Excel");
   };
 
@@ -93,6 +92,7 @@ function DeTaiPage() {
 
         {/* Danh sách */}
         <DanhSachDeTai
+          onView={handleView}
           onEdit={handleOpenEdit}
           onDelete={handleXoa}
           refresh={refreshKey}

@@ -17,6 +17,7 @@ import {
 } from '@/interfaces';
 import { getData, getPaginatedData, deleteData } from './coreApi';
 import axiosInstance from '../axios';
+import { API_URL } from '@/config/api.config';
 import { ApiSuccessResponse } from '@/interfaces';
 
 /**
@@ -27,20 +28,20 @@ export const deTaiApi = {
    * Lấy danh sách đề tài có phân trang
    */
   getAll: (params?: PaginationParams) => 
-    getPaginatedData<DeTai>('/de-tai', params),
+    getPaginatedData<DeTai>(API_URL.DE_TAI, params),
 
   /**
    * Lấy chi tiết đề tài (kèm relations)
    */
   getById: (id: number) => 
-    getData<DeTai>(`/de-tai/${id}`),
+    getData<DeTai>(`${API_URL.DE_TAI}/${id}`),
 
   /**
    * Tạo đề tài mới
    */
   create: async (data: DeTaiDto): Promise<DeTai> => {
     const response = await axiosInstance.post<ApiSuccessResponse<DeTai>>(
-      '/de-tai',
+      API_URL.DE_TAI,
       data
     );
     return response.data.data;
@@ -51,7 +52,7 @@ export const deTaiApi = {
    */
   update: async (id: number, data: Partial<DeTaiDto>): Promise<DeTai> => {
     const response = await axiosInstance.patch<ApiSuccessResponse<DeTai>>(
-      `/de-tai/${id}`,
+      `${API_URL.DE_TAI}/${id}`,
       data
     );
     return response.data.data;
@@ -61,7 +62,7 @@ export const deTaiApi = {
    * Xóa đề tài (cascade xóa các con)
    */
   delete: (id: number) => 
-    deleteData(`/de-tai/${id}`),
+    deleteData(`${API_URL.DE_TAI}/${id}`),
 };
 
 /**
@@ -72,14 +73,14 @@ export const kinhPhiNamApi = {
    * Lấy danh sách kinh phí theo năm của một đề tài
    */
   getAll: (deTaiId: number) => 
-    getData<KinhPhiNam[]>(`/de-tai/${deTaiId}/kinh-phi-nam`),
+    getData<KinhPhiNam[]>(`${API_URL.DE_TAI}/${deTaiId}/kinh-phi`),
 
   /**
    * Thêm kinh phí theo năm
    */
   create: async (deTaiId: number, data: KinhPhiNamDto): Promise<KinhPhiNam> => {
     const response = await axiosInstance.post<ApiSuccessResponse<KinhPhiNam>>(
-      `/de-tai/${deTaiId}/kinh-phi-nam`,
+      `${API_URL.DE_TAI}/${deTaiId}/kinh-phi`,
       data
     );
     return response.data.data;
@@ -88,9 +89,13 @@ export const kinhPhiNamApi = {
   /**
    * Cập nhật kinh phí theo năm
    */
-  update: async (id: number, data: Partial<KinhPhiNamDto>): Promise<KinhPhiNam> => {
+  update: async (
+    deTaiId: number,
+    id: number,
+    data: Partial<KinhPhiNamDto>
+  ): Promise<KinhPhiNam> => {
     const response = await axiosInstance.patch<ApiSuccessResponse<KinhPhiNam>>(
-      `/de-tai/kinh-phi-nam/${id}`,
+      `${API_URL.DE_TAI}/${deTaiId}/kinh-phi/${id}`,
       data
     );
     return response.data.data;
@@ -99,86 +104,88 @@ export const kinhPhiNamApi = {
   /**
    * Xóa kinh phí theo năm
    */
-  delete: (id: number) => 
-    deleteData(`/de-tai/kinh-phi-nam/${id}`),
+ delete: (deTaiId: number, id: number) =>
+    deleteData(
+      `${API_URL.DE_TAI}/${deTaiId}/kinh-phi/${id}`
+    ),
 };
 
 /**
  * API services cho Sản Phẩm Dự Kiến
  */
 export const sanPhamApi = {
-  /**
-   * Lấy danh sách sản phẩm dự kiến của một đề tài
-   */
-  getAll: (deTaiId: number) => 
-    getData<SanPham[]>(`/de-tai/${deTaiId}/san-pham`),
+  getAll: (deTaiId: number) =>
+    getData<SanPham[]>(
+      `${API_URL.DE_TAI}/${deTaiId}/san-pham`
+    ),
 
-  /**
-   * Thêm sản phẩm dự kiến
-   */
-  create: async (deTaiId: number, data: SanPhamDto): Promise<SanPham> => {
+  create: async (
+    deTaiId: number,
+    data: SanPhamDto
+  ): Promise<SanPham> => {
     const response = await axiosInstance.post<ApiSuccessResponse<SanPham>>(
-      `/de-tai/${deTaiId}/san-pham`,
+      `${API_URL.DE_TAI}/${deTaiId}/san-pham`,
       data
     );
     return response.data.data;
   },
 
-  /**
-   * Cập nhật sản phẩm dự kiến
-   */
-  update: async (id: number, data: Partial<SanPhamDto>): Promise<SanPham> => {
+  update: async (
+    deTaiId: number,
+    id: number,
+    data: Partial<SanPhamDto>
+  ): Promise<SanPham> => {
     const response = await axiosInstance.patch<ApiSuccessResponse<SanPham>>(
-      `/de-tai/san-pham/${id}`,
+      `${API_URL.DE_TAI}/${deTaiId}/san-pham/${id}`,
       data
     );
     return response.data.data;
   },
 
-  /**
-   * Xóa sản phẩm dự kiến
-   */
-  delete: (id: number) => 
-    deleteData(`/de-tai/san-pham/${id}`),
+  delete: (deTaiId: number, id: number) =>
+    deleteData(
+      `${API_URL.DE_TAI}/${deTaiId}/san-pham/${id}`
+    ),
 };
 
 /**
  * API services cho Sản Phẩm Thực Tế
  */
 export const sanPhamThucTeApi = {
-  /**
-   * Lấy danh sách sản phẩm thực tế của một đề tài
-   */
-  getAll: (deTaiId: number) => 
-    getData<SanPhamThucTe[]>(`/de-tai/${deTaiId}/san-pham-thuc-te`),
+  getAll: (deTaiId: number) =>
+    getData<SanPhamThucTe[]>(
+      `${API_URL.DE_TAI}/${deTaiId}/san-pham-thuc-te`
+    ),
 
-  /**
-   * Thêm sản phẩm thực tế
-   */
-  create: async (deTaiId: number, data: SanPhamThucTeDto): Promise<SanPhamThucTe> => {
-    const response = await axiosInstance.post<ApiSuccessResponse<SanPhamThucTe>>(
-      `/de-tai/${deTaiId}/san-pham-thuc-te`,
-      data
-    );
+  create: async (
+    deTaiId: number,
+    data: SanPhamThucTeDto
+  ): Promise<SanPhamThucTe> => {
+    const response =
+      await axiosInstance.post<ApiSuccessResponse<SanPhamThucTe>>(
+        `${API_URL.DE_TAI}/${deTaiId}/san-pham-thuc-te`,
+        data
+      );
     return response.data.data;
   },
 
-  /**
-   * Cập nhật sản phẩm thực tế
-   */
-  update: async (id: number, data: Partial<SanPhamThucTeDto>): Promise<SanPhamThucTe> => {
-    const response = await axiosInstance.patch<ApiSuccessResponse<SanPhamThucTe>>(
-      `/de-tai/san-pham-thuc-te/${id}`,
-      data
-    );
+  update: async (
+    deTaiId: number,
+    id: number,
+    data: Partial<SanPhamThucTeDto>
+  ): Promise<SanPhamThucTe> => {
+    const response =
+      await axiosInstance.patch<ApiSuccessResponse<SanPhamThucTe>>(
+        `${API_URL.DE_TAI}/${deTaiId}/san-pham-thuc-te/${id}`,
+        data
+      );
     return response.data.data;
   },
 
-  /**
-   * Xóa sản phẩm thực tế
-   */
-  delete: (id: number) => 
-    deleteData(`/de-tai/san-pham-thuc-te/${id}`),
+  delete: (deTaiId: number, id: number) =>
+    deleteData(
+      `${API_URL.DE_TAI}/${deTaiId}/san-pham-thuc-te/${id}`
+    ),
 };
 
 /**
@@ -189,7 +196,7 @@ export const hoSoLuuTruApi = {
    * Lấy danh sách hồ sơ lưu trữ của một đề tài (kèm file info)
    */
   getAll: (deTaiId: number) => 
-    getData<HoSoLuuTru[]>(`/de-tai/${deTaiId}/ho-so`),
+    getData<HoSoLuuTru[]>(`${API_URL.DE_TAI}/${deTaiId}/ho-so`),
 
   /**
    * Thêm hồ sơ lưu trữ với file (multipart/form-data)
@@ -212,7 +219,7 @@ export const hoSoLuuTruApi = {
     }
 
     const response = await axiosInstance.post<ApiSuccessResponse<HoSoLuuTru>>(
-      `/de-tai/${deTaiId}/ho-so`,
+      `${API_URL.DE_TAI}/${deTaiId}/ho-so`,
       formData,
       {
         headers: {
@@ -239,6 +246,7 @@ export const hoSoLuuTruApi = {
    * @param onProgress - Callback theo dõi progress upload
    */
   update: async (
+     deTaiId: number,
     id: number,
     data: Partial<HoSoLuuTruDto>,
     file?: File,
@@ -266,7 +274,7 @@ export const hoSoLuuTruApi = {
     }
 
     const response = await axiosInstance.patch<ApiSuccessResponse<HoSoLuuTru>>(
-      `/de-tai/ho-so/${id}`,
+      `${API_URL.DE_TAI}/${deTaiId}/ho-so/${id}`,
       formData,
       {
         headers: {
@@ -287,6 +295,8 @@ export const hoSoLuuTruApi = {
   /**
    * Xóa hồ sơ lưu trữ (cascade xóa file)
    */
-  delete: (id: number) => 
-    deleteData(`/de-tai/ho-so/${id}`),
+   delete: (deTaiId: number, id: number) =>
+    deleteData(
+      `${API_URL.DE_TAI}/${deTaiId}/ho-so/${id}`
+    ),
 };

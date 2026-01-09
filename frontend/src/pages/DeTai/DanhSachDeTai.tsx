@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from "react";
 import { Table, Space, Button, Tooltip, Popconfirm, Typography } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { DeTai } from "@/interfaces";
 import { deTaiApi } from "@/services/api/deTaiApi";
@@ -16,6 +16,7 @@ import { useColumnFilter } from "@/hooks/useColumnFilter";
 const { Text } = Typography;
 
 interface DanhSachDeTaiProps {
+  onView?: (record: DeTai) => void;
   onEdit: (record: DeTai) => void;
   onDelete: (id: number) => void;
   refresh?: number;
@@ -24,7 +25,12 @@ interface DanhSachDeTaiProps {
 /**
  * Component Danh sách đề tài
  */
-function DanhSachDeTai({ onEdit, onDelete, refresh }: DanhSachDeTaiProps) {
+function DanhSachDeTai({
+  onView,
+  onEdit,
+  onDelete,
+  refresh,
+}: DanhSachDeTaiProps) {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<DeTai[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -324,6 +330,15 @@ function DanhSachDeTai({ onEdit, onDelete, refresh }: DanhSachDeTaiProps) {
       fixed: "right",
       render: (_, record) => (
         <Space size="small">
+          {onView && (
+            <Tooltip title="Xem chi tiết">
+              <Button
+                type="text"
+                icon={<EyeOutlined />}
+                onClick={() => onView(record)}
+              />
+            </Tooltip>
+          )}
           <Tooltip title="Sửa">
             <Button
               type="text"
