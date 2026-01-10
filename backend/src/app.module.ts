@@ -10,6 +10,7 @@ import { PhanQuyenModule } from './modules/PhanQuyen/phan-quyen.module';
 import { FileHeThongModule } from './modules/FileHeThong/file-he-thong.module';
 import { HopDongModule } from './modules/HopDong/hop-dong.module';
 import { DeTaiModule } from './modules/DeTai/de-tai.module';
+import { DauThauModule } from './modules/DauThau/dau-thau.module';
 
 /**
  * Module chính của ứng dụng
@@ -37,6 +38,7 @@ import { DeTaiModule } from './modules/DeTai/de-tai.module';
     FileHeThongModule,
     HopDongModule,
     DeTaiModule,
+    DauThauModule,
   ],
   controllers: [AppController],
   providers: [AppService],
