@@ -93,16 +93,18 @@ function ChiTietDeTai() {
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#f0f2f5" }}>
-      <HeaderPageForm title="Chi tiết đề tài" backUrl="/de-tai" />
-
       <div
         style={{
           maxWidth: 1400,
           margin: "0 auto",
           backgroundColor: "#fff",
           minHeight: "calc(100vh - 120px)",
+          borderRadius: 8,
+          overflow: "hidden",
         }}
       >
+        <HeaderPageForm title="Chi tiết đề tài" backUrl="/de-tai" />
+
         {/* Form chính - Disabled */}
         <FormDeTai form={form} initialValues={deTai} disabled />
 

@@ -17,6 +17,8 @@ import ThemDeTai from "@/pages/DeTai/ThemDeTai";
 import SuaDeTai from "@/pages/DeTai/SuaDeTai";
 import ChiTietDeTai from "@/pages/DeTai/ChiTietDeTai";
 import DauThau from "@/pages/DauThau/DauThau";
+import ThemDauThau from "@/pages/DauThau/ThemDauThau";
+import SuaDauThau from "@/pages/DauThau/SuaDauThau";
 import KhongCoQuyen from "@/pages/KhongCoQuyen/KhongCoQuyen";
 import { ROUTES } from "@/constants/routes";
 
@@ -52,8 +54,13 @@ function AppRouter() {
           <Route path=":id" element={<ChiTietDeTai />} /> {/* /de-tai/:id */}
         </Route>
 
-        {/* ====== ĐẤU THẦU ====== */}
-        <Route path={ROUTES.DAU_THAU} element={<DauThau />} />
+        {/* ====== ĐẤU THẦU (nested routes) ====== */}
+        <Route path={ROUTES.DAU_THAU}>
+          <Route index element={<DauThau />} /> {/* /dau-thau */}
+          <Route path="them" element={<ThemDauThau />} /> {/* /dau-thau/them */}
+          <Route path="sua/:id" element={<SuaDauThau />} />{" "}
+          {/* /dau-thau/sua/:id */}
+        </Route>
       </Route>
 
       {/* 403 page */}

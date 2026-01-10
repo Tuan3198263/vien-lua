@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from "react";
 import { Table, Space, Button, Tooltip, Popconfirm, Typography } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { DauThau } from "@/interfaces";
 import { dauThauApi } from "@/services/api/dauThauApi";
@@ -16,6 +16,7 @@ import { useColumnFilter } from "@/hooks/useColumnFilter";
 const { Text } = Typography;
 
 interface DanhSachDauThauProps {
+  onEdit?: (record: DauThau) => void;
   onDelete: (id: number) => void;
   refresh?: number;
 }
@@ -23,7 +24,7 @@ interface DanhSachDauThauProps {
 /**
  * Component Danh sách đấu thầu
  */
-function DanhSachDauThau({ onDelete, refresh }: DanhSachDauThauProps) {
+function DanhSachDauThau({ onEdit, onDelete, refresh }: DanhSachDauThauProps) {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<DauThau[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -37,7 +38,7 @@ function DanhSachDauThau({ onDelete, refresh }: DanhSachDauThauProps) {
   });
 
   // Custom hook cho column filtering
-  const { getColumnSearchProps } = useColumnFilter();
+  const { getColumnSearchProps, getColumnNumberProps } = useColumnFilter();
 
   /**
    * Load dữ liệu từ API
@@ -120,7 +121,7 @@ function DanhSachDauThau({ onDelete, refresh }: DanhSachDauThauProps) {
       title: "Tên đề tài",
       dataIndex: ["deTai", "ten_de_tai"],
       key: "ten_de_tai",
-      width: 250,
+      width: 300,
       fixed: "left",
       ...getColumnSearchProps("ten_de_tai", "Tên đề tài"),
       filteredValue: filters.ten_de_tai ? [filters.ten_de_tai] : null,
@@ -138,9 +139,10 @@ function DanhSachDauThau({ onDelete, refresh }: DanhSachDauThauProps) {
       key: "nam_thuc_hien",
       width: 120,
       align: "center",
-      ...getColumnSearchProps("nam_thuc_hien", "Năm thực hiện"),
+      ...getColumnNumberProps("nam_thuc_hien", "Năm"),
       filteredValue: filters.nam_thuc_hien ? [filters.nam_thuc_hien] : null,
       onFilter: () => true,
+      render: (value) => <Text>{value}</Text>,
     },
     {
       title: "Tổng kinh phí",
@@ -194,6 +196,16 @@ function DanhSachDauThau({ onDelete, refresh }: DanhSachDauThauProps) {
       align: "center",
       render: (_, record) => (
         <Space size="small">
+          {onEdit && (
+            <Tooltip title="Sửa">
+              <Button
+                type="text"
+                icon={<EditOutlined />}
+                size="small"
+                onClick={() => onEdit(record)}
+              />
+            </Tooltip>
+          )}
           <Popconfirm
             title="Xác nhận xóa"
             description={

@@ -3,9 +3,10 @@
  */
 
 import { useEffect, useState } from "react";
-import { Form, InputNumber, Input, Row, Col } from "antd";
+import { Form, InputNumber, Row, Col, Select } from "antd";
 import { DANH_SACH_DAU_THAU_VALIDATOR } from "@/validators/dauThau.validator";
 import { FileUpload } from "@/components/FileUpload";
+import { taoOptionsTuDanhMuc } from "@/constants/danhMuc";
 
 export interface FormDanhSachDauThauValues {
   nam: number;
@@ -102,7 +103,16 @@ function FormDanhSachDauThau({
             name="hinh_thuc"
             rules={DANH_SACH_DAU_THAU_VALIDATOR.hinh_thuc}
           >
-            <Input placeholder="Nhập hình thức đấu thầu" />
+            <Select
+              placeholder="Chọn hình thức đấu thầu"
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={taoOptionsTuDanhMuc("HINH_THUC_DAU_THAU")}
+            />
           </Form.Item>
         </Col>
 
@@ -112,7 +122,16 @@ function FormDanhSachDauThau({
             name="buoc"
             rules={DANH_SACH_DAU_THAU_VALIDATOR.buoc}
           >
-            <Input placeholder="Nhập bước đấu thầu" />
+            <Select
+              placeholder="Chọn bước đấu thầu"
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={taoOptionsTuDanhMuc("BUOC_DAU_THAU")}
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -122,7 +141,14 @@ function FormDanhSachDauThau({
         name="trang_thai"
         rules={DANH_SACH_DAU_THAU_VALIDATOR.trang_thai}
       >
-        <Input placeholder="Nhập trạng thái" />
+        <Select
+          placeholder="Chọn trạng thái"
+          showSearch
+          filterOption={(input, option) =>
+            (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+          }
+          options={taoOptionsTuDanhMuc("TRANG_THAI_DAU_THAU")}
+        />
       </Form.Item>
 
       <FileUpload

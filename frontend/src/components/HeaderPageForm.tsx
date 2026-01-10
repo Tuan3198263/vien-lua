@@ -57,6 +57,8 @@ function HeaderPageForm({ title, backUrl, onBack }: HeaderPageFormProps) {
         position: "sticky",
         top: 0,
         zIndex: 100,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
       }}
     >
       <ArrowLeftOutlined

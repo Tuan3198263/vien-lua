@@ -48,7 +48,20 @@ export const useDocumentTitle = () => {
         pageTitle = ROUTE_LABELS.KHONG_CO_QUYEN;
         break;
       default:
-        pageTitle = 'Trang chủ';
+        // Handle dynamic routes
+        if (path.startsWith('/de-tai/them')) {
+          pageTitle = 'Thêm đề tài';
+        } else if (path.startsWith('/de-tai/sua/')) {
+          pageTitle = 'Sửa đề tài';
+        } else if (path.startsWith('/de-tai/')) {
+          pageTitle = 'Chi tiết đề tài';
+        } else if (path.startsWith('/dau-thau/them')) {
+          pageTitle = 'Thêm đấu thầu';
+        } else if (path.startsWith('/dau-thau/sua/')) {
+          pageTitle = 'Sửa đấu thầu';
+        } else {
+          pageTitle = 'Trang chủ';
+        }
     }
 
     // Set document title

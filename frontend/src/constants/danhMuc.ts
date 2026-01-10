@@ -105,6 +105,43 @@ export const DANH_SACH_DANH_MUC: DanhMucInfo[] = [
       'Đã hủy',
     ],
   },
+  {
+    ma_danh_muc: 'NGUON_KINH_PHI',
+    ten_danh_muc: 'Nguồn kinh phí',
+    danh_sach_gia_tri: [
+      'Ngân sách nhà nước',
+      'Ngân sách địa phương',
+      'Doanh nghiệp',
+      'Hợp tác quốc tế',
+      'Tự nguồn',
+      'Khác',
+    ],
+  },
+  {
+    ma_danh_muc: 'TRANG_THAI_DAU_THAU',
+    ten_danh_muc: 'Trạng thái đấu thầu',
+    danh_sach_gia_tri: [
+      'Đang hoàn thành',
+      'Hoàn thành',
+    ],
+  },
+  {
+    ma_danh_muc: 'HINH_THUC_DAU_THAU',
+    ten_danh_muc: 'Hình thức đấu thầu',
+    danh_sach_gia_tri: [
+      'Chào hàng cạnh tranh',
+      'Chỉ định rút gọn',
+    ],
+  },
+  {
+    ma_danh_muc: 'BUOC_DAU_THAU',
+    ten_danh_muc: 'Bước đấu thầu',
+    danh_sach_gia_tri: [
+      'Bước 1',
+      'Bước 2',
+      'Bước cuối',
+    ],
+  },
 ];
 
 /**

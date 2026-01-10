@@ -1,8 +1,9 @@
-import { Input, Button, Space, DatePicker } from "antd";
+import { Input, Button, Space, DatePicker, InputNumber } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import type { ColumnType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 /**
  * Custom hook cho column filtering với Ant Design Table
@@ -170,5 +171,83 @@ export const useColumnFilter = () => {
     ),
   });
 
-  return { getColumnSearchProps, getColumnDateProps };
+  /**
+   * Tạo props cho column number filter (lọc theo số - chỉ bằng)
+   * @param dataIndex - Tên field/column
+   * @param columnTitle - Tên hiển thị của cột (ví dụ: 'Năm thực hiện')
+   * @returns Props để spread vào column definition
+   */
+  const getColumnNumberProps = (
+    dataIndex: string,
+    columnTitle?: string
+  ): ColumnType<any> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => {
+      const [value, setValue] = useState<number | undefined>(
+        selectedKeys[0] ? Number(selectedKeys[0]) : undefined
+      );
+
+      const handleApply = () => {
+        const keys: string[] = [];
+        if (value !== undefined) {
+          keys.push(String(value));
+        }
+        setSelectedKeys(keys);
+        handleSearch(keys, confirm);
+      };
+
+      return (
+        <div
+          style={{ padding: 8, width: 250 }}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
+          <div style={{ marginBottom: 8, fontWeight: 600, color: "#1890ff" }}>
+            Lọc theo {columnTitle || dataIndex}
+          </div>
+
+          <InputNumber
+            placeholder="Nhập giá trị"
+            value={value}
+            onChange={(val) => setValue(val ?? undefined)}
+            style={{ width: "100%", marginBottom: 8 }}
+            onPressEnter={handleApply}
+          />
+
+          <Space style={{ marginTop: 8 }}>
+            <Button
+              type="primary"
+              onClick={handleApply}
+              icon={<SearchOutlined />}
+              size="small"
+              disabled={value === undefined}
+            >
+              Áp dụng
+            </Button>
+            <Button
+              onClick={() => {
+                if (clearFilters) {
+                  setValue(undefined);
+                  handleReset(clearFilters);
+                  confirm({ closeDropdown: false });
+                }
+              }}
+              size="small"
+              icon={<ReloadOutlined />}
+            >
+              Làm mới
+            </Button>
+          </Space>
+        </div>
+      );
+    },
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+  });
+
+  return { getColumnSearchProps, getColumnDateProps, getColumnNumberProps };
 };

@@ -4,8 +4,10 @@
 
 import { useState } from "react";
 import { Card, Typography, Button, Flex } from "antd";
-import { FileExcelOutlined } from "@ant-design/icons";
+import { PlusOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import DanhSachDauThau from "./DanhSachDauThau";
+import { DauThau } from "@/interfaces";
 import { notifySuccess, notifyError } from "@/utils/notification";
 import { dauThauApi } from "@/services/api/dauThauApi";
 import { ROUTE_LABELS } from "@/constants/routes";
@@ -19,7 +21,22 @@ const { Title } = Typography;
  */
 function DauThauPage() {
   useDocumentTitle();
+  const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
+
+  /**
+   * Mở form thêm mới
+   */
+  const handleOpenCreate = () => {
+    navigate("/dau-thau/them");
+  };
+
+  /**
+   * Mở form sửa
+   */
+  const handleOpenEdit = (record: DauThau) => {
+    navigate(`/dau-thau/sua/${record.id}`);
+  };
 
   /**
    * Xử lý xóa đấu thầu
@@ -53,6 +70,13 @@ function DauThauPage() {
           </Title>
 
           <Flex gap="small" wrap="wrap">
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={handleOpenCreate}
+            >
+              Thêm
+            </Button>
             <Button icon={<FileExcelOutlined />} onClick={handleExport}>
               Xuất Excel
             </Button>
@@ -60,7 +84,11 @@ function DauThauPage() {
         </Flex>
 
         {/* Danh sách */}
-        <DanhSachDauThau onDelete={handleXoa} refresh={refreshKey} />
+        <DanhSachDauThau
+          onEdit={handleOpenEdit}
+          onDelete={handleXoa}
+          refresh={refreshKey}
+        />
       </Flex>
     </Card>
   );

@@ -13,7 +13,6 @@ import {
   Modal,
   Form,
   Tooltip,
-  Tag,
 } from "antd";
 import {
   PlusOutlined,
@@ -170,7 +169,7 @@ function DanhSachDanhSachDauThau({ dauThauId }: DanhSachDanhSachDauThauProps) {
       key: "nam",
       width: 100,
       align: "center",
-      render: (value) => <Tag color="blue">{value}</Tag>,
+      render: (value) => value || "-",
     },
     {
       title: "Kinh phí",
@@ -188,14 +187,14 @@ function DanhSachDanhSachDauThau({ dauThauId }: DanhSachDanhSachDauThauProps) {
       title: "Hình thức",
       dataIndex: "hinh_thuc",
       key: "hinh_thuc",
-      width: 150,
+      width: 180,
       render: (value) => value || "-",
     },
     {
       title: "Bước",
       dataIndex: "buoc",
       key: "buoc",
-      width: 150,
+      width: 100,
       render: (value) => value || "-",
     },
     {
@@ -279,15 +278,14 @@ function DanhSachDanhSachDauThau({ dauThauId }: DanhSachDanhSachDauThauProps) {
   ];
 
   return (
-    <Flex vertical gap="middle" style={{ padding: "16px 24px" }}>
+    <div style={{ marginTop: 24 }}>
       {/* Header */}
-      <Flex justify="space-between" align="center">
-        <Title level={5} style={{ margin: 0 }}>
+      <Flex justify="space-between" align="center" style={{ marginBottom: 16 }}>
+        <Title level={4} style={{ margin: 0, color: "#1890ff" }}>
           Danh sách đấu thầu
         </Title>
         <Button
           type="primary"
-          size="small"
           icon={<PlusOutlined />}
           onClick={() => setThemModalOpen(true)}
         >
@@ -349,7 +347,7 @@ function DanhSachDanhSachDauThau({ dauThauId }: DanhSachDanhSachDauThauProps) {
           existingFile={selectedRecord?.file_dau_thau}
         />
       </Modal>
-    </Flex>
+    </div>
   );
 }
 

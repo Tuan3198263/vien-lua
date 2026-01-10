@@ -25,18 +25,14 @@ export const DAU_THAU_VALIDATOR = {
   ] as Rule[],
 
   nguon_kinh_phi: [
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Nguồn kinh phí không được quá 255 ký tự' },
     { whitespace: true, message: 'Nguồn kinh phí không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   tong_kinh_phi: [
     { required: true, message: MESSAGES.ERROR.REQUIRED },
-    { type: 'number', message: 'Tổng kinh phí phải là số' },
-    { 
-      type: 'number', 
-      min: 0, 
-      message: 'Tổng kinh phí phải lớn hơn hoặc bằng 0' 
-    },
+    
   ] as Rule[],
 };
 
@@ -46,7 +42,7 @@ export const DAU_THAU_VALIDATOR = {
 export const DANH_SACH_DAU_THAU_VALIDATOR = {
   nam: [
     { required: true, message: MESSAGES.ERROR.REQUIRED },
-    { type: 'number', message: 'Năm phải là số' },
+   
     { 
       type: 'number', 
       min: 1900, 
@@ -56,25 +52,23 @@ export const DANH_SACH_DAU_THAU_VALIDATOR = {
 
   kinh_phi: [
     { required: true, message: MESSAGES.ERROR.REQUIRED },
-    { type: 'number', message: 'Kinh phí phải là số' },
-    { 
-      type: 'number', 
-      min: 0, 
-      message: 'Kinh phí phải lớn hơn hoặc bằng 0' 
-    },
+   
   ] as Rule[],
 
   hinh_thuc: [
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Hình thức không được quá 255 ký tự' },
     { whitespace: true, message: 'Hình thức không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   buoc: [
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Bước không được quá 255 ký tự' },
     { whitespace: true, message: 'Bước không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   trang_thai: [
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 255, message: 'Trạng thái không được quá 255 ký tự' },
     { whitespace: true, message: 'Trạng thái không được chỉ chứa khoảng trắng' },
   ] as Rule[],
