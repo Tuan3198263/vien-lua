@@ -237,6 +237,34 @@ export class DeTaiService {
       }
     }
 
-    await this.deTaiRepository.remove(deTai);
+    try {
+      await this.deTaiRepository.remove(deTai);
+    } catch (error: any) {
+      // Xử lý lỗi foreign key constraint
+      if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+        // Parse tên bảng từ message lỗi
+        const match = error.message.match(/`(\w+)`\.`(\w+)`/);
+        const tableName = match ? match[2] : 'bảng khác';
+        
+        // Map tên bảng tiếng Anh sang tiếng Việt
+        const tableNameMap: Record<string, string> = {
+          'dau_thau': 'Đấu thầu',
+          'kinh_phi_nam': 'Kinh phí năm',
+          'san_pham': 'Sản phẩm',
+          'san_pham_thuc_te': 'Sản phẩm thực tế',
+          'ho_so_luu_tru': 'Hồ sơ lưu trữ',
+        };
+
+        const displayName = tableNameMap[tableName] || tableName;
+        
+        throw new BadRequestException(
+          `Không thể xóa đề tài này vì còn ${displayName} liên quan. ` +
+          `Vui lòng xóa ${displayName} trước.`
+        );
+      }
+      
+      // Ném lỗi khác
+      throw error;
+    }
   }
 }

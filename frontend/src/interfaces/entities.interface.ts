@@ -193,3 +193,50 @@ export interface HoSoLuuTru {
   ngay_tao?: string;
   ngay_cap_nhat?: string;
 }
+
+/**
+ * Entity Đấu Thầu
+ */
+export interface DauThau {
+  id?: number;
+  de_tai_id: number;
+  nam_thuc_hien: number;
+  nguon_kinh_phi?: string;
+  tong_kinh_phi: number;
+  nguoi_cap_nhat_id?: number;
+  nguoi_cap_nhat?: {
+    id: number;
+    ho_ten: string;
+  };
+  de_tai?: {
+    id: number;
+    ten_de_tai: string;
+    don_vi_phe_duyet: string;
+    cap_quan_ly_de_tai: string;
+    chu_nhiem_de_tai: string;
+  };
+  danh_sach_dau_thau?: DanhSachDauThau[];
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
+ * Entity Danh Sách Đấu Thầu
+ */
+export interface DanhSachDauThau {
+  id?: number;
+  dau_thau_id: number;
+  nam: number;
+  kinh_phi: number;
+  hinh_thuc?: string;
+  buoc?: string;
+  trang_thai?: string;
+  ten_file?: string;
+  file_dau_thau?: {
+    id: number;
+    ten_goc: string;
+    url_xem?: string;
+  };
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}

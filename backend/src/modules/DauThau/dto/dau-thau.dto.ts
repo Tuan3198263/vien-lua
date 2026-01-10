@@ -6,6 +6,7 @@ import {
   Min,
   MaxLength,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { PaginationDto } from '../../../shared/dto/pagination.dto';
 
 // ============================================
@@ -77,6 +78,7 @@ export class FilterDauThauDto extends PaginationDto {
    * Filter theo năm thực hiện
    */
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   nam_thuc_hien?: number;
 

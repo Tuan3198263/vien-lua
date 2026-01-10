@@ -106,3 +106,26 @@ export interface HoSoLuuTruDto {
   loai_ho_so: string;
   nam: number;
 }
+
+/**
+ * DTO Đấu Thầu
+ * Dùng cho create/update đấu thầu
+ */
+export interface DauThauDto {
+  de_tai_id: number;
+  nam_thuc_hien: number;
+  nguon_kinh_phi?: string;
+  tong_kinh_phi: number;
+}
+
+/**
+ * DTO Danh Sách Đấu Thầu
+ * Dùng cho create/update danh sách đấu thầu
+ */
+export interface DanhSachDauThauDto {
+  nam: number;
+  kinh_phi: number;
+  hinh_thuc?: string;
+  buoc?: string;
+  trang_thai?: string;
+}

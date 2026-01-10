@@ -16,6 +16,7 @@ export const ROUTES = {
   VAI_TRO: '/vai-tro',
   HOP_DONG: '/hop-dong',
   DE_TAI: '/de-tai',
+  DAU_THAU: '/dau-thau',
   TAI_LIEU: '/tai-lieu',
 } as const;
 
@@ -29,6 +30,7 @@ export const ROUTE_LABELS = {
   VAI_TRO: 'Vai trò',
   HOP_DONG: 'Hợp đồng',
   DE_TAI: 'Đề tài',
+  DAU_THAU: 'Đấu thầu',
   TAI_LIEU: 'Tài liệu',
   DANG_NHAP: 'Đăng nhập',
   KHONG_CO_QUYEN: 'Không có quyền truy cập',

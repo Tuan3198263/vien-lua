@@ -54,6 +54,11 @@ function AppSider({ collapsed, onCollapse }: AppSiderProps) {
       label: ROUTE_LABELS.DE_TAI,
     },
     {
+      key: ROUTES.DAU_THAU,
+      icon: <FileProtectOutlined />,
+      label: ROUTE_LABELS.DAU_THAU,
+    },
+    {
       key: ROUTES.HOP_DONG,
       icon: <FileProtectOutlined />,
       label: ROUTE_LABELS.HOP_DONG,
