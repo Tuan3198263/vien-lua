@@ -155,7 +155,7 @@ function DanhSachNguoiDung({
         <Space size="small">
           <Tooltip title="Sửa">
             <Button
-              type="link"
+              type="text"
               icon={<EditOutlined />}
               onClick={() => onEdit(record)}
             />
@@ -169,7 +169,7 @@ function DanhSachNguoiDung({
               cancelText="Hủy"
               okType="danger"
             >
-              <Button type="link" danger icon={<DeleteOutlined />} />
+              <Button type="text" danger icon={<DeleteOutlined />} />
             </Popconfirm>
           </Tooltip>
         </Space>
