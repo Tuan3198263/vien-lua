@@ -56,6 +56,10 @@ export class CreateDauThauDto {
 export class UpdateDauThauDto {
   @IsOptional()
   @IsNumber()
+  de_tai_id?: number;
+
+  @IsOptional()
+  @IsNumber()
   @Min(1900)
   nam_thuc_hien?: number;
 
