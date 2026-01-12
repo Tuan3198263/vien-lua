@@ -147,6 +147,9 @@ jobs:
 
             # Kiểm tra cuối cùng
             if curl -f http://localhost:3001/api 2>/dev/null; then
+              echo "Deployment successful!"
+              docker logs vien-lua-backend --tail 20
+            else
               echo "Deployment failed: Backend not responding"
               docker logs vien-lua-backend --tail 50
               exit 1
