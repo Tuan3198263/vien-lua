@@ -19,6 +19,9 @@ import ChiTietDeTai from "@/pages/DeTai/ChiTietDeTai";
 import DauThau from "@/pages/DauThau/DauThau";
 import ThemDauThau from "@/pages/DauThau/ThemDauThau";
 import SuaDauThau from "@/pages/DauThau/SuaDauThau";
+import DeCuongThiNghiem from "@/pages/DeCuongThiNghiem/DeCuongThiNghiem";
+import ThemDeCuongThiNghiem from "@/pages/DeCuongThiNghiem/ThemDeCuongThiNghiem";
+import SuaDeCuongThiNghiem from "@/pages/DeCuongThiNghiem/SuaDeCuongThiNghiem";
 import KhongCoQuyen from "@/pages/KhongCoQuyen/KhongCoQuyen";
 import { ROUTES } from "@/constants/routes";
 
@@ -60,6 +63,16 @@ function AppRouter() {
           <Route path="them" element={<ThemDauThau />} /> {/* /dau-thau/them */}
           <Route path="sua/:id" element={<SuaDauThau />} />{" "}
           {/* /dau-thau/sua/:id */}
+        </Route>
+
+        {/* ====== ĐỀ CƯƠNG THÍ NGHIỆM (nested routes) ====== */}
+        <Route path={ROUTES.DE_CUONG_THI_NGHIEM}>
+          <Route index element={<DeCuongThiNghiem />} />{" "}
+          {/* /de-cuong-thi-nghiem */}
+          <Route path="them" element={<ThemDeCuongThiNghiem />} />{" "}
+          {/* /de-cuong-thi-nghiem/them */}
+          <Route path="sua/:id" element={<SuaDeCuongThiNghiem />} />{" "}
+          {/* /de-cuong-thi-nghiem/sua/:id */}
         </Route>
       </Route>
 

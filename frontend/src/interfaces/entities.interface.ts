@@ -240,3 +240,62 @@ export interface DanhSachDauThau {
   ngay_tao?: string;
   ngay_cap_nhat?: string;
 }
+
+/**
+ * Entity Đề Cương Thí Nghiệm
+ */
+export interface DeCuongThiNghiem {
+  id?: number;
+  de_tai_id: number;
+  ten_thi_nghiem: string;
+  loai_hinh_thi_nghiem: string;
+  ngay_bat_dau: string;
+  ngay_ket_thuc: string;
+  mua_vu: string;
+  nguoi_thuc_hien: string;
+  kinh_phi_ky_thuat: number;
+  kinh_phi_lao_dong: number;
+  kinh_phi_nguyen_vat_lieu: number;
+  nguoi_cap_nhat_id?: number;
+  nguoi_cap_nhat?: {
+    id: number;
+    ho_ten: string;
+  };
+  // Backend trả về deTai (camelCase)
+  deTai?: {
+    id: number;
+    ten_de_tai: string;
+    don_vi_phe_duyet: string;
+    cap_quan_ly_de_tai: string;
+    chu_nhiem_de_tai: string;
+  };
+  // Alias cho snake_case (deprecated)
+  de_tai?: {
+    id: number;
+    ten_de_tai: string;
+    don_vi_phe_duyet: string;
+    cap_quan_ly_de_tai: string;
+    chu_nhiem_de_tai: string;
+  };
+  file_de_cuong?: {
+    id: number;
+    ten_goc: string;
+    url_xem?: string;
+  };
+  danh_sach_so_luong?: DanhSachSoLuongThiNghiem[];
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
+ * Entity Danh Sách Số Lượng Thí Nghiệm
+ */
+export interface DanhSachSoLuongThiNghiem {
+  id?: number;
+  de_cuong_thi_nghiem_id: number;
+  dia_diem: string;
+  vi_tri: string;
+  dien_tich: number;
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}

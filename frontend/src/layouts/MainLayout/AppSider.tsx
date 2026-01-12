@@ -17,6 +17,7 @@ import {
   FileTextOutlined,
   FileProtectOutlined,
   ProjectOutlined,
+  ExperimentOutlined,
 } from "@ant-design/icons";
 import { ROUTES, ROUTE_LABELS } from "@/constants/routes";
 import logoImage from "@/assets/logo.png";
@@ -57,6 +58,11 @@ function AppSider({ collapsed, onCollapse }: AppSiderProps) {
       key: ROUTES.DAU_THAU,
       icon: <FileProtectOutlined />,
       label: ROUTE_LABELS.DAU_THAU,
+    },
+    {
+      key: ROUTES.DE_CUONG_THI_NGHIEM,
+      icon: <ExperimentOutlined />,
+      label: ROUTE_LABELS.DE_CUONG_THI_NGHIEM,
     },
     {
       key: ROUTES.HOP_DONG,

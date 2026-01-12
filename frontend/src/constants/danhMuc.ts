@@ -142,6 +142,42 @@ export const DANH_SACH_DANH_MUC: DanhMucInfo[] = [
       'Bước cuối',
     ],
   },
+  {
+    ma_danh_muc: 'LOAI_HINH_THI_NGHIEM',
+    ten_danh_muc: 'Loại hình thí nghiệm',
+    danh_sach_gia_tri: [
+      'Thí nghiệm đồng ruộng',
+      'Thí nghiệm nhà lưới',
+      'Thí nghiệm phòng thí nghiệm',
+      'Thí nghiệm mô hình',
+      'Khác',
+    ],
+  },
+  {
+    ma_danh_muc: 'MUA_VU',
+    ten_danh_muc: 'Mùa vụ',
+    danh_sach_gia_tri: [
+      'Vụ Xuân',
+      'Vụ Hè Thu',
+      'Vụ Đông',
+      'Vụ Mùa',
+      'Cả năm',
+    ],
+  },
+  {
+    ma_danh_muc: 'DIA_DIEM_THI_NGHIEM',
+    ten_danh_muc: 'Địa điểm thí nghiệm',
+    danh_sach_gia_tri: [
+      'Hà Nội',
+      'Hưng Yên',
+      'Thái Bình',
+      'Nam Định',
+      'Hải Dương',
+      'Vĩnh Phúc',
+      'Bắc Ninh',
+      'Khác',
+    ],
+  },
 ];
 
 /**

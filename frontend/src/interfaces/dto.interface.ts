@@ -129,3 +129,30 @@ export interface DanhSachDauThauDto {
   buoc?: string;
   trang_thai?: string;
 }
+
+/**
+ * DTO Đề Cương Thí Nghiệm
+ * Dùng cho create/update đề cương thí nghiệm
+ */
+export interface DeCuongThiNghiemDto {
+  de_tai_id: number;
+  ten_thi_nghiem: string;
+  loai_hinh_thi_nghiem: string;
+  ngay_bat_dau: string;
+  ngay_ket_thuc: string;
+  mua_vu: string;
+  nguoi_thuc_hien: string;
+  kinh_phi_ky_thuat: number;
+  kinh_phi_lao_dong: number;
+  kinh_phi_nguyen_vat_lieu: number;
+}
+
+/**
+ * DTO Danh Sách Số Lượng Thí Nghiệm
+ * Dùng cho create/update danh sách số lượng thí nghiệm
+ */
+export interface DanhSachSoLuongThiNghiemDto {
+  dia_diem: string;
+  vi_tri: string;
+  dien_tich: number;
+}
