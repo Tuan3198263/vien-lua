@@ -206,7 +206,7 @@ export const useColumnFilter = () => {
           onKeyDown={(e) => e.stopPropagation()}
         >
           <div style={{ marginBottom: 8, fontWeight: 600, color: "#1890ff" }}>
-            Lọc theo {columnTitle || dataIndex}
+            Tìm theo {columnTitle || dataIndex}
           </div>
 
           <InputNumber

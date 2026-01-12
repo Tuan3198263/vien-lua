@@ -11,6 +11,7 @@ import { FileHeThongModule } from './modules/FileHeThong/file-he-thong.module';
 import { HopDongModule } from './modules/HopDong/hop-dong.module';
 import { DeTaiModule } from './modules/DeTai/de-tai.module';
 import { DauThauModule } from './modules/DauThau/dau-thau.module';
+import { DeCuongThiNghiemModule } from './modules/DeCuongThiNghiem/de-cuong-thi-nghiem.module';
 
 /**
  * Module chính của ứng dụng
@@ -39,6 +40,7 @@ import { DauThauModule } from './modules/DauThau/dau-thau.module';
     HopDongModule,
     DeTaiModule,
     DauThauModule,
+    DeCuongThiNghiemModule,
   ],
   controllers: [AppController],
   providers: [AppService],
