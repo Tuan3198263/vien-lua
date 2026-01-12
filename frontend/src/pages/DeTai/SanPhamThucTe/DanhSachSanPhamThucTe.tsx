@@ -73,7 +73,7 @@ function DanhSachSanPhamThucTe({
     try {
       const values = await suaForm.validateFields();
       setActionLoading(true);
-      await onEdit(selectedRecord.id, values);
+      await onEdit(selectedRecord.id!, values);
       setSuaModalOpen(false);
       setSelectedRecord(null);
     } catch (error: any) {
@@ -138,7 +138,7 @@ function DanhSachSanPhamThucTe({
           <Popconfirm
             title="Xác nhận xóa?"
             description="Bạn có chắc muốn xóa sản phẩm này?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => handleDelete(record.id!)}
             okText="Xóa"
             cancelText="Hủy"
           >

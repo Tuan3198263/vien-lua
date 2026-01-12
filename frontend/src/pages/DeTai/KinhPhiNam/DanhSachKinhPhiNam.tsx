@@ -96,7 +96,7 @@ function DanhSachKinhPhiNam({
 
     try {
       setActionLoading(true);
-      await onEdit(selectedRecord.id, values);
+      await onEdit(selectedRecord.id!, values);
       setSuaModalOpen(false);
       setSelectedRecord(null);
     } catch (error: any) {
@@ -176,7 +176,7 @@ function DanhSachKinhPhiNam({
           <Popconfirm
             title="Xác nhận xóa?"
             description="Bạn có chắc muốn xóa kinh phí năm này?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => handleDelete(record.id!)}
             okText="Xóa"
             cancelText="Hủy"
           >
