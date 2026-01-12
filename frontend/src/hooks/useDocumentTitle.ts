@@ -17,7 +17,7 @@ export const useDocumentTitle = () => {
     const path = location.pathname;
     
     // Map path to label
-    let pageTitle = 'Dashboard';
+    let pageTitle = 'Trang chủ';
     
     switch (path) {
       case '/':

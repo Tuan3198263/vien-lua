@@ -48,6 +48,17 @@
   background: #bfbfbf;
 }
 
+/* Modal divider - Thêm border dưới header */
+.ant-modal-header {
+  border-bottom: 1px solid #f0f0f0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 8px !important;
+}
+
+.ant-modal-body {
+  padding-top: 24px !important;
+}
+
 /* Table scrollbar */
 .ant-table-body::-webkit-scrollbar {
   width: 8px;
