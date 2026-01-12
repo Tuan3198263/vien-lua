@@ -131,6 +131,23 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            docker compose -f /home/ubuntu/vien-lua/docker-compose.prod.yml ps
-            docker logs vien-lua-backend --tail 20
-            curl -f http://localhost:3001/api || exit 1
+            cd /home/ubuntu/vien-lua
+            docker compose -f docker-compose.prod.yml ps
+
+            # Đợi backend khởi động (tối đa 60 giây)
+            echo "Waiting for backend to start..."
+            for i in {1..12}; do
+              if curl -f http://localhost:3001/api 2>/dev/null; then
+                echo "Backend is up!"
+                break
+              fi
+              echo "Attempt $i/12: Backend not ready yet, waiting 5s..."
+              sleep 5
+            done
+
+            # Kiểm tra cuối cùng
+            if curl -f http://localhost:3001/api 2>/dev/null; then
+              echo "Deployment failed: Backend not responding"
+              docker logs vien-lua-backend --tail 50
+              exit 1
+            fi
