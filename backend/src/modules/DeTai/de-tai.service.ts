@@ -253,6 +253,7 @@ export class DeTaiService {
           'san_pham': 'Sản phẩm',
           'san_pham_thuc_te': 'Sản phẩm thực tế',
           'ho_so_luu_tru': 'Hồ sơ lưu trữ',
+          'de_cuong_thi_nghiem': 'Đề cương thí nghiệm',
         };
 
         const displayName = tableNameMap[tableName] || tableName;
