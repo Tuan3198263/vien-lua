@@ -1,7 +1,7 @@
 import {
   Injectable,
   NotFoundException,
- 
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -370,6 +370,31 @@ export class DeCuongThiNghiemService {
       }
     }
 
-    await this.deCuongThiNghiemRepository.remove(deCuong);
+    try {
+      await this.deCuongThiNghiemRepository.remove(deCuong);
+    } catch (error: any) {
+      // Xử lý lỗi foreign key constraint
+      if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+        // Parse tên bảng từ message lỗi
+        const match = error.message.match(/`(\w+)`\.`(\w+)`/);
+        const tableName = match ? match[2] : 'bảng khác';
+        
+        // Map tên bảng tiếng Anh sang tiếng Việt
+        const tableNameMap: Record<string, string> = {
+          'lan_su_dung': 'Lần sử dụng (Nhà Lưới)',
+        
+        };
+
+        const displayName = tableNameMap[tableName] || tableName;
+        
+        throw new BadRequestException(
+          `Không thể xóa đề cương thí nghiệm này vì còn ${displayName} liên quan. ` +
+          `Vui lòng xóa ${displayName} trước.`
+        );
+      }
+      
+      // Ném lỗi khác
+      throw error;
+    }
   }
 }
