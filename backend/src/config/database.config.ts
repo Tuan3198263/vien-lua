@@ -17,6 +17,7 @@ import { DauThau } from '../modules/DauThau/entities/dau-thau.entity';
 import { DanhSachDauThau } from '../modules/DauThau/entities/danh-sach-dau-thau.entity';
 import { DeCuongThiNghiem } from '../modules/DeCuongThiNghiem/entities/de-cuong-thi-nghiem.entity';
 import { DanhSachSoLuongThiNghiem } from '../modules/DeCuongThiNghiem/entities/danh-sach-so-luong-thi-nghiem.entity';
+import { NhaLuoi } from '../modules/NhaLuoi/nha-luoi.entity';
 
 /**
  * Cấu hình kết nối database
@@ -53,6 +54,7 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
         DanhSachDauThau,
         DeCuongThiNghiem,
         DanhSachSoLuongThiNghiem,
+        NhaLuoi,
       ],
       
       // Chỉ bật synchronize trong development

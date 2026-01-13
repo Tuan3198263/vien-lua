@@ -46,6 +46,11 @@ export const DANH_SACH_MODULE: ModuleInfo[] = [
     ten_module: 'Đề cương thí nghiệm',
     thu_tu: 6,
   },
+  {
+    ma_module: 'NHA_LUOI',
+    ten_module: 'Nhà lưới',
+    thu_tu: 7,
+  },
 ];
 
 /**
