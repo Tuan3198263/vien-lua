@@ -18,6 +18,7 @@ import {
   FileProtectOutlined,
   ProjectOutlined,
   ExperimentOutlined,
+  BuildOutlined,
 } from "@ant-design/icons";
 import { ROUTES, ROUTE_LABELS } from "@/constants/routes";
 import logoImage from "@/assets/logo.png";
@@ -69,7 +70,11 @@ function AppSider({ collapsed, onCollapse }: AppSiderProps) {
       icon: <FileProtectOutlined />,
       label: ROUTE_LABELS.HOP_DONG,
     },
-
+    {
+      key: ROUTES.NHA_LUOI,
+      icon: <BuildOutlined />,
+      label: ROUTE_LABELS.NHA_LUOI,
+    },
     {
       key: ROUTES.TAI_LIEU,
       icon: <FileTextOutlined />,

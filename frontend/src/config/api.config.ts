@@ -20,6 +20,7 @@ export const API_URL = {
   DE_TAI: '/de-tai',
   DAU_THAU: '/dau-thau',
   DE_CUONG_THI_NGHIEM: '/de-cuong-thi-nghiem',
+  NHA_LUOI: '/nha-luoi',
 } as const;
 
 /**

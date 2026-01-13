@@ -299,3 +299,68 @@ export interface DanhSachSoLuongThiNghiem {
   ngay_tao?: string;
   ngay_cap_nhat?: string;
 }
+
+/**
+ * Entity Nhà Lưới
+ */
+export interface NhaLuoi {
+  id?: number;
+  ten_nha_luoi: string;
+  khu: string;
+  so_be?: string;
+  dien_tich?: number;
+  dia_diem?: string;
+  nguoi_cap_nhat_id?: number;
+  nguoi_cap_nhat?: {
+    id: number;
+    ho_ten: string;
+  };
+  danh_sach_lan_su_dung?: LanSuDung[];
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}
+
+/**
+ * Entity Lần Sử Dụng Nhà Lưới
+ */
+export interface LanSuDung {
+  id?: number;
+  nha_luoi_id: number;
+  de_cuong_thi_nghiem_id: number;
+  dung_cu?: string;
+  so_luong?: number;
+  ngay_muon?: string;
+  ngay_tra?: string;
+  khau_hao?: number;
+  hien_trang?: string;
+  ten_file?: string;
+  nguoi_cap_nhat_id?: number;
+  nguoi_cap_nhat?: {
+    id: number;
+    ho_ten: string;
+  };
+  nhaLuoi?: {
+    id: number;
+    ten_nha_luoi: string;
+    khu: string;
+  };
+  deCuongThiNghiem?: {
+    id: number;
+    ten_thi_nghiem: string;
+    nguoi_thuc_hien: string;
+    ngay_bat_dau: string;
+    ngay_ket_thuc: string;
+    deTai?: {
+      id: number;
+      ten_de_tai: string;
+      cap_quan_ly_de_tai: string;
+    };
+  };
+  file_lan_su_dung?: {
+    id: number;
+    ten_goc: string;
+    url_xem?: string;
+  };
+  ngay_tao?: string;
+  ngay_cap_nhat?: string;
+}

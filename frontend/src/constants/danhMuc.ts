@@ -178,6 +178,43 @@ export const DANH_SACH_DANH_MUC: DanhMucInfo[] = [
       'Khác',
     ],
   },
+  {
+    ma_danh_muc: 'KHU_NHA_LUOI',
+    ten_danh_muc: 'Khu nhà lưới',
+    danh_sach_gia_tri: [
+      'Khu A',
+      'Khu B',
+      'Khu C',
+      'Khu D',
+      'Khu E',
+    ],
+  },
+  {
+    ma_danh_muc: 'DUNG_CU_NHA_LUOI',
+    ten_danh_muc: 'Dụng cụ nhà lưới',
+    danh_sach_gia_tri: [
+      'Chậu ươm',
+      'Khay ươm',
+      'Bệ',
+      'Bình tưới',
+      'Nhíp',
+      'Kéo cắt',
+      'Thước đo',
+      'Khác',
+    ],
+  },
+  {
+    ma_danh_muc: 'HIEN_TRANG_DUNG_CU',
+    ten_danh_muc: 'Hiện trạng dụng cụ',
+    danh_sach_gia_tri: [
+      'Tốt',
+      'Bình thường',
+      'Hư vỡ nhẹ',
+      'Hư vỡ nặng',
+      'Hết hạn sử dụng',
+      'Cần thay thế',
+    ],
+  },
 ];
 
 /**

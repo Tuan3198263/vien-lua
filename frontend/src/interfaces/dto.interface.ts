@@ -156,3 +156,29 @@ export interface DanhSachSoLuongThiNghiemDto {
   vi_tri: string;
   dien_tich: number;
 }
+
+/**
+ * DTO Nhà Lưới
+ * Dùng cho create/update nhà lưới
+ */
+export interface NhaLuoiDto {
+  ten_nha_luoi: string;
+  khu: string;
+  so_be?: string;
+  dien_tich?: number;
+  dia_diem?: string;
+}
+
+/**
+ * DTO Lần Sử Dụng Nhà Lưới
+ * Dùng cho create/update lần sử dụng
+ */
+export interface LanSuDungDto {
+  de_cuong_thi_nghiem_id: number;
+  dung_cu?: string;
+  so_luong?: number;
+  ngay_muon?: string;
+  ngay_tra?: string;
+  khau_hao?: number;
+  hien_trang?: string;
+}
