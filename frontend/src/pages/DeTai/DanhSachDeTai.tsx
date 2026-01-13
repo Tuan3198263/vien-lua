@@ -350,7 +350,7 @@ function DanhSachDeTai({
             title="Xác nhận xóa"
             description={
               <>
-                Bạn có chắc chắn muốn xóa đấu thầu này?
+                Bạn có chắc chắn muốn xóa đề tài này?
                 <br />
                 <Text type="danger">
                   <strong>Cảnh báo:</strong> Tất cả dữ liệu liên quan sẽ bị xóa!
