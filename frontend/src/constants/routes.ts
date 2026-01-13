@@ -19,6 +19,7 @@ export const ROUTES = {
   DAU_THAU: '/dau-thau',
   DE_CUONG_THI_NGHIEM: '/de-cuong-thi-nghiem',
   NHA_LUOI: '/nha-luoi',
+  DONG_RUONG: '/dong-ruong',
   TAI_LIEU: '/tai-lieu',
 } as const;
 
@@ -35,6 +36,7 @@ export const ROUTE_LABELS = {
   DAU_THAU: 'Đấu thầu',
   DE_CUONG_THI_NGHIEM: 'Đề cương TN',
   NHA_LUOI: 'Nhà lưới',
+  DONG_LUA: 'Đồng ruộng',
   TAI_LIEU: 'Tài liệu',
   DANG_NHAP: 'Đăng nhập',
   KHONG_CO_QUYEN: 'Không có quyền truy cập',

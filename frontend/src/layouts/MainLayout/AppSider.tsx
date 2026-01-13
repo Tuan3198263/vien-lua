@@ -19,6 +19,7 @@ import {
   ProjectOutlined,
   ExperimentOutlined,
   BuildOutlined,
+  GoldOutlined,
 } from "@ant-design/icons";
 import { ROUTES, ROUTE_LABELS } from "@/constants/routes";
 import logoImage from "@/assets/logo.png";
@@ -74,6 +75,11 @@ function AppSider({ collapsed, onCollapse }: AppSiderProps) {
       key: ROUTES.NHA_LUOI,
       icon: <BuildOutlined />,
       label: ROUTE_LABELS.NHA_LUOI,
+    },
+    {
+      key: ROUTES.DONG_RUONG,
+      icon: <GoldOutlined />,
+      label: ROUTE_LABELS.DONG_LUA,
     },
     {
       key: ROUTES.TAI_LIEU,

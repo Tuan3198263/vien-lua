@@ -25,6 +25,7 @@ import SuaDeCuongThiNghiem from "@/pages/DeCuongThiNghiem/SuaDeCuongThiNghiem";
 import NhaLuoi from "@/pages/NhaLuoi/NhaLuoi";
 import ThemNhaLuoi from "@/pages/NhaLuoi/ThemNhaLuoi";
 import SuaNhaLuoi from "@/pages/NhaLuoi/SuaNhaLuoi";
+import DongRuong from "@/pages/DongLua/DongRuong";
 import KhongCoQuyen from "@/pages/KhongCoQuyen/KhongCoQuyen";
 import { ROUTES } from "@/constants/routes";
 
@@ -85,6 +86,9 @@ function AppRouter() {
           <Route path="sua/:id" element={<SuaDeCuongThiNghiem />} />{" "}
           {/* /de-cuong-thi-nghiem/sua/:id */}
         </Route>
+
+        {/* ====== ĐỒNG RUỘNG ====== */}
+        <Route path={ROUTES.DONG_RUONG} element={<DongRuong />} />
       </Route>
 
       {/* 403 page */}
