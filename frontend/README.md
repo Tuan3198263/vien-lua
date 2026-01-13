@@ -1,148 +1,132 @@
-# Frontend - React + TypeScript + Vite + Ant Design
+# Frontend - Viện Lúa
 
-## 📋 Mô tả
+Ứng dụng web quản lý viện lúa, xây dựng với React + TypeScript + Ant Design.
 
-Frontend của dự án Viện Lúa, xây dựng với React, TypeScript và Ant Design. Sử dụng Vite làm build tool để có tốc độ phát triển nhanh.
+## 🎨 Công nghệ
 
-## 🎨 Công nghệ sử dụng
-
-- **React 18** - Library UI
+- **React** - UI library
 - **TypeScript** - Type safety
-- **Vite** - Build tool và dev server siêu nhanh
-- **Ant Design 5** - Component library
-- **Axios** - HTTP client
+- **Vite** - Build tool
+- **Ant Design** - Component library
+- **Redux Toolkit** - State management
+- **React Router** - Routing
 
-## 📁 Cấu trúc thư mục
+## 📁 Cấu trúc chính
 
 ```
-frontend/
-├── src/
-│   ├── pages/          # Các trang của ứng dụng
-│   ├── main.tsx        # Entry point
-│   └── App.tsx         # Root component với layout
-├── index.html          # HTML template
-├── vite.config.ts      # Cấu hình Vite
-├── tsconfig.json       # Cấu hình TypeScript
-└── package.json        # Dependencies
+src/
+├── pages/            # Các trang chức năng
+│   ├── TrangChu/    # Dashboard
+│   ├── DeTai/       # Quản lý đề tài
+│   ├── DauThau/     # Quản lý đấu thầu
+│   ├── NhaLuoi/     # Nhà lưới
+│   ├── DeCuongTN/   # Đề cương Thí Nghiệm
+│   ├── HopDong/     # Quản lý hợp đồng
+│   ├── TaiLieu/     # Tài liệu
+│   ├── NguoiDung/   # Quản lý người dùng
+│   └── VaiTro/      # Quản lý vai trò
+├── components/      # Components tái sử dụng
+├── layouts/         # Layouts (MainLayout, AuthLayout)
+├── services/        # API services
+├── stores/          # Redux stores
+├── hooks/           # Custom hooks
+├── utils/           # Utilities
+├── constants/       # Constants, routes, permissions
+└── validators/      # Form validators
 ```
 
-## 🚀 Chạy Development
+## 🚀 Chạy dự án
+
+**Development:**
 
 ```bash
-# Install dependencies
 npm install
-
-# Chạy dev server
 npm run dev
-
-# Truy cập: http://localhost:3000
 ```
 
-## 🏗️ Build Production
+Ứng dụng chạy tại: `http://localhost:3000`
+
+**Production:**
 
 ```bash
-# Build
 npm run build
-
-# Preview build
 npm run preview
 ```
 
-## 🐳 Docker
+## 🎯 Tính năng chính
 
-```bash
-# Build image
-docker build -t vien-lua-frontend .
+### Authentication
 
-# Run container
-docker run -p 80:80 vien-lua-frontend
-```
+- Đăng nhập/đăng xuất
+- Phân quyền dựa trên vai trò
+- Protected routes
 
-## 🎯 Features
+### Quản lý nghiên cứu
 
-### Layout
+- **Đề tài**: CRUD, quản lý người tham gia, sản phẩm, file
+- **Đấu thầu**: Quản lý gói thầu, tiến độ
+- **Đề cương thí nghiệm**: Nhà lưới, lần sử dụng, sổ bề
+- **Hợp đồng**: Theo dõi hợp đồng nghiên cứu
+- **Tài liệu**: Upload/download tài liệu chung
+  ...
 
-- Header với tiêu đề trang
-- Sidebar menu có thể thu gọn
-- Content area responsive
+### UI/UX Features
 
-### Dashboard
+- Table với pagination, sort, filter
+- Form validation chi tiết
+- Upload/preview file (PDF, Word, Excel, images)
+- Responsive design
+- Vietnamese locale
 
-- Cards thống kê với số liệu mẫu
-- Layout grid với Ant Design Row/Col
-- Icons từ Ant Design
+### Components tái sử dụng
 
-### Cấu hình
+- **ApiSelect** - Select box load data từ API
+- **DanhMucSelect** - Select danh mục
+- **FileUpload** - Upload file với preview
+- **HeaderPageForm** - Header form thống nhất
+- **PrivateRoute** - Route yêu cầu đăng nhập
 
-- Proxy API requests tới backend (`/api` → `http://localhost:3001`)
-- Ngôn ngữ tiếng Việt cho Ant Design
-- Hot Module Replacement (HMR)
+## ⚙️ Cấu hình
 
-## 📝 Scripts
+**API Proxy** (vite.config.ts):
 
-```bash
-npm run dev      # Development mode với HMR
-npm run build    # Build production
-npm run preview  # Preview production build
-npm run lint     # Chạy ESLint
-```
+- `/api` → `http://localhost:3001` (backend)
 
-## 🔧 Cấu hình quan trọng
+**Theme** (main.tsx):
 
-### vite.config.ts
+- Font chữ: System font stack
+- Form spacing: Giảm khoảng cách label
+- Menu: Font size 15px, font-weight 500/600
 
-- Server port: 3000
-- Proxy: `/api` → backend:3001
-- Plugin: React
+## 📝 Hướng dẫn
 
-### tsconfig.json
+Chi tiết từng module:
 
-- Target: ES2020
-- JSX: react-jsx
-- Strict mode enabled
+- `DANH_MUC_GUIDE.md` - Sử dụng DanhMucSelect
+- `docs/frontend-guides/` - Hướng dẫn phát triển
 
-## 💡 Hướng dẫn mở rộng
+## 🏗️ Pattern
 
-### Thêm trang mới
+**CRUD Pattern**:
 
-1. Tạo component trong `src/pages/`
-2. Thêm route (nếu dùng React Router)
-3. Cập nhật menu trong `App.tsx`
+- Tách biệt form thêm/sửa
+- Modal riêng với `themModalOpen`, `suaModalOpen`
+- Methods: `handleAdd`, `handleEdit`, `handleDelete`
+- Table với file preview, pagination, filters
 
-### Gọi API
+**State Management**:
 
-```typescript
-import axios from "axios";
+- Redux cho auth state
+- Local state cho form và table data
 
-// API sẽ tự động proxy qua backend
-const response = await axios.get("/api/users");
-```
+**API Handling**:
 
-### Sử dụng Ant Design components
-
-```typescript
-import { Button, Table, Form } from "antd";
-```
-
-## 🎨 Theme customization
-
-Có thể customize theme Ant Design trong `main.tsx`:
-
-```typescript
-<ConfigProvider
-  theme={{
-    token: {
-      colorPrimary: "#00b96b",
-    },
-  }}
->
-  <App />
-</ConfigProvider>
-```
+- Services trong `src/services/`
+- Error handling với notification
+- Loading states
 
 ## 🔗 Links
 
-- [React Documentation](https://react.dev/)
-- [Vite Documentation](https://vitejs.dev/)
+- [React Docs](https://react.dev/)
 - [Ant Design](https://ant.design/)
-- [TypeScript](https://www.typescriptlang.org/)
+- [Vite Docs](https://vitejs.dev/)

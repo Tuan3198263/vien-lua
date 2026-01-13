@@ -1,233 +1,115 @@
-# Backend - NestJS + TypeORM + MySQL
+# Backend - Viện Lúa
 
-## 📋 Mô tả
+Hệ thống backend API quản lý nghiên cứu và thí nghiệm lúa, xây dựng với NestJS + TypeORM + MySQL.
 
-Backend API cho dự án Viện Lúa, xây dựng với NestJS framework và TypeORM. Sử dụng kiến trúc modular để dễ dàng mở rộng.
+## 🛠️ Công nghệ
 
-## 🛠️ Công nghệ sử dụng
+- **NestJS** - Framework backend
+- **TypeORM** - ORM quản lý database
+- **MySQL** - Database
+- **AWS S3** - Lưu trữ file
+- **JWT** - Authentication
 
-- **NestJS 10** - Progressive Node.js framework
-- **TypeORM** - ORM cho TypeScript/JavaScript
-- **MySQL2** - MySQL client cho Node.js
-- **TypeScript** - Type safety
-
-## 📁 Cấu trúc thư mục
+## 📁 Cấu trúc chính
 
 ```
-backend/
-├── src/
-│   ├── modules/              # Feature modules
-│   │   └── user/             # User module
-│   │       ├── user.entity.ts      # Entity (database model)
-│   │       ├── user.controller.ts  # Controller (routes)
-│   │       ├── user.service.ts     # Service (business logic)
-│   │       └── user.module.ts      # Module definition
-│   ├── config/
-│   │   └── database.config.ts      # Database configuration
-│   ├── main.ts               # Application entry point
-│   ├── app.module.ts         # Root module
-│   ├── app.controller.ts     # Root controller
-│   └── app.service.ts        # Root service
-├── nest-cli.json             # NestJS CLI config
-├── tsconfig.json             # TypeScript config
-└── package.json              # Dependencies
+src/
+├── modules/          # Các module chức năng
+│   ├── NguoiDung/   # Quản lý người dùng
+│   ├── VaiTro/      # Quản lý vai trò
+│   ├── PhanQuyen/   # Phân quyền
+│   ├── DeTai/       # Đề tài nghiên cứu
+│   ├── DauThau/     # Đấu thầu
+│   ├── DeCuongThiNghiem/ # Đề cương thí nghiệm
+│   ├── HopDong/     # Hợp đồng
+│   └── FileHeThong/ # Quản lý file
+├── common/          # Guards, filters, decorators
+├── config/          # Cấu hình database, S3
+├── core/            # Database, logger
+└── shared/          # Utils, constants, interfaces
 ```
 
-## 🚀 Chạy Development
+## 🚀 Chạy dự án
+
+**Development:**
 
 ```bash
-# Install dependencies
 npm install
-
-# Copy environment variables
-cp .env.example .env
-
-# Chạy dev mode với hot reload
 npm run start:dev
-
-# API sẽ chạy tại: http://localhost:3001/api
 ```
 
-## 🏗️ Build Production
+API chạy tại: `http://localhost:3001/api`
+
+**Production:**
 
 ```bash
-# Build
 npm run build
-
-# Run production
 npm run start:prod
 ```
 
-## 🐳 Docker
+## 🔑 Cấu hình
 
-```bash
-# Build image
-docker build -t vien-lua-backend .
+Tạo file `.env` với các biến:
 
-# Run container
-docker run -p 3001:3001 --env-file .env vien-lua-backend
-```
+- `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` - Database
+- `JWT_SECRET` - Bảo mật JWT
+- `AWS_*` - Cấu hình S3 (region, bucket, access keys)
 
-## 🔗 API Endpoints
+## 🎯 Tính năng chính
 
-### Root Endpoints
-```
-GET  /api                  - Health check
-GET  /api/database-check   - Kiểm tra kết nối database
-```
+### Authentication & Authorization
 
-### User Module
-```
-GET  /api/users           - Lấy danh sách users
-GET  /api/users/count     - Đếm số lượng users
-```
+- Đăng nhập/đăng xuất với JWT
+- Phân quyền theo vai trò và module
+- Guard bảo vệ API endpoints
 
-## 🗄️ Database
+### Quản lý nghiên cứu
 
-### Cấu hình
+- **Đề tài**: Thông tin, người tham gia, sản phẩm
+- **Đấu thầu**: Gói thầu, tiến độ
+- **Đề cương thí nghiệm**: Nhà lưới, sổ bề, số lượng thí nghiệm
+- **Hợp đồng**: Theo dõi hợp đồng nghiên cứu
+  ...
 
-File `.env`:
-```env
-DB_HOST=sql.freedb.tech
-DB_PORT=3306
-DB_USER=freedb_tuanle2901
-DB_PASSWORD=8KWDRXuY!AbwG%S
-DB_NAME=freedb_vien_lua
-```
+### File Management
 
-### Kiểm tra kết nối
+- Upload/download files qua S3
+- Phân loại theo module (DE_TAI, DAU_THAU, etc.)
+- Xóa file cascade khi xóa record
 
-```bash
-# Gọi endpoint kiểm tra database
-curl http://localhost:3001/api/database-check
-```
+### Query & Filter
 
-Kết quả mong đợi:
-```json
-{
-  "status": "OK",
-  "message": "Kết nối database thành công",
-  "database": "freedb_vien_lua",
-  "timestamp": "2025-12-21T..."
-}
-```
+- Pagination, sorting
+- Tìm kiếm theo nhiều trường
+- Filter theo danh mục, trạng thái
 
-### Entity & Migration
+## 📝 API Documentation
 
-TypeORM tự động tạo/cập nhật bảng khi `synchronize: true` (chỉ dùng trong dev).
+Chi tiết API cho từng module:
 
-**Lưu ý**: Trong production, nên tắt `synchronize` và dùng migrations.
+- `DE_TAI_API_GUIDE.md` - API đề tài
+- `DAU_THAU_API_GUIDE.md` - API đấu thầu
+- `HOP_DONG_API_GUIDE.md` - API hợp đồng
+- `PHAN_QUYEN_API_GUIDE.md` - API phân quyền
+- `FILE_INTEGRATION_GUIDE.md` - Hướng dẫn upload file
+  ...
 
-## 📝 Scripts
+## 🏗️ Kiến trúc
 
-```bash
-npm run start         # Start
-npm run start:dev     # Development mode với watch
-npm run start:debug   # Debug mode
-npm run start:prod    # Production mode
-npm run build         # Build
-npm run lint          # ESLint
-npm run test          # Unit tests
-npm run test:e2e      # E2E tests
-```
+**Module pattern**: Mỗi chức năng là một module độc lập với:
 
-## 🏗️ Kiến trúc Module
+- Entity (TypeORM) - Database model
+- DTO - Validation và transfer data
+- Service - Business logic
+- Controller - API endpoints
 
-### Module Structure
-Mỗi feature được tổ chức thành 1 module:
+**Global components**:
 
-```
-user/
-├── user.entity.ts      # Database model
-├── user.controller.ts  # API endpoints
-├── user.service.ts     # Business logic
-├── user.module.ts      # Module declaration
-└── dto/                # Data Transfer Objects (tùy chọn)
-```
-
-### Tạo module mới
-
-```bash
-# Sử dụng NestJS CLI
-nest generate module modules/product
-nest generate controller modules/product
-nest generate service modules/product
-```
-
-## 🔧 Cấu hình quan trọng
-
-### database.config.ts
-- Kết nối MySQL qua TypeORM
-- Auto-load entities
-- Synchronize trong development
-- Connection pooling
-
-### main.ts
-- CORS enabled
-- Global prefix: `/api`
-- Port: 3001
-
-## 💡 Best Practices
-
-### 1. Structure theo Module
-- Mỗi feature = 1 module
-- Tách biệt controller, service, entity
-- Export service để module khác sử dụng
-
-### 2. Dependency Injection
-```typescript
-constructor(
-  private readonly userService: UserService,
-) {}
-```
-
-### 3. DTO & Validation
-```typescript
-// dto/create-user.dto.ts
-export class CreateUserDto {
-  @IsString()
-  name: string;
-  
-  @IsEmail()
-  email: string;
-}
-```
-
-### 4. Exception Handling
-```typescript
-throw new NotFoundException('User not found');
-throw new BadRequestException('Invalid data');
-```
-
-## 🧪 Testing
-
-```bash
-# Unit tests
-npm run test
-
-# E2E tests
-npm run test:e2e
-
-# Test coverage
-npm run test:cov
-```
-
-## 📚 Mở rộng
-
-### Thêm CRUD cho entity
-1. Tạo entity với decorators TypeORM
-2. Tạo service với repository
-3. Tạo controller với endpoints
-4. Import module vào AppModule
-
-### Thêm Authentication
-```bash
-npm install @nestjs/jwt @nestjs/passport passport passport-jwt
-nest generate module auth
-```
+- Exception Filter - Xử lý lỗi database (max_questions, FK constraints)
+- JWT Guard - Bảo vệ endpoints yêu cầu đăng nhập
+- Roles Guard - Kiểm tra quyền truy cập
 
 ## 🔗 Links
 
-- [NestJS Documentation](https://docs.nestjs.com/)
-- [TypeORM Documentation](https://typeorm.io/)
-- [MySQL Documentation](https://dev.mysql.com/doc/)
+- [NestJS Docs](https://docs.nestjs.com/)
+- [TypeORM Docs](https://typeorm.io/)
