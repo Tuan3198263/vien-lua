@@ -6,8 +6,10 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { NguoiDung } from '../NguoiDung/nguoi-dung.entity';
+import { LanSuDung } from './entities/lan-su-dung.entity';
 
 /**
  * Entity Nhà Lưới
@@ -86,6 +88,14 @@ export class NhaLuoi {
   @ManyToOne(() => NguoiDung, { nullable: false })
   @JoinColumn({ name: 'nguoi_cap_nhat_id' })
   nguoi_cap_nhat: NguoiDung;
+
+  /**
+   * Danh sách lần sử dụng
+   */
+  @OneToMany(() => LanSuDung, (lanSuDung) => lanSuDung.nhaLuoi, {
+    cascade: true,
+  })
+  danh_sach_lan_su_dung: LanSuDung[];
 
   /**
    * Ngày tạo nhà lưới

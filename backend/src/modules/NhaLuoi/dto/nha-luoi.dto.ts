@@ -5,6 +5,7 @@ import {
   IsOptional,
   MaxLength,
   Min,
+  IsDateString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationDto } from '../../../shared/dto/pagination.dto';
@@ -134,4 +135,129 @@ export class FilterNhaLuoiDto extends PaginationDto {
   @Type(() => Number)
   @IsNumber({}, { message: 'Diện tích phải là số' })
   dien_tich?: number;
+}
+
+// ============================================
+// DTO CHO LẦN SỬ DỤNG (SUB-MODULE)
+// ============================================
+
+/**
+ * DTO để tạo lần sử dụng mới
+ */
+export class CreateLanSuDungDto {
+  /**
+   * ID đề cương thí nghiệm - bắt buộc
+   */
+  @IsNotEmpty({ message: 'Đề cương thí nghiệm không được để trống' })
+  @IsNumber({}, { message: 'Đề cương thí nghiệm phải là số' })
+  de_cuong_thi_nghiem_id: number;
+
+  /**
+   * Dụng cụ sử dụng - tùy chọn
+   */
+  @IsOptional()
+  @IsString({ message: 'Dụng cụ phải là chuỗi' })
+  @MaxLength(255, { message: 'Dụng cụ không được vượt quá 255 ký tự' })
+  dung_cu?: string;
+
+  /**
+   * Số lượng - tùy chọn
+   */
+  @IsOptional()
+  @IsNumber({}, { message: 'Số lượng phải là số' })
+  @Min(0, { message: 'Số lượng phải lớn hơn hoặc bằng 0' })
+  so_luong?: number;
+
+  /**
+   * Ngày mượn - tùy chọn
+   * Format: YYYY-MM-DD
+   */
+  @IsOptional()
+  @IsDateString({}, { message: 'Ngày mượn phải có định dạng YYYY-MM-DD' })
+  ngay_muon?: string;
+
+  /**
+   * Ngày trả - tùy chọn
+   * Format: YYYY-MM-DD
+   */
+  @IsOptional()
+  @IsDateString({}, { message: 'Ngày trả phải có định dạng YYYY-MM-DD' })
+  ngay_tra?: string;
+
+  /**
+   * Khấu hao - tùy chọn
+   */
+  @IsOptional()
+  @IsNumber({}, { message: 'Khấu hao phải là số' })
+  @Min(0, { message: 'Khấu hao phải lớn hơn hoặc bằng 0' })
+  khau_hao?: number;
+
+  /**
+   * Hiện trạng - tùy chọn
+   */
+  @IsOptional()
+  @IsString({ message: 'Hiện trạng phải là chuỗi' })
+  @MaxLength(255, { message: 'Hiện trạng không được vượt quá 255 ký tự' })
+  hien_trang?: string;
+}
+
+/**
+ * DTO để cập nhật lần sử dụng
+ * Tất cả fields đều optional
+ */
+export class UpdateLanSuDungDto {
+  /**
+   * ID đề cương thí nghiệm - tùy chọn
+   */
+  @IsOptional()
+  @IsNumber({}, { message: 'Đề cương thí nghiệm phải là số' })
+  de_cuong_thi_nghiem_id?: number;
+
+  /**
+   * Dụng cụ sử dụng - tùy chọn
+   */
+  @IsOptional()
+  @IsString({ message: 'Dụng cụ phải là chuỗi' })
+  @MaxLength(255, { message: 'Dụng cụ không được vượt quá 255 ký tự' })
+  dung_cu?: string;
+
+  /**
+   * Số lượng - tùy chọn
+   */
+  @IsOptional()
+  @IsNumber({}, { message: 'Số lượng phải là số' })
+  @Min(0, { message: 'Số lượng phải lớn hơn hoặc bằng 0' })
+  so_luong?: number;
+
+  /**
+   * Ngày mượn - tùy chọn
+   * Format: YYYY-MM-DD
+   */
+  @IsOptional()
+  @IsDateString({}, { message: 'Ngày mượn phải có định dạng YYYY-MM-DD' })
+  ngay_muon?: string;
+
+  /**
+   * Ngày trả - tùy chọn
+   * Format: YYYY-MM-DD
+   */
+  @IsOptional()
+  @IsDateString({}, { message: 'Ngày trả phải có định dạng YYYY-MM-DD' })
+  ngay_tra?: string;
+
+  /**
+   * Khấu hao - tùy chọn
+   */
+  @IsOptional()
+  @IsNumber({}, { message: 'Khấu hao phải là số' })
+  @Min(0, { message: 'Khấu hao phải lớn hơn hoặc bằng 0' })
+  khau_hao?: number;
+
+  /**
+   * Hiện trạng - tùy chọn
+   */
+  @IsOptional()
+  @IsString({ message: 'Hiện trạng phải là chuỗi' })
+  @MaxLength(255, { message: 'Hiện trạng không được vượt quá 255 ký tự' })
+  hien_trang?: string;
 }
