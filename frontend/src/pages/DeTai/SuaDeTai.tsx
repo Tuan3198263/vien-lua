@@ -239,6 +239,22 @@ function SuaDeTai() {
         {/* Form chính */}
         <FormDeTai form={form} initialValues={deTai} />
 
+        {/* Action Buttons */}
+        <Flex
+          justify="flex-end"
+          style={{
+            padding: "16px 24px",
+            borderTop: "1px solid #f0f0f0",
+            position: "sticky",
+            bottom: 0,
+            backgroundColor: "#fff",
+          }}
+        >
+          <Button type="primary" onClick={handleSubmit} loading={loading}>
+            Lưu
+          </Button>
+        </Flex>
+
         {/* Sub-modules */}
         <div style={{ padding: "0 24px 24px" }}>
           <DanhSachKinhPhiNam
@@ -269,22 +285,6 @@ function SuaDeTai() {
             onDelete={handleDeleteHoSo}
           />
         </div>
-
-        {/* Action Buttons */}
-        <Flex
-          justify="flex-end"
-          style={{
-            padding: "16px 24px",
-            borderTop: "1px solid #f0f0f0",
-            position: "sticky",
-            bottom: 0,
-            backgroundColor: "#fff",
-          }}
-        >
-          <Button type="primary" onClick={handleSubmit} loading={loading}>
-            Lưu
-          </Button>
-        </Flex>
       </div>
     </div>
   );

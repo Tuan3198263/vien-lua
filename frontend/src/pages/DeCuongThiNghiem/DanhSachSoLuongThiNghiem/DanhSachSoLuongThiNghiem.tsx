@@ -194,30 +194,16 @@ function DanhSachSoLuongThiNghiem({
       dataIndex: "dia_diem",
       key: "dia_diem",
       width: 200,
-      ellipsis: { showTitle: false },
-      render: (value: string) =>
-        value ? (
-          <Tooltip title={value} placement="topLeft">
-            {value}
-          </Tooltip>
-        ) : (
-          "-"
-        ),
+      ellipsis: true,
+      render: (value: string) => value || "-",
     },
     {
       title: "Vị trí",
       dataIndex: "vi_tri",
       key: "vi_tri",
       width: 150,
-      ellipsis: { showTitle: false },
-      render: (value: string) =>
-        value ? (
-          <Tooltip title={value} placement="topLeft">
-            {value}
-          </Tooltip>
-        ) : (
-          "-"
-        ),
+      ellipsis: true,
+      render: (value: string) => value || "-",
     },
     {
       title: "Diện tích (ha)",
@@ -234,14 +220,12 @@ function DanhSachSoLuongThiNghiem({
       fixed: "right" as const,
       render: (_: any, record: DanhSachSoLuongThiNghiem) => (
         <Space size="small">
-          <Tooltip title="Sửa">
-            <Button
-              type="text"
-              icon={<EditOutlined />}
-              onClick={() => handleOpenEditModal(record)}
-              title="Sửa"
-            />
-          </Tooltip>
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => handleOpenEditModal(record)}
+            title="Sửa"
+          />
           <Popconfirm
             title="Xóa số lượng thí nghiệm"
             description="Bạn có chắc chắn muốn xóa?"
@@ -250,14 +234,7 @@ function DanhSachSoLuongThiNghiem({
             cancelText="Hủy"
             okButtonProps={{ danger: true }}
           >
-            <Tooltip title="Xóa">
-              <Button
-                type="text"
-                danger
-                icon={<DeleteOutlined />}
-                title="Xóa"
-              />
-            </Tooltip>
+            <Button type="text" danger icon={<DeleteOutlined />} title="Xóa" />
           </Popconfirm>
         </Space>
       ),

@@ -178,8 +178,12 @@ function DanhSachDeTai({
       dataIndex: "phuong_thuc_khoang_chi",
       key: "phuong_thuc_khoang_chi",
       width: 180,
-      ellipsis: true,
-      render: (value) => value || "-",
+      ellipsis: { showTitle: false },
+      render: (value) => (
+        <Tooltip title={value} placement="topLeft">
+          {value || "-"}
+        </Tooltip>
+      ),
     },
     {
       title: "Nội dung khoáng chi",
@@ -197,17 +201,25 @@ function DanhSachDeTai({
       title: "Lĩnh vực khoa học",
       dataIndex: "linh_vuc_khoa_hoc",
       key: "linh_vuc_khoa_hoc",
-      width: 150,
-      ellipsis: true,
-      render: (value) => value || "-",
+      width: 170,
+      ellipsis: { showTitle: false },
+      render: (value) => (
+        <Tooltip title={value} placement="topLeft">
+          {value || "-"}
+        </Tooltip>
+      ),
     },
     {
       title: "Nguồn gốc",
       dataIndex: "nguon_goc_de_tai",
       key: "nguon_goc_de_tai",
       width: 150,
-      ellipsis: true,
-      render: (value) => value || "-",
+      ellipsis: { showTitle: false },
+      render: (value) => (
+        <Tooltip title={value} placement="topLeft">
+          {value || "-"}
+        </Tooltip>
+      ),
     },
     {
       title: "Hợp đồng",
@@ -336,7 +348,15 @@ function DanhSachDeTai({
           </Tooltip>
           <Popconfirm
             title="Xác nhận xóa"
-            description="Bạn có chắc chắn muốn xóa đề tài này? Tất cả dữ liệu liên quan (kinh phí, sản phẩm, hồ sơ) sẽ bị xóa."
+            description={
+              <>
+                Bạn có chắc chắn muốn xóa đấu thầu này?
+                <br />
+                <Text type="danger">
+                  <strong>Cảnh báo:</strong> Tất cả dữ liệu liên quan sẽ bị xóa!
+                </Text>
+              </>
+            }
             onConfirm={() => record.id && onDelete(record.id)}
             okText="Xóa"
             cancelText="Hủy"
