@@ -13,7 +13,6 @@ import {
   Modal,
   Form,
   Flex,
-  Tooltip,
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import type { TablePaginationConfig } from "antd";
