@@ -88,7 +88,7 @@ export class LanSuDungController {
     if (file) {
       try {
         const uploadDto: UploadFileDto = {
-          module: 'LAN_SU_DUNG',
+          module: 'NHA_LUOI',
           ban_ghi_id: lanSuDung.id,
           ten_truong: 'file_lan_su_dung',
         };
@@ -191,7 +191,7 @@ export class LanSuDungController {
     if (body.xoa_file === 'true' || body.xoa_file === true) {
       try {
         await this.fileHeThongService.xoaFile({
-          module: 'LAN_SU_DUNG',
+          module: 'NHA_LUOI',
           ban_ghi_id: id,
           ten_truong: 'file_lan_su_dung',
         });
@@ -205,7 +205,7 @@ export class LanSuDungController {
     if (file) {
       try {
         const uploadDto: UploadFileDto = {
-          module: 'LAN_SU_DUNG',
+          module: 'NHA_LUOI',
           ban_ghi_id: id,
           ten_truong: 'file_lan_su_dung',
         };
