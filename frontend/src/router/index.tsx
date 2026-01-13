@@ -23,6 +23,8 @@ import DeCuongThiNghiem from "@/pages/DeCuongThiNghiem/DeCuongThiNghiem";
 import ThemDeCuongThiNghiem from "@/pages/DeCuongThiNghiem/ThemDeCuongThiNghiem";
 import SuaDeCuongThiNghiem from "@/pages/DeCuongThiNghiem/SuaDeCuongThiNghiem";
 import NhaLuoi from "@/pages/NhaLuoi/NhaLuoi";
+import ThemNhaLuoi from "@/pages/NhaLuoi/ThemNhaLuoi";
+import SuaNhaLuoi from "@/pages/NhaLuoi/SuaNhaLuoi";
 import KhongCoQuyen from "@/pages/KhongCoQuyen/KhongCoQuyen";
 import { ROUTES } from "@/constants/routes";
 
@@ -48,7 +50,14 @@ function AppRouter() {
         <Route path={ROUTES.VAI_TRO} element={<VaiTro />} />
         <Route path={ROUTES.TAI_LIEU} element={<TaiLieu />} />
         <Route path={ROUTES.HOP_DONG} element={<HopDong />} />
-        <Route path={ROUTES.NHA_LUOI} element={<NhaLuoi />} />
+
+        {/* ====== NHÀ LƯỚI (nested routes) ====== */}
+        <Route path={ROUTES.NHA_LUOI}>
+          <Route index element={<NhaLuoi />} /> {/* /nha-luoi */}
+          <Route path="them" element={<ThemNhaLuoi />} /> {/* /nha-luoi/them */}
+          <Route path="sua/:id" element={<SuaNhaLuoi />} />{" "}
+          {/* /nha-luoi/sua/:id */}
+        </Route>
 
         {/* ====== ĐỀ TÀI (nested routes) ====== */}
         <Route path={ROUTES.DE_TAI}>

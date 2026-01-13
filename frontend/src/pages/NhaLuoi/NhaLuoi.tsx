@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { Card, Typography, Button, Flex } from "antd";
 import { PlusOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import DanhSachNhaLuoi from "./DanhSachNhaLuoi";
 import { NhaLuoi } from "@/interfaces";
 import { notifySuccess, notifyError } from "@/utils/notification";
@@ -20,22 +21,21 @@ const { Title } = Typography;
  */
 function NhaLuoiPage() {
   useDocumentTitle();
+  const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
 
   /**
    * Mở form thêm mới
    */
   const handleOpenCreate = () => {
-    notifySuccess("Tính năng đang phát triển");
-    console.log("Mở form thêm nhà lưới");
+    navigate("/nha-luoi/them");
   };
 
   /**
    * Mở form sửa
    */
   const handleOpenEdit = (record: NhaLuoi) => {
-    notifySuccess("Tính năng đang phát triển");
-    console.log("Mở form sửa nhà lưới:", record);
+    navigate(`/nha-luoi/sua/${record.id}`);
   };
 
   /**

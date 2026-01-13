@@ -307,7 +307,7 @@ export interface NhaLuoi {
   id?: number;
   ten_nha_luoi: string;
   khu: string;
-  so_be?: string;
+  so_be?: number;
   dien_tich?: number;
   dia_diem?: string;
   nguoi_cap_nhat_id?: number;

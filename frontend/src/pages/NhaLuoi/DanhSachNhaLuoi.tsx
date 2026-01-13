@@ -135,7 +135,7 @@ function DanhSachNhaLuoi({ onEdit, onDelete, refresh }: DanhSachNhaLuoiProps) {
       render: (value) => <Text>{value}</Text>,
     },
     {
-      title: "Số bệ",
+      title: "Số bể",
       dataIndex: "so_be",
       key: "so_be",
       width: 100,

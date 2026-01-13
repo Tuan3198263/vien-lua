@@ -41,6 +41,9 @@ export const useDocumentTitle = () => {
       case '/hop-dong':
         pageTitle = ROUTE_LABELS.HOP_DONG;
         break;
+      case '/nha-luoi':
+        pageTitle = ROUTE_LABELS.NHA_LUOI;
+        break;
       case '/tai-lieu':
         pageTitle = ROUTE_LABELS.TAI_LIEU;
         break;
@@ -62,6 +65,10 @@ export const useDocumentTitle = () => {
           pageTitle = 'Thêm đấu thầu';
         } else if (path.startsWith('/dau-thau/sua/')) {
           pageTitle = 'Sửa đấu thầu';
+        } else if (path.startsWith('/nha-luoi/them')) {
+          pageTitle = 'Thêm nhà lưới';
+        } else if (path.startsWith('/nha-luoi/sua/')) {
+          pageTitle = 'Sửa nhà lưới';
         } else {
           pageTitle = 'Trang chủ';
         }

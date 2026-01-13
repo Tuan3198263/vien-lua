@@ -21,11 +21,14 @@ export const NHA_LUOI_VALIDATOR = {
   ] as Rule[],
 
   so_be: [
-    { max: 50, message: 'Số bệ không được quá 50 ký tự' },
+    { required: true, message: MESSAGES.ERROR.REQUIRED },
+    { type: 'number', message: 'Số bể phải là số' },
+    { type: 'number', min: 0, message: 'Số bể phải lớn hơn hoặc bằng 0' },
   ] as Rule[],
 
   dien_tich: [
-    { type: 'number', min: 0, message: 'Diện tích phải lớn hơn hoặc bằng 0' },
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
+   
   ] as Rule[],
 
   dia_diem: [
@@ -43,27 +46,33 @@ export const LAN_SU_DUNG_VALIDATOR = {
   ] as Rule[],
 
   dung_cu: [
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 500, message: 'Dụng cụ không được quá 500 ký tự' },
     { whitespace: true, message: 'Dụng cụ không được chỉ chứa khoảng trắng' },
   ] as Rule[],
 
   so_luong: [
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
     { type: 'number', min: 0, message: 'Số lượng phải lớn hơn hoặc bằng 0' },
   ] as Rule[],
 
   ngay_muon: [
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
     { type: 'date', message: 'Ngày mượn không hợp lệ' },
   ] as Rule[],
 
   ngay_tra: [
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
     { type: 'date', message: 'Ngày trả không hợp lệ' },
   ] as Rule[],
 
   khau_hao: [
-    { type: 'number', min: 0, max: 100, message: 'Khấu hao phải từ 0 đến 100' },
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
+   
   ] as Rule[],
 
   hien_trang: [
+     { required: true, message: MESSAGES.ERROR.REQUIRED },
     { max: 500, message: 'Hiện trạng không được quá 500 ký tự' },
   ] as Rule[],
 };
