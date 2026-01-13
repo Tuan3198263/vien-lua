@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NhaLuoi } from './nha-luoi.entity';
 import { CreateNhaLuoiDto, UpdateNhaLuoiDto, FilterNhaLuoiDto } from './dto/nha-luoi.dto';
+import { LanSuDungService } from './lan-su-dung.service';
 import {
   PaginationDto,
   PaginatedResult,
@@ -22,6 +23,7 @@ export class NhaLuoiService {
   constructor(
     @InjectRepository(NhaLuoi)
     private nhaLuoiRepository: Repository<NhaLuoi>,
+    private lanSuDungService: LanSuDungService,
   ) {}
 
   /**
@@ -175,16 +177,31 @@ export class NhaLuoiService {
   }
 
   /**
-   * Xóa nhà lưới
+   * Xóa nhà lưới (cascade delete lần sử dụng con và files liên quan)
    * @param id - ID nhà lưới cần xóa
    * @returns Thông báo xóa thành công
    */
   async xoa(id: number): Promise<{ message: string }> {
-    // Kiểm tra nhà lưới có tồn tại không
-    const nhaLuoi = await this.nhaLuoiRepository.findOne({ where: { id } });
+    // Kiểm tra nhà lưới có tồn tại không và load relations
+    const nhaLuoi = await this.nhaLuoiRepository.findOne({
+      where: { id },
+      relations: ['danh_sach_lan_su_dung'],
+    });
 
     if (!nhaLuoi) {
       throw new NotFoundException(`Không tìm thấy nhà lưới với ID ${id}`);
+    }
+
+    // Xóa files của lần sử dụng (trước khi cascade delete)
+    if (nhaLuoi.danh_sach_lan_su_dung && nhaLuoi.danh_sach_lan_su_dung.length > 0) {
+      for (const lanSuDung of nhaLuoi.danh_sach_lan_su_dung) {
+        try {
+          await this.lanSuDungService.xoa(lanSuDung.id);
+        } catch (error) {
+          console.error(`Lỗi xóa lần sử dụng ${lanSuDung.id}:`, error);
+          // Tiếp tục xóa dù có lỗi
+        }
+      }
     }
 
     // Xóa nhà lưới
