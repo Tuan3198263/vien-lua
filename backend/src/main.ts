@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { DataSource } from 'typeorm';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 
 /**
  * Entry point của ứng dụng NestJS
@@ -15,6 +16,9 @@ async function bootstrap() {
   
   // Prefix cho tất cả các route API
   app.setGlobalPrefix('api');
+
+  // Bật global exception filter
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   // Bật validation pipe toàn cục
   app.useGlobalPipes(
