@@ -1,122 +1,47 @@
-# Viện Lúa - Dashboard Quản Lý
+# 🌾 Viện Lúa - Hệ Thống Quản Lý
 
-## 📋 Mô tả
+🌐 **Demo:** http://vienlua.myvnc.com:8080/
 
-Đây là boilerplate cho web app dashboard quản lý, được xây dựng với stack công nghệ hiện đại:
+**Tài khoản test:**
 
-- **Frontend**: React + TypeScript + Vite + Ant Design
+- Tên đăng nhập: `TESTER`
+- Mật khẩu: `TESTER`
+
+---
+
+Hệ thống quản lý viện lúa, cung cấp các chức năng tạo – cập nhật – tra cứu dữ liệu, phân quyền người dùng, quản lý file và xuất báo cáo Excel.
+
+- **Frontend**: React + TypeScript + Vite + Ant Design 5
 - **Backend**: NestJS + TypeORM + MySQL
-- **DevOps**: Docker + Docker Compose + GitHub Actions
+- **Storage**: AWS S3
+- **DevOps**: Docker + Docker Compose + GitHub Actions (CI/CD)
 
-## 🏗️ Kiến trúc hệ thống
+---
 
-```
-┌─────────────────┐
-│   Client/User   │
-└────────┬────────┘
-         │ HTTP
-         ▼
-┌─────────────────┐
-│    Frontend     │
-│  React + Vite   │ :80
-│   Ant Design    │
-└────────┬────────┘
-         │ API Calls (/api)
-         ▼
-┌─────────────────┐
-│     Backend     │
-│     NestJS      │ :3001
-│    TypeORM      │
-└────────┬────────┘
-         │ SQL
-         ▼
-┌─────────────────┐
-│     MySQL DB    │
-│  freedb.tech    │
-└─────────────────┘
-```
+## ⚙️ 1. Cài đặt & Chạy dự án
 
-## 📁 Cấu trúc thư mục
-
-```
-vien_lua/
-├── frontend/                 # Frontend React application
-│   ├── src/
-│   │   ├── pages/           # Các trang (Dashboard, etc.)
-│   │   ├── main.tsx         # Entry point
-│   │   └── App.tsx          # Root component
-│   ├── Dockerfile           # Docker config cho frontend
-│   ├── package.json
-│   ├── vite.config.ts
-│   └── tsconfig.json
-│
-├── backend/                  # Backend NestJS application
-│   ├── src/
-│   │   ├── modules/         # Feature modules
-│   │   │   └── user/        # User module mẫu
-│   │   ├── config/          # Database config
-│   │   ├── main.ts          # Entry point
-│   │   ├── app.module.ts    # Root module
-│   │   ├── app.controller.ts
-│   │   └── app.service.ts
-│   ├── Dockerfile           # Docker config cho backend
-│   ├── package.json
-│   └── tsconfig.json
-│
-├── .github/
-│   └── workflows/
-│       └── deploy.yml       # CI/CD pipeline
-│
-├── docs/                     # Tài liệu
-├── docker-compose.yml        # Orchestration
-├── .env.example              # Environment variables template
-└── README.md                 # File này
-```
-
-## 🚀 Cài đặt và Chạy
-
-### Yêu cầu hệ thống
-
-- Node.js 20+
-- Docker & Docker Compose
-- Git
-
-### 1. Clone repository
+### 📥 Clone dự án
 
 ```bash
-git clone <repository-url>
-cd vien_lua
+git clone https://github.com/Tuan3198263/vien-lua.git
+cd vien-lua
 ```
 
-### 2. Chạy với Docker Compose (Khuyến nghị)
+**Truy cập:**
 
-```bash
-# Copy file .env
-cp .env.example .env
+- 🌐 Frontend: http://localhost:8080
+- 🔌 Backend API: http://localhost:3001/api
 
-# Build và chạy tất cả services
-docker-compose up -d
-
-# Xem logs
-docker-compose logs -f
-
-# Dừng services
-docker-compose down
-```
-
-Truy cập:
-
-- Frontend: http://localhost
-- Backend API: http://localhost:3001/api
-
-### 3. Chạy development mode (Local)
+### 🖥️ Chạy development mode (Local)
 
 #### Backend
 
 ```bash
 cd backend
 npm install
+# Tạo file .env từ template
 cp .env.example .env
+# Chỉnh sửa .env với thông tin database, JWT_SECRET của bạn
 npm run start:dev
 ```
 
@@ -128,145 +53,95 @@ npm install
 npm run dev
 ```
 
-## 🔗 API Endpoints
+## 🚀 2. Công nghệ sử dụng
 
-### Health Check
+**Frontend:** React 18, TypeScript, Vite, Ant Design 5, Redux, Axios
 
-- `GET /api` - Kiểm tra server hoạt động
-- `GET /api/database-check` - Kiểm tra kết nối database
+**Backend:** NestJS 10, TypeORM, MySQL, JWT, ExcelJS
 
-### User Module
+**🔗 Tích hợp & Dịch vụ bên ngoài**
 
-- `GET /api/users` - Lấy danh sách users
-- `GET /api/users/count` - Đếm số lượng users
+- AWS S3 – Lưu trữ file đính kèm
+- Docker Hub – Registry cho Docker images
+- GitHub Actions – CI/CD tự động
 
-## 🗄️ Database
+## 📌 3. Chức năng chính
 
-Thông tin kết nối MySQL (FreedDB):
+- Đăng nhập / Đăng xuất (JWT)
+- Phân quyền theo vai trò
 
-- Host: `sql.freedb.tech`
-- Port: `3306`
-- Database: `freedb_vien_lua`
-- User: `freedb_tuanle2901`
-- Password: `8KWDRXuY!AbwG%S`
+### 📊 Quản lý dữ liệu
 
-## 🔄 CI/CD
+- **Đề tài:** CRUD, upload file, tìm kiếm/lọc, phân trang, export Excel
+- **Đấu thầu:** CRUD, upload file, liên kết đề tài, export Excel
+- **Đề cương Thí nghiệm:** CRUD, upload file, export Excel
+- **Hợp đồng:** CRUD, upload file , export Excel
+- **Nhà lưới:** CRUD, upload file, export Excel
+- **Tài liệu:** Quản lý file hệ thống
 
-GitHub Actions workflow tự động:
+### 🛠️ Quản trị viên
 
-1. ✅ Build và test khi push code
-2. 🐳 Build Docker images
-3. 🚀 Deploy lên AWS EC2 (nếu cấu hình)
+- Quản lý người dùng
+- Quản lý vai trò & phân quyền chi tiết
 
-### Setup GitHub Secrets cho CI/CD
+## 🧱 4. Cấu trúc thư mục
 
 ```
-EC2_HOST       - Địa chỉ IP EC2
-EC2_USER       - Username SSH (ubuntu)
-EC2_SSH_KEY    - Private SSH key
+vien_lua/
+│
+├── backend/
+│   ├── src/
+│   │   ├── modules/             # Feature modules
+│   │   ├── common/              # Guards, decorators, filters
+│   │   ├── config/              # Database, S3 config
+│   │   ├── core/                # Core services
+│   │   ├── shared/              # Utils, constants, DTOs
+│   │   └── main.ts              # Entry point
+│   ├── Dockerfile
+│   └── package.json
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/               # Page components
+│   │   ├── components/          # Reusable components
+│   │   ├── layouts/             # Layout components
+│   │   ├── services/            # API services
+│   │   ├── stores/              # Redux stores
+│   │   ├── router/              # Route config
+│   │   ├── config/              # App config
+│   │   ├── constants/           # Constants
+│   │   ├── interfaces/          # TypeScript interfaces
+│   │   ├── utils/               # Helper functions
+│   │   ├── hooks/               # Custom hooks
+│   │   └── main.tsx             # Entry point
+│   ├── Dockerfile
+│   └── package.json
+│
+├── docs/                        # Documentation
+│
+├── .github/
+│   └── workflows/
+│       └── deploy.yml           # CI/CD pipeline
+│
+├── docker-compose.yml            # Local development
+├── docker-compose.prod.yml       # Production deployment
+└── README.md                     # This file
 ```
 
-## 📝 Các lệnh hữu ích
+## 🎓 5. Mục đích
 
-### Docker
+Dự án được phát triển nhằm:
 
-```bash
-# Rebuild images
-docker-compose up -d --build
+- 📚 Học tập và thực hành công nghệ mới
+- 🏗️ Xây dựng kiến trúc ứng dụng web quy mô thực tế
+- 🔧 Thực hành DevOps với Docker và CI/CD
+- 💼 Giải quyết bài toán quản lý thực tế của viện nghiên cứu
 
-# Xem logs của service cụ thể
-docker-compose logs -f backend
-docker-compose logs -f frontend
+## 👨‍💻 6. Liên hệ
 
-# Restart service
-docker-compose restart backend
+📧 Email: lnttuan911@gmail.com
 
-# Xóa tất cả containers và volumes
-docker-compose down -v
-```
+---
 
-### Development
-
-```bash
-# Backend
-cd backend
-npm run start:dev      # Dev mode với hot reload
-npm run build          # Build production
-npm run test           # Chạy tests
-
-# Frontend
-cd frontend
-npm run dev            # Dev mode
-npm run build          # Build production
-npm run preview        # Preview production build
-```
-
-## 🎯 Features hiện có
-
-### Frontend
-
-- ✅ Layout cơ bản với Header, Sidebar, Content
-- ✅ Trang Dashboard với cards thống kê mẫu
-- ✅ Menu điều hướng
-- ✅ Ant Design UI components
-- ✅ TypeScript support
-
-### Backend
-
-- ✅ Cấu trúc modular architecture
-- ✅ Module User mẫu
-- ✅ TypeORM integration
-- ✅ MySQL connection
-- ✅ Health check endpoints
-- ✅ CORS enabled
-- ✅ Environment configuration
-
-## 📚 Tài liệu thêm
-
-- [Frontend README](./frontend/README.md)
-- [Backend README](./backend/README.md)
-- [Hướng dẫn Deploy](./docs/DEPLOYMENT.md)
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool & dev server
-- **Ant Design 5** - UI component library
-- **Axios** - HTTP client
-
-### Backend
-
-- **NestJS 10** - Node.js framework
-- **TypeORM** - ORM
-- **MySQL2** - Database driver
-- **Class Validator** - Validation
-
-### DevOps
-
-- **Docker** - Containerization
-- **Docker Compose** - Multi-container orchestration
-- **GitHub Actions** - CI/CD
-- **Nginx** - Web server (trong Docker)
-
-## 📈 Roadmap
-
-- [ ] Authentication & Authorization (JWT)
-- [ ] User CRUD operations
-- [ ] Pagination & Filtering
-- [ ] File upload
-- [ ] Email service
-- [ ] Logging system
-- [ ] Unit & E2E tests
-- [ ] API documentation (Swagger)
-- [ ] Performance monitoring
-
-## 👥 Contributors
-
-- Your Name - Initial work
-
-## 📄 License
-
-MIT License
+⭐ **Built with modern technologies | Crafted with passion and dedication** 🚀
+💻 **Vibe Coding**
