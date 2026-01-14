@@ -9,9 +9,8 @@ export const DEFAULT_PAGE_SIZE = 10;
 export const MAX_PAGE_SIZE = 100;
 
 /**
- * Độ dài của JWT token (giờ)
+ * Độ dài của refresh token (ngày)
  */
-export const JWT_EXPIRATION = '24h';
 export const JWT_REFRESH_EXPIRATION = '7d';
 
 /**

@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import type { StringValue } from 'ms';
+
 import { NguoiDungService } from './nguoi-dung.service';
 import { NguoiDungController } from './nguoi-dung.controller';
 import { AuthController } from './auth.controller';
@@ -10,7 +12,6 @@ import { NguoiDung } from './nguoi-dung.entity';
 import { VaiTroModule } from '../VaiTro/vai-tro.module';
 import { PhanQuyenModule } from '../PhanQuyen/phan-quyen.module';
 import { JwtStrategy } from '../../common/strategies/jwt.strategy';
-import { JWT_EXPIRATION } from '../../shared/constants/app.constants';
 
 /**
  * Module Người Dùng
@@ -30,13 +31,21 @@ import { JWT_EXPIRATION } from '../../shared/constants/app.constants';
     // Passport Module
     PassportModule.register({ defaultStrategy: 'jwt' }),
 
-    // JWT Module
+    // JWT Module (load secret + expiration từ .env)
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET') || 'vien-lua-secret-key-2024',
+        // Secret ký JWT
+        secret:
+          configService.get<string>('JWT_SECRET') ??
+          'vien-lua-secret-key-2024',
+
+        // Thời gian hết hạn token
         signOptions: {
-          expiresIn: JWT_EXPIRATION,
+          // StringValue đến từ package "ms" (ví dụ: 1d | 24h | 30m)
+          expiresIn:
+            (configService.get<string>('JWT_EXPIRATION') ??
+              '24h') as StringValue,
         },
       }),
       inject: [ConfigService],
