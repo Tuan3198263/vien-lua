@@ -10,12 +10,6 @@
 ---
 
 Hệ thống quản lý viện lúa, cung cấp các chức năng tạo – cập nhật – tra cứu dữ liệu, phân quyền người dùng, quản lý file và xuất báo cáo Excel.
-
-- **Frontend**: React + TypeScript + Vite + Ant Design 5
-- **Backend**: NestJS + TypeORM + MySQL
-- **Storage**: AWS S3
-- **DevOps**: Docker + Docker Compose + GitHub Actions (CI/CD)
-
 ---
 
 ## ⚙️ 1. Cài đặt & Chạy dự án
