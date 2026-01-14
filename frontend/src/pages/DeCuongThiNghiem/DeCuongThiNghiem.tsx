@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { Card, Typography, Button, Flex } from "antd";
-import { PlusOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { PlusOutlined, ExportOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DanhSachDeCuongThiNghiem from "./DanhSachDeCuongThiNghiem";
 import { DeCuongThiNghiem } from "@/interfaces";
@@ -23,6 +23,9 @@ function DeCuongThiNghiemPage() {
   useDocumentTitle();
   const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [hasData, setHasData] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState<Record<string, any>>({});
 
   /**
    * Mở form thêm mới
@@ -55,8 +58,22 @@ function DeCuongThiNghiemPage() {
   /**
    * Xử lý export Excel
    */
-  const handleExport = () => {
-    notifySuccess("Tính năng đang phát triển");
+  const handleExport = async () => {
+    if (!hasData) {
+      notifyError("", "Chưa có dữ liệu để xuất");
+      return;
+    }
+
+    try {
+      setExportLoading(true);
+      await deCuongThiNghiemApi.export(currentFilters);
+      notifySuccess("Xuất file thành công");
+    } catch (error: any) {
+      const message = error.response?.data?.message || error.message;
+      notifyError("Xuất file thất bại", message);
+    } finally {
+      setExportLoading(false);
+    }
   };
 
   return (
@@ -76,7 +93,12 @@ function DeCuongThiNghiemPage() {
             >
               Thêm
             </Button>
-            <Button icon={<FileExcelOutlined />} onClick={handleExport}>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={handleExport}
+              loading={exportLoading}
+              disabled={!hasData}
+            >
               Xuất Excel
             </Button>
           </Flex>
@@ -87,6 +109,8 @@ function DeCuongThiNghiemPage() {
           onEdit={handleOpenEdit}
           onDelete={handleXoa}
           refresh={refreshKey}
+          onDataChange={(hasData) => setHasData(hasData)}
+          onFilterChange={(filters) => setCurrentFilters(filters)}
         />
       </Flex>
     </Card>

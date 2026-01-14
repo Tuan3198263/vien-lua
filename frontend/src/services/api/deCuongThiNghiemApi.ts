@@ -12,7 +12,7 @@ import {
   DanhSachSoLuongThiNghiem,
   DanhSachSoLuongThiNghiemDto,
 } from '@/interfaces';
-import { getPaginatedData, deleteData, getData } from './coreApi';
+import { getPaginatedData, deleteData, getData, exportExcel } from './coreApi';
 
 /**
  * API services cho module Đề Cương Thí Nghiệm chính
@@ -162,6 +162,12 @@ export const deCuongThiNghiemApi = {
    */
   delete: (id: number) =>
     deleteData(`${API_URL.DE_CUONG_THI_NGHIEM}/${id}`),
+
+  /**
+   * Export danh sách đề cương thí nghiệm ra Excel
+   */
+  export: (params?: Record<string, any>) => 
+    exportExcel(`${API_URL.DE_CUONG_THI_NGHIEM}/export`, params),
 };
 
 /**

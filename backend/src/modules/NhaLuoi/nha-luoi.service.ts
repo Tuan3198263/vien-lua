@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -124,8 +125,61 @@ export class NhaLuoiService {
     );
   }
 
-  /**
-   * Lấy chi tiết nhà lưới theo ID
+  /**   * Lấy danh sách nhà lưới để export Excel (không phân trang)
+   * @param filterDto - Thông tin filter
+   * @returns Danh sách nhà lưới đầy đủ (tối đa 100 bản ghi)
+   */
+  async layDanhSachExport(filterDto: FilterNhaLuoiDto): Promise<any[]> {
+    const MAX_EXPORT_LIMIT = 100;
+
+    const queryBuilder = this.nhaLuoiRepository
+      .createQueryBuilder('nha_luoi')
+      .leftJoinAndSelect('nha_luoi.nguoi_cap_nhat', 'nguoi_dung');
+
+    // Các field được phép filter (string fields dùng LIKE)
+    const allowedFields = ['ten_nha_luoi', 'khu'];
+
+    // Áp dụng field filtering (KHÔNG có phân trang)
+    Object.keys(filterDto).forEach((key) => {
+      if (allowedFields.includes(key) && filterDto[key] !== undefined) {
+        queryBuilder.andWhere(`nha_luoi.${key} LIKE :${key}`, {
+          [key]: `%${filterDto[key]}%`,
+        });
+      }
+    });
+
+    // Filter theo số bể (exact match)
+    if (filterDto.so_be !== undefined && filterDto.so_be !== null) {
+      queryBuilder.andWhere('nha_luoi.so_be = :so_be', {
+        so_be: filterDto.so_be,
+      });
+    }
+
+    // Filter theo diện tích (exact match)
+    if (filterDto.dien_tich !== undefined && filterDto.dien_tich !== null) {
+      queryBuilder.andWhere('nha_luoi.dien_tich = :dien_tich', {
+        dien_tich: filterDto.dien_tich,
+      });
+    }
+
+    // Giới hạn số lượng bản ghi
+    queryBuilder.take(MAX_EXPORT_LIMIT + 1);
+
+    // Lấy dữ liệu
+    const danhSach = await queryBuilder.getMany();
+
+    // Kiểm tra vượt giới hạn
+    if (danhSach.length > MAX_EXPORT_LIMIT) {
+      throw new BadRequestException(
+        `Số lượng bản ghi vượt quá giới hạn export (${MAX_EXPORT_LIMIT} bản ghi). Vui lòng sử dụng bộ lọc để thu hẹp kết quả.`,
+      );
+    }
+
+    // Map nguoi_cap_nhat
+    return danhSach.map((nl) => this.mapNguoiCapNhat(nl));
+  }
+
+  /**   * Lấy chi tiết nhà lưới theo ID
    * @param id - ID nhà lưới
    * @returns Chi tiết nhà lưới (với nguoi_cap_nhat chỉ có id và ho_ten)
    */

@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { Card, Typography, Button, Flex } from "antd";
-import { PlusOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { PlusOutlined, ExportOutlined } from "@ant-design/icons";
 import DanhSachHopDong from "./DanhSachHopDong";
 import ThemHopDong from "./ThemHopDong";
 import SuaHopDong from "./SuaHopDong";
@@ -25,6 +25,9 @@ function HopDongPage() {
   const [selectedRecord, setSelectedRecord] = useState<HopDong | undefined>();
   const [loading, setLoading] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [hasData, setHasData] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState<Record<string, any>>({});
 
   /**
    * Mở form thêm mới
@@ -121,9 +124,23 @@ function HopDongPage() {
   /**
    * Xử lý export Excel
    */
-  const handleExport = () => {
-    notifySuccess("Xuất Excel thành công");
-    console.log("Export to Excel");
+  const handleExport = async () => {
+    if (!hasData) {
+      notifyError("", "Chưa có dữ liệu để xuất");
+      return;
+    }
+
+    try {
+      setExportLoading(true);
+      // Export đúng trang hiện tại (bao gồm page và limit)
+      await hopDongApi.export(currentFilters);
+      notifySuccess("Xuất file thành công");
+    } catch (error: any) {
+      const message = error.response?.data?.message || error.message;
+      notifyError("Xuất file thất bại", message);
+    } finally {
+      setExportLoading(false);
+    }
   };
 
   return (
@@ -143,7 +160,12 @@ function HopDongPage() {
             >
               Thêm
             </Button>
-            <Button icon={<FileExcelOutlined />} onClick={handleExport}>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={handleExport}
+              loading={exportLoading}
+              disabled={!hasData}
+            >
               Xuất Excel
             </Button>
           </Flex>
@@ -154,6 +176,8 @@ function HopDongPage() {
           onEdit={handleOpenEdit}
           onDelete={handleXoa}
           refresh={refreshKey}
+          onDataChange={(hasData) => setHasData(hasData)}
+          onFilterChange={(filters) => setCurrentFilters(filters)}
         />
       </Flex>
 

@@ -12,7 +12,7 @@ import {
   ApiSuccessResponse,
   PaginationParams,
 } from '@/interfaces';
-import { getPaginatedData, getData, deleteData } from './coreApi';
+import { getPaginatedData, getData, deleteData, exportExcel } from './coreApi';
 
 /**
  * API services cho module Đấu Thầu chính
@@ -57,6 +57,12 @@ export const dauThauApi = {
    */
   delete: (id: number) => 
     deleteData(`${API_URL.DAU_THAU}/${id}`),
+
+  /**
+   * Export danh sách đấu thầu ra Excel
+   */
+  export: (params?: Record<string, any>) => 
+    exportExcel(`${API_URL.DAU_THAU}/export`, params),
 };
 
 /**

@@ -19,12 +19,20 @@ interface DanhSachDauThauProps {
   onEdit?: (record: DauThau) => void;
   onDelete: (id: number) => void;
   refresh?: number;
+  onDataChange?: (hasData: boolean) => void;
+  onFilterChange?: (filters: Record<string, any>) => void;
 }
 
 /**
  * Component Danh sách đấu thầu
  */
-function DanhSachDauThau({ onEdit, onDelete, refresh }: DanhSachDauThauProps) {
+function DanhSachDauThau({
+  onEdit,
+  onDelete,
+  refresh,
+  onDataChange,
+  onFilterChange,
+}: DanhSachDauThauProps) {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<DauThau[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -66,6 +74,7 @@ function DanhSachDauThau({ onEdit, onDelete, refresh }: DanhSachDauThauProps) {
         current: page,
         pageSize,
       }));
+      onDataChange?.(response.data.length > 0);
     } catch (error: any) {
       notifyError("Lỗi tải dữ liệu", error.message);
     } finally {
@@ -89,6 +98,7 @@ function DanhSachDauThau({ onEdit, onDelete, refresh }: DanhSachDauThauProps) {
     });
 
     setFilters(newFilters);
+    onFilterChange?.(newFilters);
     loadData(newPagination.current, newPagination.pageSize, newFilters);
   };
 

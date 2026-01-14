@@ -19,12 +19,20 @@ interface DanhSachNhaLuoiProps {
   onEdit?: (record: NhaLuoi) => void;
   onDelete: (id: number) => void;
   refresh?: number;
+  onDataChange?: (hasData: boolean) => void;
+  onFilterChange?: (filters: Record<string, any>) => void;
 }
 
 /**
  * Component Danh sách nhà lưới
  */
-function DanhSachNhaLuoi({ onEdit, onDelete, refresh }: DanhSachNhaLuoiProps) {
+function DanhSachNhaLuoi({
+  onEdit,
+  onDelete,
+  refresh,
+  onDataChange,
+  onFilterChange,
+}: DanhSachNhaLuoiProps) {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<NhaLuoi[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -66,6 +74,7 @@ function DanhSachNhaLuoi({ onEdit, onDelete, refresh }: DanhSachNhaLuoiProps) {
         current: page,
         pageSize,
       }));
+      onDataChange?.(response.data.length > 0);
     } catch (error: any) {
       notifyError("Lỗi tải dữ liệu", error.message);
     } finally {
@@ -89,6 +98,7 @@ function DanhSachNhaLuoi({ onEdit, onDelete, refresh }: DanhSachNhaLuoiProps) {
     });
 
     setFilters(newFilters);
+    onFilterChange?.(newFilters);
     loadData(newPagination.current, newPagination.pageSize, newFilters);
   };
 

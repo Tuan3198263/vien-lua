@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { Card, Typography, Button, Flex } from "antd";
-import { PlusOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { PlusOutlined, ExportOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DanhSachDauThau from "./DanhSachDauThau";
 import { DauThau } from "@/interfaces";
@@ -23,6 +23,9 @@ function DauThauPage() {
   useDocumentTitle();
   const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [hasData, setHasData] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState<Record<string, any>>({});
 
   /**
    * Mở form thêm mới
@@ -55,9 +58,22 @@ function DauThauPage() {
   /**
    * Xử lý export Excel
    */
-  const handleExport = () => {
-    notifySuccess("Tính năng đang phát triển");
-    console.log("Export to Excel");
+  const handleExport = async () => {
+    if (!hasData) {
+      notifyError("", "Chưa có dữ liệu để xuất");
+      return;
+    }
+
+    try {
+      setExportLoading(true);
+      await dauThauApi.export(currentFilters);
+      notifySuccess("Xuất file thành công");
+    } catch (error: any) {
+      const message = error.response?.data?.message || error.message;
+      notifyError("Xuất file thất bại", message);
+    } finally {
+      setExportLoading(false);
+    }
   };
 
   return (
@@ -77,7 +93,12 @@ function DauThauPage() {
             >
               Thêm
             </Button>
-            <Button icon={<FileExcelOutlined />} onClick={handleExport}>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={handleExport}
+              loading={exportLoading}
+              disabled={!hasData}
+            >
               Xuất Excel
             </Button>
           </Flex>
@@ -88,6 +109,8 @@ function DauThauPage() {
           onEdit={handleOpenEdit}
           onDelete={handleXoa}
           refresh={refreshKey}
+          onDataChange={(hasData) => setHasData(hasData)}
+          onFilterChange={(filters) => setCurrentFilters(filters)}
         />
       </Flex>
     </Card>

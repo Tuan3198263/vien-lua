@@ -132,7 +132,7 @@ export class DeTaiService {
    * @returns Danh sách đề tài đầy đủ để export
    */
   async layDanhSachExport(paginationDto: PaginationDto): Promise<any[]> {
-    const MAX_EXPORT_LIMIT = 10000; // Giới hạn tối đa 10,000 bản ghi
+    const MAX_EXPORT_LIMIT = 100; // Giới hạn tối đa 100 bản ghi
 
     const queryBuilder = this.deTaiRepository
       .createQueryBuilder('de_tai')

@@ -12,13 +12,16 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { PermissionGuard } from '../../common/guards/permission.guard';
 import { RequirePermission } from '../../common/decorators/require-permission.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { HanhDong } from '../../shared/constants/hanh-dong.enum';
+import { ExcelUtils } from '../../shared/utils/excel.utils';
 import { DeCuongThiNghiemService } from './de-cuong-thi-nghiem.service';
 import { 
   CreateDeCuongThiNghiemDto, 
@@ -128,6 +131,61 @@ export class DeCuongThiNghiemController {
   @RequirePermission('DE_CUONG_THI_NGHIEM', HanhDong.XEM)
   async layDanhSach(@Query() filterDto: FilterDeCuongThiNghiemDto) {
     return this.deCuongThiNghiemService.layDanhSach(filterDto);
+  }
+
+  /**
+   * Export danh sách đề cương thí nghiệm ra file Excel
+   * GET /api/de-cuong-thi-nghiem/export
+   */
+  @Get('export')
+  @RequirePermission('DE_CUONG_THI_NGHIEM', HanhDong.XEM)
+  async export(@Query() filterDto: FilterDeCuongThiNghiemDto, @Res() res: Response) {
+    // Lấy danh sách (không phân trang)
+    const danhSach = await this.deCuongThiNghiemService.layDanhSachExport(filterDto);
+
+    // Thêm STT (1, 2, 3...)
+    const dataWithSTT = danhSach.map((item, index) => ({
+      ...item,
+      stt: index + 1,
+    }));
+
+    // Cấu hình các cột Excel (theo thứ tự frontend)
+    const columns = [
+      { header: 'STT', key: 'stt', width: 10 },
+      { header: 'Tên đề tài', key: 'deTai.ten_de_tai', width: 30 },
+      { header: 'Cấp đề tài', key: 'deTai.cap_quan_ly_de_tai', width: 20 },
+      { header: 'Đơn vị phê duyệt', key: 'deTai.don_vi_phe_duyet', width: 25 },
+      { header: 'Chủ nhiệm đề tài', key: 'deTai.chu_nhiem_de_tai', width: 25 },
+      { header: 'Tên thí nghiệm', key: 'ten_thi_nghiem', width: 30 },
+      { header: 'Loại hình thí nghiệm', key: 'loai_hinh_thi_nghiem', width: 25 },
+      { header: 'Kinh phí kỹ thuật', key: 'kinh_phi_ky_thuat', width: 18 },
+      { header: 'Kinh phí lao động', key: 'kinh_phi_lao_dong', width: 18 },
+      { header: 'Kinh phí NVL', key: 'kinh_phi_nguyen_vat_lieu', width: 18 },
+      { header: 'Mùa vụ', key: 'mua_vu', width: 15 },
+      { header: 'Người thực hiện', key: 'nguoi_thuc_hien', width: 25 },
+      { header: 'Ngày bắt đầu', key: 'ngay_bat_dau', width: 15 },
+      { header: 'Ngày kết thúc', key: 'ngay_ket_thuc', width: 15 },
+      { header: 'Người cập nhật', key: 'nguoi_cap_nhat.ho_ten', width: 25 },
+    ];
+
+    // Generate Excel buffer
+    const buffer = await ExcelUtils.generateExcel(
+      dataWithSTT,
+      columns,
+      'Danh sách đề cương thí nghiệm',
+    );
+
+    // Set response headers
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="danh-sach-de-cuong-thi-nghiem-${new Date().getTime()}.xlsx"`,
+    );
+
+    res.send(buffer);
   }
 
   /**

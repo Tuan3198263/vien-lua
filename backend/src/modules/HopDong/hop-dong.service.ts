@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -141,6 +142,55 @@ export class HopDongService {
 
     // Tạo kết quả phân trang
     return QueryUtils.createPaginatedResult(dataWithFiles, total, paginationDto);
+  }
+
+  /**
+   * Lấy danh sách hợp đồng để export Excel (không phân trang)
+   * @param paginationDto - Thông tin filter
+   * @returns Danh sách hợp đồng đầy đủ (tối đa 100 bản ghi)
+   */
+  async layDanhSachExport(paginationDto: PaginationDto): Promise<any[]> {
+    const MAX_EXPORT_LIMIT = 100;
+
+    const queryBuilder = this.hopDongRepository
+      .createQueryBuilder('hop_dong')
+      .leftJoinAndSelect('hop_dong.nguoi_cap_nhat', 'nguoi_dung');
+
+    // Các field được phép filter
+    const allowedFields = [
+      'so_hop_dong',
+      'doi_tac',
+      'ghi_chu',
+      'ngay_cap_nhat',
+    ];
+
+    // Áp dụng field filtering
+    Object.keys(paginationDto).forEach((key) => {
+      if (allowedFields.includes(key) && paginationDto[key] !== undefined) {
+        queryBuilder.andWhere(`hop_dong.${key} LIKE :${key}`, {
+          [key]: `%${paginationDto[key]}%`,
+        });
+      }
+    });
+
+    // Áp dụng phân trang (export đúng trang hiện tại)
+    const { page = 1, limit = 10 } = paginationDto;
+    const skip = (page - 1) * limit;
+    
+    // Kiểm tra limit không vượt quá giới hạn
+    if (limit > MAX_EXPORT_LIMIT) {
+      throw new BadRequestException(
+        `Số lượng bản ghi mỗi trang không được vượt quá ${MAX_EXPORT_LIMIT}.`,
+      );
+    }
+
+    queryBuilder.skip(skip).take(limit);
+
+    // Lấy dữ liệu
+    const hopDongs = await queryBuilder.getMany();
+
+    // Map nguoi_cap_nhat (không cần lấy file cho export)
+    return hopDongs.map(hopDong => this.mapNguoiCapNhat(hopDong));
   }
 
   /**

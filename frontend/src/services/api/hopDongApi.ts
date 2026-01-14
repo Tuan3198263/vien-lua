@@ -8,7 +8,7 @@ import {
   PaginationParams
 } from '@/interfaces';
 import { API_URL } from '@/config/api.config';
-import { getData, getPaginatedData, deleteData } from './coreApi';
+import { getData, getPaginatedData, deleteData, exportExcel } from './coreApi';
 import axiosInstance from '../axios';
 import { ApiSuccessResponse } from '@/interfaces';
 
@@ -130,4 +130,10 @@ export const hopDongApi = {
    */
   delete: (id: number) => 
     deleteData(`${API_URL.HOP_DONG}/${id}`),
+
+  /**
+   * Export danh sách hợp đồng ra Excel
+   */
+  export: (params?: Record<string, any>) => 
+    exportExcel(`${API_URL.HOP_DONG}/export`, params),
 };

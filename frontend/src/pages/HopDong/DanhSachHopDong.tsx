@@ -21,12 +21,20 @@ interface DanhSachHopDongProps {
   onEdit: (record: HopDong) => void;
   onDelete: (id: number) => void;
   refresh?: number;
+  onDataChange?: (hasData: boolean) => void;
+  onFilterChange?: (filters: Record<string, any>) => void;
 }
 
 /**
  * Component Danh sách hợp đồng
  */
-function DanhSachHopDong({ onEdit, onDelete, refresh }: DanhSachHopDongProps) {
+function DanhSachHopDong({
+  onEdit,
+  onDelete,
+  refresh,
+  onDataChange,
+  onFilterChange,
+}: DanhSachHopDongProps) {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<HopDong[]>([]);
   const [filters, setFilters] = useState<Record<string, string>>({});
@@ -68,6 +76,14 @@ function DanhSachHopDong({ onEdit, onDelete, refresh }: DanhSachHopDongProps) {
         current: page,
         pageSize,
       }));
+      onDataChange?.(response.data.length > 0);
+
+      // Cập nhật filters cho parent (bao gồm page và limit)
+      onFilterChange?.({
+        ...currentFilters,
+        page,
+        limit: pageSize,
+      });
     } catch (error: any) {
       notifyError("Lỗi tải dữ liệu", error.message);
     } finally {
@@ -91,6 +107,14 @@ function DanhSachHopDong({ onEdit, onDelete, refresh }: DanhSachHopDongProps) {
     });
 
     setFilters(newFilters);
+
+    // Truyền cả page và limit cho parent để export đúng trang
+    onFilterChange?.({
+      ...newFilters,
+      page: newPagination.current,
+      limit: newPagination.pageSize,
+    });
+
     loadData(newPagination.current, newPagination.pageSize, newFilters);
   };
 

@@ -12,7 +12,7 @@ import {
   ApiSuccessResponse,
   PaginationParams,
 } from '@/interfaces';
-import { getPaginatedData, getData, deleteData } from './coreApi';
+import { getPaginatedData, getData, deleteData, exportExcel } from './coreApi';
 
 /**
  * API services cho module Nhà Lưới chính
@@ -57,6 +57,12 @@ export const nhaLuoiApi = {
    */
   delete: (id: number) => 
     deleteData(`${API_URL.NHA_LUOI}/${id}`),
+
+  /**
+   * Export danh sách nhà lưới ra Excel
+   */
+  export: (params?: Record<string, any>) => 
+    exportExcel(`${API_URL.NHA_LUOI}/export`, params),
 };
 
 /**

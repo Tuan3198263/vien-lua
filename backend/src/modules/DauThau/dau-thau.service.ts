@@ -113,6 +113,61 @@ export class DauThauService {
   }
 
   /**
+   * Lấy danh sách đấu thầu để export Excel (không phân trang)
+   * @param filterDto - Thông tin filter
+   * @returns Danh sách đấu thầu đầy đủ (tối đa 10,000 bản ghi)
+   */
+  async layDanhSachExport(filterDto: FilterDauThauDto): Promise<any[]> {
+    const MAX_EXPORT_LIMIT = 100;
+
+    const queryBuilder = this.dauThauRepository
+      .createQueryBuilder('dau_thau')
+      .leftJoinAndSelect('dau_thau.nguoi_cap_nhat', 'nguoi_cap_nhat')
+      .leftJoinAndSelect('dau_thau.deTai', 'deTai');
+
+    // Các field được phép filter
+    const allowedFields = [
+      'nam_thuc_hien',
+      'nguon_kinh_phi',
+      'tong_kinh_phi',
+      'ngay_tao',
+      'ngay_cap_nhat',
+    ];
+
+    // Áp dụng field filtering (KHÔNG có phân trang)
+    Object.keys(filterDto).forEach((key) => {
+      if (allowedFields.includes(key) && filterDto[key] !== undefined) {
+        queryBuilder.andWhere(`dau_thau.${key} LIKE :${key}`, {
+          [key]: `%${filterDto[key]}%`,
+        });
+      }
+    });
+
+    // Filter theo tên đề tài (nếu có)
+    if (filterDto.ten_de_tai) {
+      queryBuilder.andWhere('deTai.ten_de_tai LIKE :ten_de_tai', {
+        ten_de_tai: `%${filterDto.ten_de_tai}%`,
+      });
+    }
+
+    // Giới hạn số lượng bản ghi
+    queryBuilder.take(MAX_EXPORT_LIMIT + 1);
+
+    // Lấy dữ liệu
+    const danhSach = await queryBuilder.getMany();
+
+    // Kiểm tra vượt giới hạn
+    if (danhSach.length > MAX_EXPORT_LIMIT) {
+      throw new BadRequestException(
+        `Số lượng bản ghi vượt quá giới hạn export (${MAX_EXPORT_LIMIT} bản ghi). Vui lòng sử dụng bộ lọc để thu hẹp kết quả.`,
+      );
+    }
+
+    // Map relations (chỉ lấy fields cần thiết)
+    return danhSach.map(dt => this.mapRelations(dt));
+  }
+
+  /**
    * Lấy chi tiết đấu thầu theo ID
    * @param id - ID đấu thầu
    * @returns Chi tiết đấu thầu (với relations)

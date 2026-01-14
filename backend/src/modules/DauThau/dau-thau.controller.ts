@@ -9,7 +9,9 @@ import {
   Query,
   UseGuards,
   ParseIntPipe,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { PermissionGuard } from '../../common/guards/permission.guard';
 import { RequirePermission } from '../../common/decorators/require-permission.decorator';
@@ -17,6 +19,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { HanhDong } from '../../shared/constants/hanh-dong.enum';
 import { DauThauService } from './dau-thau.service';
 import { CreateDauThauDto, UpdateDauThauDto, FilterDauThauDto } from './dto/dau-thau.dto';
+import { ExcelUtils } from '../../shared/utils/excel.utils';
 
 /**
  * Controller xử lý API cho Đấu Thầu
@@ -49,6 +52,52 @@ export class DauThauController {
   @RequirePermission('DAU_THAU', HanhDong.XEM)
   async layDanhSach(@Query() filterDto: FilterDauThauDto) {
     return this.dauThauService.layDanhSach(filterDto);
+  }
+
+  /**
+   * Export danh sách đấu thầu ra file Excel
+   * GET /api/dau-thau/export
+   */
+  @Get('export')
+  @RequirePermission('DAU_THAU', HanhDong.XEM)
+  async export(@Query() filterDto: FilterDauThauDto, @Res() res: Response) {
+    // Lấy danh sách (không phân trang)
+    const danhSach = await this.dauThauService.layDanhSachExport(filterDto);
+
+    // Thêm STT (1, 2, 3...)
+    const dataWithSTT = danhSach.map((item, index) => ({
+      ...item,
+      stt: index + 1,
+    }));
+
+    // Cấu hình các cột Excel (theo thứ tự frontend)
+    const columns = [
+      { header: 'STT', key: 'stt', width: 10 },
+      { header: 'Tên đề tài', key: 'deTai.ten_de_tai', width: 40 },
+      { header: 'Năm', key: 'nam_thuc_hien', width: 12 },
+      { header: 'Tổng kinh phí', key: 'tong_kinh_phi', width: 18 },
+      { header: 'Nguồn kinh phí', key: 'nguon_kinh_phi', width: 30 },
+      { header: 'Người cập nhật', key: 'nguoi_cap_nhat.ho_ten', width: 25 },
+    ];
+
+    // Generate Excel buffer
+    const buffer = await ExcelUtils.generateExcel(
+      dataWithSTT,
+      columns,
+      'Danh sách đấu thầu',
+    );
+
+    // Set response headers
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="danh-sach-dau-thau-${new Date().getTime()}.xlsx"`,
+    );
+
+    res.send(buffer);
   }
 
   /**

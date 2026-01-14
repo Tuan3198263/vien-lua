@@ -197,6 +197,110 @@ export class DeCuongThiNghiemService {
   }
 
   /**
+   * Lấy danh sách đề cương thí nghiệm để export Excel (không phân trang)
+   * @param filterDto - Thông tin filter
+   * @returns Danh sách đề cương đầy đủ (tối đa 10,000 bản ghi)
+   */
+  async layDanhSachExport(filterDto: FilterDeCuongThiNghiemDto): Promise<any[]> {
+    const MAX_EXPORT_LIMIT = 100;
+
+    const queryBuilder = this.deCuongThiNghiemRepository
+      .createQueryBuilder('de_cuong_thi_nghiem')
+      .leftJoinAndSelect('de_cuong_thi_nghiem.nguoi_cap_nhat', 'nguoi_cap_nhat')
+      .leftJoinAndSelect('de_cuong_thi_nghiem.deTai', 'deTai');
+
+    // Các field được phép filter
+    const allowedFields = [
+      'ten_thi_nghiem',
+      'loai_hinh_thi_nghiem',
+      'ngay_bat_dau',
+      'ngay_ket_thuc',
+      'mua_vu',
+      'nguoi_thuc_hien',
+      'kinh_phi_ky_thuat',
+      'kinh_phi_lao_dong',
+      'kinh_phi_nguyen_vat_lieu',
+      'ngay_tao',
+      'ngay_cap_nhat',
+    ];
+
+    // Áp dụng field filtering (KHÔNG có phân trang)
+    Object.keys(filterDto).forEach((key) => {
+      if (allowedFields.includes(key) && filterDto[key] !== undefined) {
+        queryBuilder.andWhere(`de_cuong_thi_nghiem.${key} LIKE :${key}`, {
+          [key]: `%${filterDto[key]}%`,
+        });
+      }
+    });
+
+    // Filter theo tên thí nghiệm
+    if (filterDto.ten_thi_nghiem) {
+      queryBuilder.andWhere('de_cuong_thi_nghiem.ten_thi_nghiem LIKE :ten_thi_nghiem', {
+        ten_thi_nghiem: `%${filterDto.ten_thi_nghiem}%`,
+      });
+    }
+
+    // Filter theo loại hình thí nghiệm
+    if (filterDto.loai_hinh_thi_nghiem) {
+      queryBuilder.andWhere('de_cuong_thi_nghiem.loai_hinh_thi_nghiem LIKE :loai_hinh_thi_nghiem', {
+        loai_hinh_thi_nghiem: `%${filterDto.loai_hinh_thi_nghiem}%`,
+      });
+    }
+
+    // Filter theo tên đề tài
+    if (filterDto.ten_de_tai) {
+      queryBuilder.andWhere('deTai.ten_de_tai LIKE :ten_de_tai', {
+        ten_de_tai: `%${filterDto.ten_de_tai}%`,
+      });
+    }
+
+    // Filter theo cấp quản lý đề tài
+    if (filterDto.cap_quan_ly_de_tai) {
+      queryBuilder.andWhere('deTai.cap_quan_ly_de_tai LIKE :cap_quan_ly_de_tai', {
+        cap_quan_ly_de_tai: `%${filterDto.cap_quan_ly_de_tai}%`,
+      });
+    }
+
+    // Filter theo đơn vị phê duyệt
+    if (filterDto.don_vi_phe_duyet) {
+      queryBuilder.andWhere('deTai.don_vi_phe_duyet LIKE :don_vi_phe_duyet', {
+        don_vi_phe_duyet: `%${filterDto.don_vi_phe_duyet}%`,
+      });
+    }
+
+    // Giới hạn số lượng bản ghi
+    queryBuilder.take(MAX_EXPORT_LIMIT + 1);
+
+    // Lấy dữ liệu
+    const danhSach = await queryBuilder.getMany();
+
+    // Kiểm tra vượt giới hạn
+    if (danhSach.length > MAX_EXPORT_LIMIT) {
+      throw new BadRequestException(
+        `Số lượng bản ghi vượt quá giới hạn export (${MAX_EXPORT_LIMIT} bản ghi). Vui lòng sử dụng bộ lọc để thu hẹp kết quả.`,
+      );
+    }
+
+    // Lấy file cho từng đề cương và map relations (parallel)
+    const dataWithFiles = await Promise.all(
+      danhSach.map(async (dc) => {
+        const file = await this.layFileCuaDeCuong(dc.id);
+        const mapped = this.mapRelations(dc);
+        return {
+          ...mapped,
+          file_de_cuong: file ? {
+            id: file.id,
+            ten_goc: file.ten_goc,
+            url_xem: file.url_xem,
+          } : null,
+        };
+      }),
+    );
+
+    return dataWithFiles;
+  }
+
+  /**
    * Lấy chi tiết đề cương thí nghiệm theo ID
    * @param id - ID đề cương
    * @returns Chi tiết đề cương (với relations)

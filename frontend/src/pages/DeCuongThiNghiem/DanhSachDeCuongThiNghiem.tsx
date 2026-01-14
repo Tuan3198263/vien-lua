@@ -27,6 +27,8 @@ interface DanhSachDeCuongThiNghiemProps {
   onEdit?: (record: DeCuongThiNghiem) => void;
   onDelete: (id: number) => void;
   refresh?: number;
+  onDataChange?: (hasData: boolean) => void;
+  onFilterChange?: (filters: Record<string, any>) => void;
 }
 
 /**
@@ -36,6 +38,8 @@ function DanhSachDeCuongThiNghiem({
   onEdit,
   onDelete,
   refresh,
+  onDataChange,
+  onFilterChange,
 }: DanhSachDeCuongThiNghiemProps) {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<DeCuongThiNghiem[]>([]);
@@ -78,6 +82,7 @@ function DanhSachDeCuongThiNghiem({
         current: page,
         pageSize,
       }));
+      onDataChange?.(response.data.length > 0);
     } catch (error: any) {
       notifyError("Lỗi tải dữ liệu", error.message);
     } finally {
@@ -101,6 +106,7 @@ function DanhSachDeCuongThiNghiem({
     });
 
     setFilters(newFilters);
+    onFilterChange?.(newFilters);
     loadData(newPagination.current, newPagination.pageSize, newFilters);
   };
 

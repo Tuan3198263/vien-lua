@@ -13,7 +13,9 @@ import {
   ParseIntPipe,
   ValidationPipe,
   BadRequestException,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { HopDongService } from './hop-dong.service';
 import { CreateHopDongDto, UpdateHopDongDto, FilterHopDongDto } from './dto/hop-dong.dto';
@@ -22,6 +24,7 @@ import { PermissionGuard } from '../../common/guards/permission.guard';
 import { RequirePermission } from '../../common/decorators/require-permission.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { HanhDong } from '../../shared/constants/hanh-dong.enum';
+import { ExcelUtils } from '../../shared/utils/excel.utils';
 import { FileHeThongService } from '../FileHeThong/file-he-thong.service';
 import { UploadFileDto } from '../FileHeThong/dto/file-he-thong.dto';
 
@@ -111,6 +114,51 @@ export class HopDongController {
       success: true,
       ...result,
     };
+  }
+
+  /**
+   * Export danh sách hợp đồng ra file Excel
+   * GET /api/hop-dong/export
+   */
+  @Get('export')
+  @RequirePermission('HOP_DONG', HanhDong.XEM)
+  async export(@Query() filterDto: FilterHopDongDto, @Res() res: Response) {
+    // Lấy danh sách (không phân trang)
+    const danhSach = await this.hopDongService.layDanhSachExport(filterDto);
+
+    // Thêm STT (1, 2, 3...)
+    const dataWithSTT = danhSach.map((item, index) => ({
+      ...item,
+      stt: index + 1,
+    }));
+
+    // Cấu hình các cột Excel (theo thứ tự frontend)
+    const columns = [
+      { header: 'STT', key: 'stt', width: 10 },
+      { header: 'Số hợp đồng', key: 'so_hop_dong', width: 20 },
+      { header: 'Đối tác', key: 'doi_tac', width: 30 },
+      { header: 'Ghi chú', key: 'ghi_chu', width: 40 },
+      { header: 'Người cập nhật', key: 'nguoi_cap_nhat.ho_ten', width: 25 },
+    ];
+
+    // Generate Excel buffer
+    const buffer = await ExcelUtils.generateExcel(
+      dataWithSTT,
+      columns,
+      'Danh sách hợp đồng',
+    );
+
+    // Set response headers
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="danh-sach-hop-dong-${new Date().getTime()}.xlsx"`,
+    );
+
+    res.send(buffer);
   }
 
   /**
