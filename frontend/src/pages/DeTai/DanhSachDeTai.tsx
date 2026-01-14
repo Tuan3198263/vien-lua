@@ -79,6 +79,13 @@ function DanhSachDeTai({
 
       // Notify parent về trạng thái data
       onDataChange?.(response.data.length > 0);
+
+      // Cập nhật filters cho parent (bao gồm page và limit)
+      onFilterChange?.({
+        ...currentFilters,
+        page,
+        limit: pageSize,
+      });
     } catch (error: any) {
       notifyError("Lỗi tải dữ liệu", error.message);
       onDataChange?.(false);
@@ -103,7 +110,14 @@ function DanhSachDeTai({
     });
 
     setFilters(newFilters);
-    onFilterChange?.(newFilters); // Notify parent về filters mới
+
+    // Truyền cả page và limit cho parent để export đúng trang
+    onFilterChange?.({
+      ...newFilters,
+      page: newPagination.current,
+      limit: newPagination.pageSize,
+    });
+
     loadData(newPagination.current, newPagination.pageSize, newFilters);
   };
 

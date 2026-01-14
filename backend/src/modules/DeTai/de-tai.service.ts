@@ -159,9 +159,17 @@ export class DeTaiService {
       'ngay_cap_nhat',
     ];
 
-    // Áp dụng field filtering NHƯNG KHÔNG áp dụng phân trang
-    // Tạm thời set page=1, limit=MAX để applyQueryOptions hoạt động
-    const exportDto = { ...paginationDto, page: 1, limit: MAX_EXPORT_LIMIT };
+    // Áp dụng field filtering NHƯNG ÁP DỤNG phân trang (export đúng trang hiện tại)
+    const { page = 1, limit = 10 } = paginationDto;
+    
+    // Kiểm tra limit không vượt quá giới hạn
+    if (limit > MAX_EXPORT_LIMIT) {
+      throw new BadRequestException(
+        `Số lượng bản ghi mỗi trang không được vượt quá ${MAX_EXPORT_LIMIT}.`,
+      );
+    }
+    
+    const exportDto = { ...paginationDto, page, limit };
     QueryUtils.applyQueryOptions(
       queryBuilder,
       exportDto,
@@ -171,13 +179,6 @@ export class DeTaiService {
 
     // Lấy dữ liệu (không cần count)
     const danhSach = await queryBuilder.getMany();
-
-    // Kiểm tra giới hạn
-    if (danhSach.length >= MAX_EXPORT_LIMIT) {
-      throw new BadRequestException(
-        `Số lượng bản ghi vượt quá giới hạn export (${MAX_EXPORT_LIMIT}). Vui lòng sử dụng bộ lọc để giảm dữ liệu.`,
-      );
-    }
 
     // Map nguoi_cap_nhat (chỉ lấy id và ho_ten)
     return danhSach.map(deTai => this.mapNguoiCapNhat(deTai));

@@ -268,18 +268,21 @@ export class DeCuongThiNghiemService {
       });
     }
 
-    // Giới hạn số lượng bản ghi
-    queryBuilder.take(MAX_EXPORT_LIMIT + 1);
+    // Áp dụng phân trang (export đúng trang hiện tại)
+    const { page = 1, limit = 10 } = filterDto;
+    const skip = (page - 1) * limit;
+    
+    // Kiểm tra limit không vượt quá giới hạn
+    if (limit > MAX_EXPORT_LIMIT) {
+      throw new BadRequestException(
+        `Số lượng bản ghi mỗi trang không được vượt quá ${MAX_EXPORT_LIMIT}.`,
+      );
+    }
+
+    queryBuilder.skip(skip).take(limit);
 
     // Lấy dữ liệu
     const danhSach = await queryBuilder.getMany();
-
-    // Kiểm tra vượt giới hạn
-    if (danhSach.length > MAX_EXPORT_LIMIT) {
-      throw new BadRequestException(
-        `Số lượng bản ghi vượt quá giới hạn export (${MAX_EXPORT_LIMIT} bản ghi). Vui lòng sử dụng bộ lọc để thu hẹp kết quả.`,
-      );
-    }
 
     // Lấy file cho từng đề cương và map relations (parallel)
     const dataWithFiles = await Promise.all(
