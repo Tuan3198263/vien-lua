@@ -13,13 +13,17 @@
   color: #52c41a;
 }
 
-/* Giảm khoảng cách label và input */
+.dang-nhap-card .ant-form-item-row {
+  row-gap: 0px !important;
+}
+
 .dang-nhap-card .ant-form-item {
-  margin-bottom: 16px;
+  margin-bottom: 10px !important;
 }
 
 .dang-nhap-card .ant-form-item-label {
-  padding-bottom: 4px;
+  padding-bottom: 0 !important;
+  margin-bottom: 1px !important;
 }
 
 .submit-button {
@@ -29,7 +33,7 @@
   background: #52c41a;
   border: none;
   border-radius: 6px;
-  margin-top: 8px;
+  margin-top: 16px;
 }
 
 .submit-button:hover:not(:disabled) {
