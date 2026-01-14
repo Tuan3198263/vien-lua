@@ -20,6 +20,8 @@ interface DanhSachDeTaiProps {
   onEdit: (record: DeTai) => void;
   onDelete: (id: number) => void;
   refresh?: number;
+  onDataChange?: (hasData: boolean) => void; // Callback khi data thay đổi
+  onFilterChange?: (filters: Record<string, any>) => void; // Callback khi filter thay đổi
 }
 
 /**
@@ -30,6 +32,8 @@ function DanhSachDeTai({
   onEdit,
   onDelete,
   refresh,
+  onDataChange,
+  onFilterChange,
 }: DanhSachDeTaiProps) {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<DeTai[]>([]);
@@ -72,8 +76,12 @@ function DanhSachDeTai({
         current: page,
         pageSize,
       }));
+
+      // Notify parent về trạng thái data
+      onDataChange?.(response.data.length > 0);
     } catch (error: any) {
       notifyError("Lỗi tải dữ liệu", error.message);
+      onDataChange?.(false);
     } finally {
       setLoading(false);
     }
@@ -95,6 +103,7 @@ function DanhSachDeTai({
     });
 
     setFilters(newFilters);
+    onFilterChange?.(newFilters); // Notify parent về filters mới
     loadData(newPagination.current, newPagination.pageSize, newFilters);
   };
 
@@ -290,18 +299,6 @@ function DanhSachDeTai({
       key: "thu_ky_de_tai",
       width: 150,
       ellipsis: true,
-    },
-    {
-      title: "Thông tin đối tác",
-      dataIndex: "thong_tin_doi_tac",
-      key: "thong_tin_doi_tac",
-      width: 200,
-      ellipsis: { showTitle: false },
-      render: (value) => (
-        <Tooltip title={value} placement="topLeft">
-          {value || "-"}
-        </Tooltip>
-      ),
     },
     {
       title: "Người cập nhật",

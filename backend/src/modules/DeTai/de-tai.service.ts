@@ -127,6 +127,63 @@ export class DeTaiService {
   }
 
   /**
+   * Lấy danh sách đề tài để export (không có phân trang, có filter)
+   * @param paginationDto - Thông tin filter (không dùng page/limit)
+   * @returns Danh sách đề tài đầy đủ để export
+   */
+  async layDanhSachExport(paginationDto: PaginationDto): Promise<any[]> {
+    const MAX_EXPORT_LIMIT = 10000; // Giới hạn tối đa 10,000 bản ghi
+
+    const queryBuilder = this.deTaiRepository
+      .createQueryBuilder('de_tai')
+      .leftJoinAndSelect('de_tai.nguoi_cap_nhat', 'nguoi_cap_nhat');
+
+    // Các field được phép filter (giống layDanhSach)
+    const allowedFields = [
+      'ten_de_tai',
+      'ma_de_tai',
+      'don_vi_phe_duyet',
+      'cap_quan_ly_de_tai',
+      'phuong_thuc_khoang_chi',
+      'noi_dung_khoang_chi',
+      'linh_vuc_khoa_hoc',
+      'nguon_goc_de_tai',
+      'hop_dong',
+      'bien_ban_thanh_ly',
+      'chu_nhiem_de_tai',
+      'thu_ky_de_tai',
+      'thong_tin_doi_tac',
+      'ngay_bat_dau',
+      'ngay_ket_thuc',
+      'ngay_tao',
+      'ngay_cap_nhat',
+    ];
+
+    // Áp dụng field filtering NHƯNG KHÔNG áp dụng phân trang
+    // Tạm thời set page=1, limit=MAX để applyQueryOptions hoạt động
+    const exportDto = { ...paginationDto, page: 1, limit: MAX_EXPORT_LIMIT };
+    QueryUtils.applyQueryOptions(
+      queryBuilder,
+      exportDto,
+      'de_tai',
+      allowedFields,
+    );
+
+    // Lấy dữ liệu (không cần count)
+    const danhSach = await queryBuilder.getMany();
+
+    // Kiểm tra giới hạn
+    if (danhSach.length >= MAX_EXPORT_LIMIT) {
+      throw new BadRequestException(
+        `Số lượng bản ghi vượt quá giới hạn export (${MAX_EXPORT_LIMIT}). Vui lòng sử dụng bộ lọc để giảm dữ liệu.`,
+      );
+    }
+
+    // Map nguoi_cap_nhat (chỉ lấy id và ho_ten)
+    return danhSach.map(deTai => this.mapNguoiCapNhat(deTai));
+  }
+
+  /**
    * Lấy chi tiết đề tài theo ID
    * @param id - ID đề tài
    * @returns Chi tiết đề tài (với nguoi_cap_nhat chỉ có id và ho_ten)

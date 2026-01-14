@@ -15,7 +15,7 @@ import {
   HoSoLuuTruDto,
   PaginationParams
 } from '@/interfaces';
-import { getData, getPaginatedData, deleteData } from './coreApi';
+import { getData, getPaginatedData, deleteData, exportExcel } from './coreApi';
 import axiosInstance from '../axios';
 import { API_URL } from '@/config/api.config';
 import { ApiSuccessResponse } from '@/interfaces';
@@ -63,6 +63,13 @@ export const deTaiApi = {
    */
   delete: (id: number) => 
     deleteData(`${API_URL.DE_TAI}/${id}`),
+
+  /**
+   * Export danh sách đề tài ra Excel
+   * @param params - Filter params (search, sort, filters) - KHÔNG có page/limit
+   */
+  export: (params?: Record<string, any>) =>
+    exportExcel(`${API_URL.DE_TAI}/export`, params),
 };
 
 /**

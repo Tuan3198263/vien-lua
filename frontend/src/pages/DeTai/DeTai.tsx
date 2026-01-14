@@ -4,11 +4,15 @@
 
 import { useState } from "react";
 import { Card, Typography, Button, Flex } from "antd";
-import { PlusOutlined, FileExcelOutlined } from "@ant-design/icons";
+import { PlusOutlined, ExportOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import DanhSachDeTai from "./DanhSachDeTai";
 import { DeTai } from "@/interfaces";
-import { notifySuccess, notifyError } from "@/utils/notification";
+import {
+  notifySuccess,
+  notifyError,
+  notifyWarning,
+} from "@/utils/notification";
 import { deTaiApi } from "@/services/api/deTaiApi";
 import { ROUTE_LABELS } from "@/constants/routes";
 import { SUCCESS_MESSAGES, ERROR_MESSAGES } from "@/constants/messages";
@@ -23,6 +27,9 @@ function DeTaiPage() {
   useDocumentTitle();
   const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
+  const [exportLoading, setExportLoading] = useState(false);
+  const [hasData, setHasData] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState<Record<string, any>>({});
 
   /**
    * Mở form thêm mới
@@ -62,9 +69,21 @@ function DeTaiPage() {
   /**
    * Xử lý export Excel
    */
-  const handleExport = () => {
-    notifySuccess("Tính năng đang phát triển");
-    console.log("Export to Excel");
+  const handleExport = async () => {
+    if (!hasData) {
+      notifyWarning("Chưa có dữ liệu để xuất");
+      return;
+    }
+
+    try {
+      setExportLoading(true);
+      await deTaiApi.export(currentFilters);
+      notifySuccess("Xuất file thành công");
+    } catch (error: any) {
+      notifyError("Xuất file thất bại", error.message);
+    } finally {
+      setExportLoading(false);
+    }
   };
 
   return (
@@ -84,7 +103,12 @@ function DeTaiPage() {
             >
               Thêm
             </Button>
-            <Button icon={<FileExcelOutlined />} onClick={handleExport}>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={handleExport}
+              loading={exportLoading}
+              disabled={!hasData}
+            >
               Xuất Excel
             </Button>
           </Flex>
@@ -96,6 +120,8 @@ function DeTaiPage() {
           onEdit={handleOpenEdit}
           onDelete={handleXoa}
           refresh={refreshKey}
+          onDataChange={(hasData) => setHasData(hasData)}
+          onFilterChange={(filters) => setCurrentFilters(filters)}
         />
       </Flex>
     </Card>

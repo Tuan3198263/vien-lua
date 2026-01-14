@@ -132,3 +132,60 @@ export const downloadFile = async (url: string, filename: string): Promise<void>
   // Cleanup
   window.URL.revokeObjectURL(link.href);
 };
+
+/**
+ * Export Excel - Tải file Excel từ API
+ * @param url - API endpoint (ví dụ: /api/de-tai/export)
+ * @param params - Query parameters (filters, sort, etc.)
+ * @param filename - Tên file khi download (optional, sẽ lấy từ response header nếu không có)
+ */
+export const exportExcel = async (
+  url: string,
+  params?: Record<string, any>,
+  filename?: string
+): Promise<void> => {
+  const response = await axiosInstance.get(url, {
+    params,
+    responseType: 'blob',
+  });
+
+  // Lấy filename từ Content-Disposition header nếu không truyền vào
+  if (!filename) {
+    const contentDisposition = response.headers['content-disposition'];
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename[^;=\n]*=(['"]?)([^'"\n]*?)\1/);
+      if (filenameMatch && filenameMatch[2]) {
+        filename = decodeURIComponent(filenameMatch[2]);
+      }
+    }
+  }
+
+  // Nếu vẫn không có filename, tạo tên mặc định
+  if (!filename) {
+    const timestamp = new Date().toISOString().split('T')[0];
+    filename = `Export_${timestamp}.xlsx`;
+  }
+
+  // Đảm bảo filename có extension .xlsx
+  if (!filename.toLowerCase().endsWith('.xlsx')) {
+    filename = `${filename}.xlsx`;
+  }
+
+  // Tạo link download với Blob type chính xác
+  const blob = new Blob([response.data], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+ const blobUrl = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = blobUrl;
+  link.download = filename;
+  link.style.display = 'none';
+  
+  // Append to body, click, then remove
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  // Cleanup
+  setTimeout(() => window.URL.revokeObjectURL(blobUrl), 100);
+};
