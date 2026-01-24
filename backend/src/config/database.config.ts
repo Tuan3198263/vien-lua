@@ -73,6 +73,11 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
       extra: {
         connectionLimit: 10,
       },
+      
+      // SSL configuration (for Aiven and other services requiring SSL)
+      ssl: this.configService.get<string>('DB_SSL') === 'true' ? {
+        rejectUnauthorized: false, // Accept self-signed certificates
+      } : false,
     };
   }
 }
