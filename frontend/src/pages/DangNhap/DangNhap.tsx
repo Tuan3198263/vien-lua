@@ -6,6 +6,7 @@
 import { Form, Input, Button, Card, Flex } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { loginSuccess, setLoading } from "@/stores/authSlice";
 import { authApi } from "@/services/api";
@@ -25,6 +26,16 @@ function DangNhap() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.auth);
+
+  /**
+   * Auto-fill test credentials on component mount
+   */
+  useEffect(() => {
+    form.setFieldsValue({
+      tai_khoan: "TESTER",
+      mat_khau: "TESTER",
+    });
+  }, [form]);
 
   /**
    * Xử lý submit form đăng nhập
